@@ -1,0 +1,50 @@
+.demo-target {
+  background: white;
+  clear: both;
+  border: 1px solid #AAA;
+  min-height: auto;
+  padding: 10px;
+  margin: 0 auto;
+  text-align: center;
+  white-space: nowrap;
+  overflow-x: auto;
+  width: fit-content;
+  max-width: 100%;
+  
+  & > div {
+    display: inline-block !important;
+    vertical-align: top;
+  }
+}
+
+.demo {
+  text-align: center;
+}
+
+.demo-divider {
+  margin: 40px 0;
+}
+
+.demo-docs-link {
+  display: inline-block;
+  margin-top: 20px;
+}
+.char-select-form {
+  margin-bottom: 20px;
+}
+
+.demo-controls {
+  border: 1px solid #AAA;
+  margin: 10px auto;
+  padding: 10px;
+  max-width: 800px;
+}
+
+.demo-controls .btn {
+  margin-left: 20px
+}
+
+.character-select {
+  width: auto !important;
+  display: inline-block !important;
+}

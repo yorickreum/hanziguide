@@ -1,0 +1,303 @@
+// Integrated demo logic from demo.js
+var animationWriters = [];
+var currentStrokeIndex = 0;
+var updateTimeout = null;
+var isPlaying = false;
+var animationPromise = null;
+
+function updateCharacter() {
+  var characters = $('#character-select').val().trim();
+  if (!characters) {
+    $('#animation-target').html('<p style="padding: 20px; color: #999;">Enter characters above to see them here</p>');
+    animationWriters = [];
+    return;
+  }
+
+  $('#animation-target').html('');
+
+  // Clear old writers
+  animationWriters = [];
+  currentStrokeIndex = 0;
+
+  // Split into individual characters
+  var charArray = characters.split('');
+  var charCount = charArray.length;
+  var size = charCount === 1 ? 300 : (charCount <= 3 ? 200 : 150);
+
+  charArray.forEach(function(char, index) {
+    // Create animation writer
+    var animDiv = document.createElement('div');
+    animDiv.id = 'anim-char-' + index;
+    animDiv.style.display = 'inline-block';
+    animDiv.style.margin = '5px';
+    document.getElementById('animation-target').appendChild(animDiv);
+
+    var animWriter = HanziWriter.create(animDiv.id, char, {
+      width: size,
+      height: size,
+      padding: 5,
+      showOutline: shouldShowOutline('animation'),
+      showCharacter: false
+    });
+    animationWriters.push(animWriter);
+  });
+
+  // expose writers for debugging
+  window.animationWriters = animationWriters;
+}
+
+function getTotalStrokes() {
+  return animationWriters.reduce(function(total, writer) {
+    return total + (writer._character ? writer._character.strokes.length : 0);
+  }, 0);
+}
+
+function renderCurrentState(animate) {
+  if (animationWriters.length === 0) return;
+  
+  if (currentStrokeIndex === 0) {
+    // No strokes to show, hide everything
+    animationWriters.forEach(function(writer) {
+      writer.hideCharacter();
+    });
+    var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
+    animationWriters.forEach(function(writer) {
+      writer[method]();
+    });
+    return;
+  }
+  
+  if (animate) {
+    // For next button: just animate the newest stroke on top of existing state
+    var strokeCount = 0;
+    for (var i = 0; i < animationWriters.length; i++) {
+      var writer = animationWriters[i];
+      var charStrokes = writer._character ? writer._character.strokes.length : 0;
+      
+      for (var s = 0; s < charStrokes; s++) {
+        if (strokeCount === currentStrokeIndex - 1) {
+          writer.animateStroke(s, {
+            onComplete: function() {
+              var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
+              animationWriters.forEach(function(writer) {
+                writer[method]();
+              });
+            }
+          });
+          return;
+        }
+        strokeCount++;
+      }
+    }
+  } else {
+    // For prev button: reset everything and redraw all strokes up to currentStrokeIndex
+    animationWriters.forEach(function(writer) {
+      writer.hideCharacter();
+    });
+    
+    var strokeCount = 0;
+    var strokesToDraw = [];
+    
+    for (var i = 0; i < animationWriters.length; i++) {
+      var writer = animationWriters[i];
+      var charStrokes = writer._character ? writer._character.strokes.length : 0;
+      
+      for (var s = 0; s < charStrokes; s++) {
+        if (strokeCount < currentStrokeIndex) {
+          strokesToDraw.push({writer: writer, strokeIndex: s});
+        }
+        strokeCount++;
+      }
+    }
+    
+    // Draw all strokes in sequence with callbacks
+    var drawIndex = 0;
+    var drawNext = function() {
+      if (drawIndex >= strokesToDraw.length) {
+        var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
+        animationWriters.forEach(function(writer) {
+          writer[method]();
+        });
+        return;
+      }
+      
+      var item = strokesToDraw[drawIndex];
+      drawIndex++;
+      item.writer.animateStroke(item.strokeIndex, {
+        immediate: true,
+        onComplete: drawNext
+      });
+    };
+    
+    if (strokesToDraw.length > 0) {
+      drawNext();
+    } else {
+      var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
+      animationWriters.forEach(function(writer) {
+        writer[method]();
+      });
+    }
+  }
+}
+
+function shouldShowOutline(demoType) {
+	return $('#' + demoType + '-show-outline').prop('checked');
+}
+
+$(function() {
+	if ($('#practice').length) {
+		// Extract characters from multiple sources
+		var urlChars = '';
+		
+		console.log('Path chars:', window.HANZI_PATH_CHARS);
+		console.log('SessionStorage:', sessionStorage.getItem('hanziguide_chars'));
+		
+		// First check if chars were extracted from path by inline script
+		if (window.HANZI_PATH_CHARS) {
+			urlChars = window.HANZI_PATH_CHARS;
+			console.log('Using path chars:', urlChars);
+		}
+		// Then check sessionStorage (from 404 redirect OR previous session)
+		else if (sessionStorage.getItem('hanziguide_chars')) {
+			urlChars = sessionStorage.getItem('hanziguide_chars');
+			// Don't remove it - keep it for persistence
+			console.log('Using sessionStorage chars:', urlChars);
+		}
+		
+		if (urlChars) {
+			try {
+				if (urlChars.length <= 6) {
+					$('#character-select').val(urlChars);
+					console.log('Set input to:', urlChars);
+				}
+			} catch (e) {
+				console.log('Failed to process URL characters:', e);
+			}
+		}
+		
+		updateCharacter();
+
+		// Auto-update on typing with debounce
+		$('#character-select').on('input', function() {
+			clearTimeout(updateTimeout);
+			updateTimeout = setTimeout(function() {
+				var chars = $('#character-select').val();
+				// Save to sessionStorage for persistence
+				if (chars) {
+					sessionStorage.setItem('hanziguide_chars', chars);
+				} else {
+					sessionStorage.removeItem('hanziguide_chars');
+				}
+				updateCharacter();
+			}, 500); // 500ms delay after user stops typing
+		});
+
+		// Also handle form submission (Enter key)
+		$('.js-char-form').on('submit', function(evt) {
+			evt.preventDefault();
+			clearTimeout(updateTimeout);
+			updateCharacter();
+		});
+
+		$('#animate-play').on('click', function(evt) {
+			evt.preventDefault();
+			
+			if (isPlaying) {
+				// Pause
+				isPlaying = false;
+				$('#animate-play').html('▶ Play').removeClass('btn-success').addClass('btn-primary');
+				// Cancel ongoing animations
+				animationWriters.forEach(function(writer) {
+					try {
+						writer.cancelAnimation();
+					} catch(e) {}
+				});
+			} else {
+				// Play
+				isPlaying = true;
+				$('#animate-play').html('⏸ Pause').removeClass('btn-primary').addClass('btn-success');
+				
+				// Reset and animate all characters in sequence
+				animationWriters.forEach(function(writer) {
+					writer.hideCharacter();
+				});
+				currentStrokeIndex = 0;
+				
+				var animateNext = function(index) {
+					// Check state before starting animation
+					if (!isPlaying || index >= animationWriters.length) {
+						// Stop and reset button
+						isPlaying = false;
+						$('#animate-play').html('▶ Play').removeClass('btn-success').addClass('btn-primary');
+						return;
+					}
+					
+					var writer = animationWriters[index];
+					var totalCharStrokes = writer._character ? writer._character.strokes.length : 0;
+					var strokeIdx = 0;
+					
+					var animateStrokeByStroke = function() {
+						if (!isPlaying) {
+							return;
+						}
+						if (strokeIdx >= totalCharStrokes) {
+							// Move to next character
+							setTimeout(function() {
+								if (isPlaying) {
+									animateNext(index + 1);
+								}
+							}, 300);
+							return;
+						}
+						
+						writer.animateStroke(strokeIdx, {
+							onComplete: function() {
+								currentStrokeIndex++;
+								strokeIdx++;
+								if (isPlaying) {
+									animateStrokeByStroke();
+								}
+							}
+						});
+					};
+					
+					animateStrokeByStroke();
+				};
+				
+				animateNext(0);
+			}
+		});
+
+    $('#animate-next').on('click', function(evt) {
+      evt.preventDefault();
+      var totalStrokes = getTotalStrokes();
+      if (currentStrokeIndex >= totalStrokes) return;
+      currentStrokeIndex++;
+      renderCurrentState(true);
+    });
+
+    $('#animate-prev').on('click', function(evt) {
+      evt.preventDefault();
+      if (currentStrokeIndex <= 0) return;
+      currentStrokeIndex--;
+      renderCurrentState(false);
+    });
+
+    $('#animate-reset').on('click', function(evt) {
+      evt.preventDefault();
+      currentStrokeIndex = 0;
+      // Hide all strokes by showing only character outline
+      animationWriters.forEach(function(writer) {
+        writer.hideCharacter();
+        writer.showCharacter();
+      });
+    });
+
+		$('#animation-show-outline').on('click', function() {
+			var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
+			animationWriters.forEach(function(writer) {
+        writer[method]();
+      });
+		});
+	}
+});

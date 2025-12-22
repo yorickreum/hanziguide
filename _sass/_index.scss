@@ -1,0 +1,140 @@
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+.intro-inner {
+  margin: 20px auto 0;
+  max-width: 768px;
+}
+.intro {
+  text-align: center;
+}
+.intro-actions {
+  margin-top: 60px;
+
+  @media (max-width: 768px) {
+    display: flex;
+
+  }
+
+}
+.intro-btn {
+  width: 300px;
+  margin: 0 20px;
+
+  @media (max-width: 768px) {
+    margin: 0 10px;
+  }
+}
+
+/* Bump up size of carousel content */
+.intro-inner p {
+  margin: 20px 0;
+  font-size: 21px;
+  line-height: 1.4;
+}
+
+
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+.sub-features {
+  display: flex;
+  justify-content: space-around;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.sub-feature {
+  width: 25%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .middle-subfeature {
+    margin: 20px 0;
+  }
+
+  .marketing-top-divider {
+    margin-bottom: 40px;
+  }
+
+  .marketing-bottom-divider {
+    margin-top: 40px;
+  }
+}
+
+.marketing {
+  padding-bottom: 20px;
+}
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+  /* Navbar positioning foo */
+  .navbar-wrapper {
+    margin-top: 20px;
+  }
+  .navbar-wrapper .container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .navbar-wrapper .navbar {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* The navbar becomes detached from the top, so we round the corners */
+  .navbar-wrapper .navbar {
+    border-radius: 4px;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 992px) {
+  .featurette-heading {
+    margin-top: 120px;
+  }
+}
+
+/* --------------------------------------- */
+
+.char {
+  display: inline-block;
+  height: 200px;
+  width: 200px;
+  margin: 0 20px;
+
+  @media (max-width: 568px) {
+    width: 100px;
+    height: 100px;
+    margin: 0 10px;
+  }
+}
+
+

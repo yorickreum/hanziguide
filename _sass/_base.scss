@@ -1,0 +1,26 @@
+body {
+    position: relative;
+    padding-top: 100px;
+}
+
+// hacky fix for github pages adding an extra linebreak into every code block
+code {
+    br:last-child {
+        display: none;
+    }
+}
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+.footer-featurette-divider {
+    margin: 60px 0;
+}
+
+.footer-separator {
+    display: inline-block;
+    height: 10px;
+    margin: 0 15px;
+    border-right: 1px solid #DDD;
+}

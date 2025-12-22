@@ -1,0 +1,29 @@
+---
+permalink: /404.html
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirecting...</title>
+  <script>
+    // Store the path before redirecting
+    var path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+    if (path && path !== '404.html') {
+      try {
+        // Decode the URL-encoded path
+        var decoded = decodeURIComponent(path);
+        sessionStorage.setItem('hanziguide_chars', decoded);
+      } catch (e) {
+        // If decoding fails, store as-is
+        sessionStorage.setItem('hanziguide_chars', path);
+      }
+    }
+    window.location.replace('/');
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
