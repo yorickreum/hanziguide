@@ -340,6 +340,7 @@ $(function() {
         quizStartStrokeNum: targetStrokeNum,
         showHintAfterMisses: 2,
         highlightOnComplete: false,
+        strokeFadeDuration: 0,
         onCorrectStroke: function() {
           // Advance to next stroke
           if (currentStrokeIndex < getTotalStrokes()) {
