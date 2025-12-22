@@ -205,7 +205,7 @@ $(function() {
 			if (isPlaying) {
 				// Pause
 				isPlaying = false;
-				$('#animate-play').html('▶ Play').removeClass('btn-success').addClass('btn-primary');
+				$('#animate-play').html('<i class="fas fa-play"></i> Play').removeClass('btn-success').addClass('btn-primary');
 				// Cancel ongoing animations
 				animationWriters.forEach(function(writer) {
 					try {
@@ -215,7 +215,7 @@ $(function() {
 			} else {
 				// Play
 				isPlaying = true;
-				$('#animate-play').html('⏸ Pause').removeClass('btn-primary').addClass('btn-success');
+				$('#animate-play').html('<i class="fas fa-pause"></i> Pause').removeClass('btn-primary').addClass('btn-success');
 				
 				// Reset and animate all characters in sequence
 				animationWriters.forEach(function(writer) {
@@ -228,7 +228,7 @@ $(function() {
 					if (!isPlaying || index >= animationWriters.length) {
 						// Stop and reset button
 						isPlaying = false;
-						$('#animate-play').html('▶ Play').removeClass('btn-success').addClass('btn-primary');
+						$('#animate-play').html('<i class="fas fa-play"></i> Play').removeClass('btn-success').addClass('btn-primary');
 						return;
 					}
 					
