@@ -5,6 +5,12 @@
     <title>{{ site.title }}{% if page.title %} - {{ page.title }}{% endif %}</title>
     <meta name="description" content="{{ site.description }}">
 
+    <!-- Language alternatives -->
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
+    <link rel="alternate" hreflang="zh-Hans" href="{{ site.url }}/cn{{ page.url | replace:'index.html','' }}" />
+    <link rel="alternate" hreflang="zh-Hant" href="{{ site.url }}/tw{{ page.url | replace:'index.html','' }}" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
@@ -26,6 +32,28 @@
     <link rel="stylesheet" href="/assets/cdn/font-awesome/all.min.css">
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | prepend: site.url }}">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Hanzi Guide",
+      "url": "{{ site.url }}",
+      "description": "{{ site.description }}",
+      "applicationCategory": "EducationalApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "inLanguage": ["en", "zh-Hans", "zh-Hant"],
+      "keywords": "Chinese characters, Hanzi, stroke order, Mandarin, Cantonese, learn Chinese, write Chinese, traditional Chinese, simplified Chinese",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5."
+    }
+    </script>
+    
     <script type="application/javascript" src="/assets/cdn/hanzi-writer/hanzi-writer.min.js"></script>
     <script src="/assets/cdn/opencc/opencc.min.js"></script>
 </head>

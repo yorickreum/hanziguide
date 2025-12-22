@@ -11,6 +11,11 @@ github_username:  yorickreum
 
 # Build settings
 markdown: kramdown
+
+# Plugins
+plugins:
+  - jekyll-sitemap
+
 exclude:
   - node_modules
   - cdn/*/src
