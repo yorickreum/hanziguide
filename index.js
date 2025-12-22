@@ -286,10 +286,13 @@ $(function() {
     $('#animate-reset').on('click', function(evt) {
       evt.preventDefault();
       currentStrokeIndex = 0;
-      // Hide all strokes by showing only character outline
+      // Hide all strokes
       animationWriters.forEach(function(writer) {
         writer.hideCharacter();
-        writer.showCharacter();
+      });
+      var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
+      animationWriters.forEach(function(writer) {
+        writer[method]();
       });
     });
 
@@ -299,6 +302,73 @@ $(function() {
         writer[method]();
       });
 		});
+
+    $('#draw-mode').on('change', function() {
+      var drawMode = $(this).is(':checked');
+      if (drawMode && animationWriters.length > 0) {
+        startDrawMode();
+      } else {
+        stopDrawMode();
+      }
+    });
+
+    function startDrawMode() {
+      // Disable navigation buttons in draw mode
+      $('#animate-play, #animate-prev, #animate-next').prop('disabled', true);
+      
+      // Find which character and stroke we're on
+      var strokeCount = 0;
+      var targetWriter = null;
+      var targetStrokeNum = null;
+      
+      for (var i = 0; i < animationWriters.length; i++) {
+        var writer = animationWriters[i];
+        var charStrokes = writer._character ? writer._character.strokes.length : 0;
+        
+        if (currentStrokeIndex < strokeCount + charStrokes) {
+          targetWriter = writer;
+          targetStrokeNum = currentStrokeIndex - strokeCount;
+          break;
+        }
+        strokeCount += charStrokes;
+      }
+      
+      if (!targetWriter) return;
+      
+      // Start quiz for just this stroke
+      targetWriter.quiz({
+        quizStartStrokeNum: targetStrokeNum,
+        showHintAfterMisses: 2,
+        highlightOnComplete: false,
+        onCorrectStroke: function() {
+          // Advance to next stroke
+          if (currentStrokeIndex < getTotalStrokes()) {
+            currentStrokeIndex++;
+            
+            // Check if we need to move to next character's quiz
+            if (currentStrokeIndex < getTotalStrokes()) {
+              targetWriter.cancelQuiz();
+              setTimeout(function() {
+                if ($('#draw-mode').is(':checked')) {
+                  startDrawMode();
+                }
+              }, 100);
+            } else {
+              // Completed all strokes
+              $('#draw-mode').prop('checked', false);
+              stopDrawMode();
+            }
+          }
+        }
+      });
+    }
+    
+    function stopDrawMode() {
+      $('#animate-play, #animate-prev, #animate-next').prop('disabled', false);
+      animationWriters.forEach(function(writer) {
+        writer.cancelQuiz();
+      });
+    }
 
     $('#share-btn').on('click', function(evt) {
       evt.preventDefault();
