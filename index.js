@@ -299,5 +299,46 @@ $(function() {
         writer[method]();
       });
 		});
+
+    $('#share-btn').on('click', function(evt) {
+      evt.preventDefault();
+      var characters = $('#character-select').val().trim();
+      if (!characters) {
+        alert('Enter some characters first!');
+        return;
+      }
+      
+      var shareUrl = window.location.origin + '/' + encodeURIComponent(characters);
+      var shareText = 'Learn to write: ' + characters;
+      
+      // Use Web Share API if available (mobile)
+      if (navigator.share) {
+        navigator.share({
+          title: 'Hanzi Guide',
+          text: shareText,
+          url: shareUrl
+        }).catch(function(err) {
+          if (err.name !== 'AbortError') {
+            console.error('Share error:', err);
+          }
+        });
+      } else {
+        // Fallback: copy to clipboard
+        var tempInput = document.createElement('input');
+        tempInput.value = shareUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        
+        // Show feedback
+        var $btn = $(this);
+        var originalText = $btn.html();
+        $btn.html('✓ Link Copied!');
+        setTimeout(function() {
+          $btn.html(originalText);
+        }, 2000);
+      }
+    });
 	}
 });
