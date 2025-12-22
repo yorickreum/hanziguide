@@ -16,6 +16,8 @@ en:
   play: "Play"
   next: "Next"
   share: "Share"
+  script_simplified: "Simplified"
+  script_traditional: "Traditional"
   features:
     characters_count: "9000+ characters"
     characters_desc: "Access over 9000 of the most common simplified and traditional Mandarin and Cantonese characters."
@@ -45,6 +47,8 @@ zh:
   play: "播放"
   next: "下一笔"
   share: "分享"
+  script_simplified: "简体"
+  script_traditional: "繁體"
   features:
     characters_count: "9000+ 汉字"
     characters_desc: "支持 9000 多个常用简体字和繁体字。汉字数据来自 <a target=\"_blank\" href=\"https://github.com/skishore/makemeahanzi\">Make Me a Hanzi</a> 项目。"
@@ -74,6 +78,8 @@ zh-Hant:
   play: "播放"
   next: "下一筆"
   share: "分享"
+  script_simplified: "簡體"
+  script_traditional: "繁體"
   features:
     characters_count: "9000+ 漢字"
     characters_desc: "支持 9000 多個常用簡體字和繁體字。漢字數據來自 <a target=\"_blank\" href=\"https://github.com/skishore/makemeahanzi\">Make Me a Hanzi</a> 項目。"

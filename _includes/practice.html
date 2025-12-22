@@ -32,6 +32,17 @@
       </label>
       <input type="text" class="form-control character-select" id="character-select" placeholder="{{ t.character_placeholder }}" maxlength="6" value="你好" />
     </div>
+    <div class="form-group script-selector">
+      <label class="radio-label">
+        <input type="radio" name="script-type" value="simplified" checked />
+        <span>{{ t.script_simplified }}</span>
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="script-type" value="traditional" />
+        <span>{{ t.script_traditional }}</span>
+      </label>
+    </div>
+    <br>
     <small class="text-muted">{{ t.updates_automatically }}</small>
   </form>
 

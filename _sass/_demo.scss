@@ -99,3 +99,63 @@
   width: auto !important;
   display: inline-block !important;
 }
+
+.script-selector {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 15px;
+  gap: 10px;
+}
+
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 12px;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  transition: all 0.2s ease;
+  user-select: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.radio-label:hover {
+  border-color: #337ab7;
+  background: #f8f9fa;
+}
+
+.radio-label input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-label input[type="radio"]:checked + span {
+  color: white;
+}
+
+.radio-label:has(input[type="radio"]:checked) {
+  background: #337ab7;
+  border-color: #337ab7;
+  color: white;
+}
+
+.radio-label span {
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+@media (max-width: 768px) {
+  .char-select-form {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .script-selector {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

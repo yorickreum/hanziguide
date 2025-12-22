@@ -5,13 +5,43 @@ var updateTimeout = null;
 var isPlaying = false;
 var animationPromise = null;
 
+// Initialize OpenCC converters
+var converterToTraditional = null;
+var converterToSimplified = null;
+
+// Initialize OpenCC when available
+if (typeof OpenCC !== 'undefined') {
+  converterToTraditional = OpenCC.Converter({ from: 'cn', to: 'tw' });
+  converterToSimplified = OpenCC.Converter({ from: 'tw', to: 'cn' });
+}
+
+function getScriptType() {
+  return $('input[name="script-type"]:checked').val();
+}
+
+function convertText(text, targetScript) {
+  if (!converterToTraditional || !converterToSimplified) {
+    return text;
+  }
+  
+  if (targetScript === 'traditional') {
+    return converterToTraditional(text);
+  } else if (targetScript === 'simplified') {
+    return converterToSimplified(text);
+  }
+  return text;
+}
+
 function updateCharacter() {
-  var characters = $('#character-select').val().trim();
-  if (!characters) {
+  var inputText = $('#character-select').val().trim();
+  if (!inputText) {
     $('#animation-target').html('<p style="padding: 20px; color: #999;">Enter characters above to see them here</p>');
     animationWriters = [];
     return;
   }
+
+  var scriptType = getScriptType();
+  var characters = convertText(inputText, scriptType);
 
   $('#animation-target').html('');
 
@@ -190,6 +220,11 @@ $(function() {
 				}
 				updateCharacter();
 			}, 500); // 500ms delay after user stops typing
+		});
+
+		// Handle script type change (simplified/traditional)
+		$('input[name="script-type"]').on('change', function() {
+			updateCharacter();
 		});
 
 		// Also handle form submission (Enter key)
