@@ -308,7 +308,7 @@ $(function() {
         return;
       }
       
-      var shareUrl = window.location.origin + '/' + encodeURIComponent(characters);
+      var shareUrl = window.location.origin + '/' + characters;
       var shareText = 'Learn to write: ' + characters;
       
       // Use Web Share API if available (mobile)
