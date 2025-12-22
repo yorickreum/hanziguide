@@ -32,6 +32,8 @@ en:
   why_learn_text: "Learning proper stroke order is essential for writing Chinese characters correctly. Following the correct stroke sequence helps with character recognition, improves handwriting legibility, and makes it easier to remember complex characters. Whether you're learning Mandarin Chinese or Cantonese, understanding stroke order is fundamental to mastering Chinese writing. Our tool provides step-by-step guidance for each character, showing you exactly how native speakers write."
   how_it_works_title: "How to Use Hanzi Guide"
   how_it_works_text: "Simply enter any Chinese character or word in the input field above, and watch the animated stroke-by-stroke demonstration. You can switch between simplified Chinese (简体字) and traditional Chinese (繁體字) using the toggle buttons. Use the playback controls to pause, rewind, or step through each stroke at your own pace. For interactive practice, enable 'I want to draw!' mode to practice writing characters yourself with real-time feedback. Perfect for students, teachers, and anyone learning to read and write Chinese."
+  duolingo_companion: "Perfect Companion for Language Learning Apps"
+  duolingo_companion_text: "Learning Chinese with <a target=\"_blank\" rel=\"noopener\" href=\"https://www.duolingo.com\">Duolingo</a>, Memrise, or other language learning apps? Hanzi Guide is the perfect complementary tool to help you master character writing. While language learning apps teach you vocabulary and grammar, Hanzi Guide focuses specifically on proper stroke order and handwriting technique. Use it alongside your favorite language learning app to develop well-rounded Chinese language skills. Not affiliated with or endorsed by Duolingo or any other language learning platform."
 
 zh:
   title: "Hanzi Guide"
@@ -67,6 +69,8 @@ zh:
   why_learn_text: "学习正确的笔画顺序对于正确书写汉字至关重要。遵循正确的笔画顺序有助于汉字识别，提高书写的清晰度，并使记忆复杂汉字变得更容易。无论您是学习普通话还是粤语，了解笔画顺序是掌握中文书写的基础。我们的工具为每个汉字提供逐步指导，准确展示母语者的书写方式。"
   how_it_works_title: "如何使用 Hanzi Guide"
   how_it_works_text: "只需在上方输入框中输入任何汉字或词语，即可观看逐笔动画演示。您可以使用切换按钮在简体中文（简体字）和繁体中文（繁體字）之间切换。使用播放控制来暂停、倒退或按自己的节奏逐步查看每一笔。对于互动练习，启用"我想画！"模式，可以亲自练习书写汉字并获得实时反馈。非常适合学生、教师和任何学习读写中文的人。"
+  duolingo_companion: "语言学习应用的完美配套工具"
+  duolingo_companion_text: "正在使用 <a target=\"_blank\" rel=\"noopener\" href=\"https://www.duolingo.com\">Duolingo</a>、Memrise 或其他语言学习应用学习中文？Hanzi Guide 是帮助您掌握汉字书写的完美辅助工具。语言学习应用教您词汇和语法，而 Hanzi Guide 专注于正确的笔画顺序和书写技巧。与您喜爱的语言学习应用配合使用，全面发展中文语言技能。本站与 Duolingo 或任何其他语言学习平台无关联或背书。"
 
 zh-Hant:
   title: "Hanzi Guide"
@@ -102,3 +106,5 @@ zh-Hant:
   why_learn_text: "學習正確的筆畫順序對於正確書寫漢字至關重要。遵循正確的筆畫順序有助於漢字識別，提高書寫的清晰度，並使記憶複雜漢字變得更容易。無論您是學習普通話還是粵語，了解筆畫順序是掌握中文書寫的基礎。我們的工具為每個漢字提供逐步指導，準確展示母語者的書寫方式。"
   how_it_works_title: "如何使用 Hanzi Guide"
   how_it_works_text: "只需在上方輸入框中輸入任何漢字或詞語，即可觀看逐筆動畫演示。您可以使用切換按鈕在簡體中文（简体字）和繁體中文（繁體字）之間切換。使用播放控制來暫停、倒退或按自己的節奏逐步查看每一筆。對於互動練習，啟用"我想畫！"模式，可以親自練習書寫漢字並獲得實時反饋。非常適合學生、教師和任何學習讀寫中文的人。"
+  duolingo_companion: "語言學習應用的完美配套工具"
+  duolingo_companion_text: "正在使用 <a target=\"_blank\" rel=\"noopener\" href=\"https://www.duolingo.com\">Duolingo</a>、Memrise 或其他語言學習應用學習中文？Hanzi Guide 是幫助您掌握漢字書寫的完美輔助工具。語言學習應用教您詞彙和語法，而 Hanzi Guide 專注於正確的筆畫順序和書寫技巧。與您喜愛的語言學習應用配合使用，全面發展中文語言技能。本站與 Duolingo 或任何其他語言學習平台無關聯或背書。"
