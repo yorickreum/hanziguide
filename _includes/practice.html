@@ -6,9 +6,11 @@
     // Strip language prefix if present
     if (path.startsWith('cn/')) {
       path = path.substring(3);
+    } else if (path.startsWith('tw/')) {
+      path = path.substring(3);
     }
     // Filter out language paths and special pages
-    if (path && path !== '404.html' && path !== 'index.html' && path !== 'cn' && !path.includes('.')) {
+    if (path && path !== '404.html' && path !== 'index.html' && path !== 'cn' && path !== 'tw' && !path.includes('.')) {
       // Store path for the demo script
       window.HANZI_PATH_CHARS = decodeURIComponent(path);      console.log('Extracted chars from path:', path);    }
   })();
