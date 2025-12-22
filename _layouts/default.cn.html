@@ -2,6 +2,7 @@
 <html>
 
 {% include head.html %}
+{% assign t = site.data.translations.zh %}
 
 <body>
 
@@ -21,9 +22,9 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="/#practice">演示</a></li>
-              <li><a href="https://github.com/yorickreum/hanziguide">Github</a></li>
-              <li><a href="/">En</a></li>
+              <li><a href="/#practice">{{ t.nav.practice }}</a></li>
+              <li><a href="https://github.com/yorickreum/hanziguide">{{ t.nav.github }}</a></li>
+              <li><a href="/">EN</a></li>
             </ul>
           </div>
         </div>

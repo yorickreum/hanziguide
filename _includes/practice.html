@@ -1,0 +1,96 @@
+{% assign t = site.data.translations[page.lang] %}
+<script>
+  // Client-side router: extract chars from path immediately
+  (function() {
+    var path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+    // Strip language prefix if present
+    if (path.startsWith('cn/')) {
+      path = path.substring(3);
+    }
+    // Filter out language paths and special pages
+    if (path && path !== '404.html' && path !== 'index.html' && path !== 'cn' && !path.includes('.')) {
+      // Store path for the demo script
+      window.HANZI_PATH_CHARS = decodeURIComponent(path);      console.log('Extracted chars from path:', path);    }
+  })();
+</script>
+<div class="demo container" id="practice">
+  <h1>{{ t.title }}</h1>
+  <p class="lead">
+    {{ t.subtitle }}
+  </p>
+  
+  <hr class="demo-divider" />
+
+  <h4>{{ t.stroke_order_animation }}</h4>
+  
+  <form class="form-inline char-select-form js-char-form">
+    <div class="form-group">
+      <label for="character-select">
+        {{ t.character_label }}
+      </label>
+      <input type="text" class="form-control character-select" id="character-select" placeholder="{{ t.character_placeholder }}" maxlength="6" value="你好" />
+    </div>
+    <small class="text-muted">{{ t.updates_automatically }}</small>
+  </form>
+
+  <p>{{ t.watch_description }}</p>
+  <div class="demo-target" id="animation-target"></div>
+  <div class="demo-controls">
+    <form class="form-inline">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" checked="checked" id="animation-show-outline" /> {{ t.show_outline }}
+        </label>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" id="draw-mode" /> {{ t.draw_next_stroke }}
+        </label>
+      </div>
+      <br>
+      <div class="btn-group" role="group">
+        <button class="btn btn-default" id="animate-reset"><i class="fas fa-undo"></i> {{ t.reset }}</button>
+        <button class="btn btn-default" id="animate-prev"><i class="fas fa-chevron-left"></i> {{ t.prev }}</button>
+        <button class="btn btn-primary" id="animate-play"><i class="fas fa-play"></i> {{ t.play }}</button>
+        <button class="btn btn-default" id="animate-next">{{ t.next }} <i class="fas fa-chevron-right"></i></button>
+      </div>
+      <button class="btn btn-info" id="share-btn"><i class="fas fa-share-alt"></i> {{ t.share }}</button>
+    </form>
+  </div>
+</div>
+
+<!-- Marketing messaging and featurettes
+================================================== -->
+<!-- Wrap the rest of the page in another container to center all the content. -->
+
+<div class="container marketing">
+  <hr class="featurette-divider marketing-top-divider" />
+  <div class="sub-features">
+    <div class="sub-feature">
+      <h4>{{ t.features.characters_count }}</h4>
+      <p>
+        {{ t.features.characters_desc }}
+      </p>
+    </div>
+    <div class="sub-feature middle-subfeature">
+      <h4>{{ t.features.proper_stroke_order }}</h4>
+      <p>
+        {{ t.features.proper_stroke_desc }}
+      </p>
+    </div>
+    <div class="sub-feature">
+      <h4>{{ t.features.free_accessible }}</h4>
+      <p>
+        {{ t.features.free_accessible_desc }}
+      </p>
+    </div>
+  </div>
+  <hr class="featurette-divider marketing-bottom-divider" />
+
+  <h2>{{ t.about }}</h2>
+
+  <p>{{ t.about_text }}</p>
+
+  <p>{{ t.data_source }}</p>
+
+</div><!-- /.container -->
