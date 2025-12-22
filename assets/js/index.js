@@ -55,12 +55,28 @@ function updateCharacter() {
   var size = charCount === 1 ? 300 : (charCount <= 3 ? 200 : 150);
 
   charArray.forEach(function(char, index) {
+    // Create container for character + pinyin
+    var charContainer = document.createElement('div');
+    charContainer.style.display = 'inline-block';
+    charContainer.style.margin = '5px';
+    charContainer.style.textAlign = 'center';
+    charContainer.style.verticalAlign = 'top';
+    
+    // Create pinyin display
+    var pinyinDiv = document.createElement('div');
+    pinyinDiv.id = 'pinyin-' + index;
+    pinyinDiv.style.fontSize = '16px';
+    pinyinDiv.style.color = '#666';
+    pinyinDiv.style.marginBottom = '5px';
+    pinyinDiv.style.minHeight = '20px';
+    charContainer.appendChild(pinyinDiv);
+    
     // Create animation writer
     var animDiv = document.createElement('div');
     animDiv.id = 'anim-char-' + index;
-    animDiv.style.display = 'inline-block';
-    animDiv.style.margin = '5px';
-    document.getElementById('animation-target').appendChild(animDiv);
+    charContainer.appendChild(animDiv);
+    
+    document.getElementById('animation-target').appendChild(charContainer);
 
     var animWriter = HanziWriter.create(animDiv.id, char, {
       width: size,
@@ -69,6 +85,28 @@ function updateCharacter() {
       showOutline: shouldShowOutline('animation'),
       showCharacter: false
     });
+    
+    // Try to access character data after writer is created
+    setTimeout(function() {
+      // Use pinyin-pro library to get pronunciation
+      try {
+        if (typeof pinyinPro !== 'undefined') {
+          var pinyinText = pinyinPro.pinyin(char, { toneType: 'symbol' });
+          if (pinyinText) {
+            pinyinDiv.textContent = pinyinText;
+            pinyinDiv.style.display = 'block';
+            console.log('Pinyin for ' + char + ':', pinyinText);
+          } else {
+            console.log('No pinyin found for', char);
+          }
+        } else {
+          console.error('pinyinPro library not loaded');
+        }
+      } catch(e) {
+        console.error('Error getting pinyin:', e);
+      }
+    }, 100);
+    
     animationWriters.push(animWriter);
   });
 
