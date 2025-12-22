@@ -2,8 +2,8 @@
 title: HanziGuide
 email: tech@yorickreum.de
 description: >
-  Hanzi Guide helps you learn to write Mandarin and Cantonese characters with proper stroke order.
-  Study simplified and traditional characters with clear, step-by-step animations.
+  Hanzi Guide helps you learn to write Traditional and Simplified Chinese characters with proper stroke order.
+  Study the characters with clear, step-by-step animations.
   Based on the hanzi-writer project (github.com/chanind/hanzi-writer)
 baseurl: "/" # the subpath of your site, e.g. /blog/
 url: "https://hanzi.guide" # the base hostname & protocol for your site
