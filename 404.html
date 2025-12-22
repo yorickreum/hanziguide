@@ -9,7 +9,7 @@ permalink: /404.html
   <title>Redirecting...</title>
   <script>
     // Store the path before redirecting
-    var path = window.location.pathname.replace(/^/+|/+$/g, '');
+    var path = window.location.pathname.replace(/^\/+|\/+$/g, '');
     // Strip language prefix if present
     if (path.startsWith('cn/')) {
       path = path.substring(3);
