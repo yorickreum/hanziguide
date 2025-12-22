@@ -34,14 +34,38 @@
 }
 
 .demo-controls {
-  border: 1px solid #AAA;
   margin: 10px auto;
   padding: 10px;
   max-width: 800px;
 }
 
 .demo-controls .btn {
-  margin-left: 20px
+  margin: 5px;
+}
+
+.demo-controls .btn-group {
+  margin: 5px 0;
+}
+
+.demo-controls .checkbox {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .demo-controls form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .demo-controls .btn-group {
+    margin: 5px 0;
+  }
+  
+  .demo-controls .btn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
 }
 
 .character-select {
