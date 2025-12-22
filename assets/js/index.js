@@ -88,22 +88,36 @@ function updateCharacter() {
     
     // Try to access character data after writer is created
     setTimeout(function() {
-      // Use pinyin-pro library to get pronunciation
+      var showMandarin = $('#show-mandarin').prop('checked');
+      var showCantonese = $('#show-cantonese').prop('checked');
+      
       try {
-        if (typeof pinyinPro !== 'undefined') {
+        var pronunciations = [];
+        
+        // Get Mandarin pinyin
+        if (showMandarin && typeof pinyinPro !== 'undefined') {
           var pinyinText = pinyinPro.pinyin(char, { toneType: 'symbol' });
           if (pinyinText) {
-            pinyinDiv.textContent = pinyinText;
-            pinyinDiv.style.display = 'block';
-            console.log('Pinyin for ' + char + ':', pinyinText);
-          } else {
-            console.log('No pinyin found for', char);
+            pronunciations.push(pinyinText + ' (M)');
           }
+        }
+        
+        // Get Cantonese jyutping
+        if (showCantonese && typeof ToJyutping !== 'undefined') {
+          var jyutpingText = ToJyutping.getJyutpingText(char);
+          if (jyutpingText) {
+            pronunciations.push(jyutpingText + ' (C)');
+          }
+        }
+        
+        if (pronunciations.length > 0) {
+          pinyinDiv.textContent = pronunciations.join(' / ');
+          pinyinDiv.style.display = 'block';
         } else {
-          console.error('pinyinPro library not loaded');
+          pinyinDiv.style.display = 'none';
         }
       } catch(e) {
-        console.error('Error getting pinyin:', e);
+        console.error('Error getting pronunciation:', e);
       }
     }, 100);
     
@@ -376,14 +390,19 @@ $(function() {
       });
 		});
 
-    $('#draw-mode').on('change', function() {
-      var drawMode = $(this).is(':checked');
-      if (drawMode && animationWriters.length > 0) {
-        startDrawMode();
-      } else {
-        stopDrawMode();
-      }
-    });
+		// Add listeners for pronunciation checkboxes
+		$('#show-mandarin, #show-cantonese').on('change', function() {
+			updateCharacter();
+		});
+
+	// Handle draw mode toggle
+	$('#draw-mode').on('change', function() {
+		if ($(this).is(':checked')) {
+			startDrawMode();
+		} else {
+			stopDrawMode();
+		}
+	});
 
     function startDrawMode() {
       // Disable navigation buttons in draw mode
