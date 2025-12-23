@@ -5,6 +5,10 @@ var updateTimeout = null;
 var isPlaying = false;
 var animationPromise = null;
 var strokeSpeedFactor = 1; // 1 = normal speed
+var translationTimeout = null;
+
+// Translation API - MyMemory (works on GitHub Pages, no API key needed)
+const TRANSLATION_API_URL = 'https://api.mymemory.translated.net/get';
 
 // Initialize OpenCC converters
 var converterToTraditional = null;
@@ -33,10 +37,47 @@ function convertText(text, targetScript) {
   return text;
 }
 
+// Function to get translation from MyMemory API (works on GitHub Pages)
+async function getTranslation(characters) {
+  if (!characters || characters.trim() === '') {
+    $('#translation-display').hide();
+    return;
+  }
+
+  try {
+    // Show loading state
+    $('#translation-text').text('....');
+    $('#translation-display').show();
+
+    const url = `${TRANSLATION_API_URL}?q=${encodeURIComponent(characters)}&langpair=zh|en`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    let translation = data.responseData.translatedText;
+    
+    // Remove trailing punctuation added by the API
+    translation = translation.replace(/[.。]+$/, '');
+    
+    // Convert to lowercase
+    translation = translation.toLowerCase();
+    
+    $('#translation-text').text(translation);
+    $('#translation-display').show();
+  } catch (error) {
+    console.error('Translation error:', error);
+    $('#translation-display').hide();
+  }
+}
+
 function updateCharacter() {
   var inputText = $('#character-select').val().trim();
   if (!inputText) {
     $('#animation-target').html('<p style="padding: 20px; color: #999;">Enter characters above to see them here</p>');
+    $('#translation-display').hide();
     animationWriters = [];
     return;
   }
@@ -49,6 +90,14 @@ function updateCharacter() {
   // Clear old writers
   animationWriters = [];
   currentStrokeIndex = 0;
+
+  // Debounce translation API call
+  if (translationTimeout) {
+    clearTimeout(translationTimeout);
+  }
+  translationTimeout = setTimeout(function() {
+    getTranslation(characters);
+  }, 500); // Wait 500ms after user stops typing
 
   // Split into individual characters
   var charArray = characters.split('');
