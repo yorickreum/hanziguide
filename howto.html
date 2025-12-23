@@ -63,6 +63,13 @@ permalink: /howto/
     max-width: none;
     min-width: auto;
   }
+  .char-grid.stroke-grid .char-item {
+    flex: 0 1 calc(20% - 15px);
+    max-width: calc(20% - 15px);
+  }
+  .char-grid.stroke-grid .char-item .char {
+    font-size: 2em;
+  }
   @media (max-width: 768px) {
     .char-grid {
       flex-wrap: wrap;
@@ -73,6 +80,10 @@ permalink: /howto/
     .char-item {
       flex: 0 1 calc(50% - 15px);
       max-width: calc(50% - 15px);
+    }
+    .char-grid.stroke-grid .char-item {
+      flex: 0 1 calc(33.333% - 12px);
+      max-width: calc(33.333% - 12px);
     }
   }
 </style>
@@ -120,16 +131,16 @@ permalink: /howto/
 </div>
 
 <h2>Basic Stroke Types</h2>
-<p>Learn the building blocks:</p>
-<ul>
-  <li>横 (héng) — horizontal stroke －</li>
-  <li>竖 (shù) — vertical stroke |</li>
-  <li>撇 (piě) — left diagonal 丿</li>
-  <li>捺 (nà) — right diagonal ㇏</li>
-  <li>点 (diǎn) — dot 丶</li>
-  <li>提 (tí) — upward stroke</li>
-  <li>折 (zhé) — turning stroke</li>
-</ul>
+<p>Chinese characters are built from basic strokes. Here are the main categories:</p>
+<div class="char-grid stroke-grid">
+  <div class="char-item"><span class="char">－</span><span class="desc">横 (héng) = horizontal</span></div>
+  <div class="char-item"><span class="char">|</span><span class="desc">竖 (shù) = vertical</span></div>
+  <div class="char-item"><span class="char">丿</span><span class="desc">撇 (piě) = left diagonal</span></div>
+  <div class="char-item"><span class="char">㇏</span><span class="desc">捺 (nà) = right diagonal</span></div>
+  <div class="char-item"><span class="char">丶</span><span class="desc">点 (diǎn) = dot</span></div>
+  <div class="char-item"><span class="char">㇀</span><span class="desc">提 (tí) = upward</span></div>
+  <div class="char-item"><span class="char">㇕</span><span class="desc">折 (zhé) = turning</span></div>
+</div>
 
 <h2>Radicals = Your Best Friend</h2>
 <p>Radicals help you guess meaning:</p>
