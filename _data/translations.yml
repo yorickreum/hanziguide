@@ -1,6 +1,6 @@
 en:
   title: "Hanzi Guide"
-  subtitle: "Learn to write Hanzi with proper stroke order."
+  subtitle: "Learn to write Hanzi with proper stroke order"
   nav:
     practice: "Practice"
     github: "GitHub"
@@ -53,10 +53,11 @@ en:
     focuses specifically on proper stroke order and handwriting technique. Use it alongside your favorite
     language learning app to develop well-rounded Chinese language skills. Not affiliated with or endorsed
     by Duolingo or any other language learning platform.
+  back_to_top: "Back to top"
 
 zh:
   title: "Hanzi Guide"
-  subtitle: "学习正确的笔画顺序书写汉字。"
+  subtitle: "学习正确的笔画顺序书写汉字"
   nav:
     practice: "演示"
     github: "GitHub"
@@ -66,14 +67,16 @@ zh:
   updates_automatically: "输入时自动更新"
   watch_description: "观看每个汉字的笔画顺序演示"
   show_outline: "显示轮廓"
-  draw_next_stroke: "我想画！"
+  draw_next_stroke: "我想写！"
+  show_mandarin: "显示国语拼音"
+  show_cantonese: "显示粤语粤拼"
   reset: "重置"
   prev: "上一笔"
   play: "播放"
   next: "下一笔"
   share: "分享"
   script_simplified: "简体"
-  script_traditional: "繁體"
+  script_traditional: "繁体"
   features:
     characters_count: "9000+ 汉字"
     characters_desc: "支持 9000 多个常用简体字和繁体字。汉字数据来自 <a target=\"_blank\" href=\"https://github.com/skishore/makemeahanzi\">Make Me a Hanzi</a> 项目。"
@@ -100,10 +103,11 @@ zh:
     或其他语言学习应用学习中文？Hanzi Guide 是帮助您掌握汉字书写的完美辅助工具。语言学习应用教您词汇和语法，
     而 Hanzi Guide 专注于正确的笔画顺序和书写技巧。与您喜爱的语言学习应用配合使用，全面发展中文语言技能。
     本站与 Duolingo 或任何其他语言学习平台无关联或背书。
+  back_to_top: "回到顶部"
 
 zh-Hant:
   title: "Hanzi Guide"
-  subtitle: "學習正確的筆畫順序書寫漢字。"
+  subtitle: "學習正確的筆畫順序書寫漢字"
   nav:
     practice: "演示"
     github: "GitHub"
@@ -113,7 +117,9 @@ zh-Hant:
   updates_automatically: "輸入時自動更新"
   watch_description: "觀看每個漢字的筆畫順序演示"
   show_outline: "顯示輪廓"
-  draw_next_stroke: "我想畫！"
+  draw_next_stroke: "我想寫！"
+  show_mandarin: "顯示國語拼音"
+  show_cantonese: "顯示粵語粵拼"
   reset: "重置"
   prev: "上一筆"
   play: "播放"
@@ -125,7 +131,7 @@ zh-Hant:
     characters_count: "9000+ 漢字"
     characters_desc: "支持 9000 多個常用簡體字和繁體字。漢字數據來自 <a target=\"_blank\" href=\"https://github.com/skishore/makemeahanzi\">Make Me a Hanzi</a> 項目。"
     proper_stroke_order: "正確筆畫順序"
-    proper_stroke_desc: "學習每個漢字的正確書寫方式，通過準確的逐筆動畫演示。對於書寫清晰和字符識別至關重要。"
+    proper_stroke_desc: "通過準確的逐筆動畫演示，學習每個漢字的正確書寫方式。對於書寫清晰和字符識別至關重要。"
     free_accessible: "免費且易用"
     free_accessible_desc: "無需註冊。支持任何有瀏覽器的設備。隨時隨地在電腦、平板或手機上練習。"
   about: "關於 Hanzi Guide"
@@ -147,3 +153,4 @@ zh-Hant:
     或其他語言學習應用學習中文？Hanzi Guide 是幫助您掌握漢字書寫的完美輔助工具。語言學習應用教您詞彙和語法，
     而 Hanzi Guide 專注於正確的筆畫順序和書寫技巧。與您喜愛的語言學習應用配合使用，全面發展中文語言技能。
     本站與 Duolingo 或任何其他語言學習平台無關聯或背書。
+  back_to_top: "回到頂部"
