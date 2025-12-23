@@ -233,16 +233,36 @@ async function getTranslation(characters) {
 
     var results = await lookupCedict(characters);
     var mainText = '';
-    var detailParts = [];
+    var mandarinParts = [];
+    var cantoneseParts = [];
 
     var hasFull = false;
-    if (results._full && results._full.d) {
-      // Show only the main gloss for the phrase
+    if (results._full && (results._full.d || results._full.cantoDef)) {
       hasFull = true;
-      mainText = results._full.d;
-      var fullDetail = characters + ': ' + results._full.d;
-      if (results._full.p) fullDetail += ' (' + results._full.p + ')';
-      detailParts.push(fullDetail);
+      
+      var hasMandarin = !!results._full.d;
+      var hasCanto = !!results._full.cantoDef;
+      
+      // Build main text - prefer one clear definition
+      if (hasCanto && hasMandarin) {
+        mainText = results._full.cantoDef + ' 粵 | ' + results._full.d + ' 普';
+      } else if (hasCanto) {
+        mainText = results._full.cantoDef + ' (粵語)';
+      } else {
+        mainText = results._full.d;
+      }
+      
+      // Add to appropriate sections
+      if (hasMandarin) {
+        var mandarinEntry = characters + ': ' + results._full.d;
+        if (results._full.p) mandarinEntry += ' (' + results._full.p + ')';
+        mandarinParts.push(mandarinEntry);
+      }
+      if (hasCanto) {
+        var cantoEntry = characters + ': ' + results._full.cantoDef;
+        if (results._full.cantoJyut) cantoEntry += ' (' + results._full.cantoJyut + ')';
+        cantoneseParts.push(cantoEntry);
+      }
     }
 
     var seen = {};
@@ -251,31 +271,62 @@ async function getTranslation(characters) {
       if (!ch || /\s/.test(ch)) continue;
       if (seen[ch]) continue;
       seen[ch] = true;
+      
       var entry = results[ch];
-      if (entry && entry.d) {
-        // Skip adding per-character detail if we already have _full for a single character
-        if (!(hasFull && characters.length === 1)) {
-          // Use allDefs for tooltip (includes all variants, surnames, etc.)
-          var defsText = entry.allDefs && entry.allDefs.length ? entry.allDefs.join(' / ') : entry.d;
-          var snippet = ch + ': ' + defsText;
-          if (entry.p) snippet += ' (' + entry.p + ')';
-          detailParts.push(snippet);
-        }
-        
-        if (!mainText) {
+      if (!entry || (!entry.d && !entry.cantoDef)) continue;
+      
+      // Skip adding per-character detail if we already have _full for a single character
+      if (hasFull && characters.length === 1) continue;
+      
+      var hasMandarin = !!entry.d;
+      var hasCanto = !!entry.cantoDef;
+      
+      // Add to Mandarin section
+      if (hasMandarin) {
+        var defsText = entry.allDefs && entry.allDefs.length ? 
+          entry.allDefs.join(' / ') : entry.d;
+        var mandarinEntry = ch + ': ' + defsText;
+        if (entry.p) mandarinEntry += ' (' + entry.p + ')';
+        mandarinParts.push(mandarinEntry);
+      }
+      
+      // Add to Cantonese section
+      if (hasCanto) {
+        var cantoDefsText = entry.cantoAllDefs && entry.cantoAllDefs.length ? 
+          entry.cantoAllDefs.join(' / ') : entry.cantoDef;
+        var cantoEntry = ch + ': ' + cantoDefsText;
+        if (entry.cantoJyut) cantoEntry += ' (' + entry.cantoJyut + ')';
+        cantoneseParts.push(cantoEntry);
+      }
+      
+      // Set main text if not already set
+      if (!mainText) {
+        if (hasCanto && hasMandarin) {
+          mainText = entry.cantoDef + ' 粵 | ' + entry.d + ' 普';
+        } else if (hasCanto) {
+          mainText = entry.cantoDef + ' (粵語)';
+        } else {
           mainText = entry.d;
         }
       }
     }
 
     if (!mainText) {
-      $('#translation-text').text('No CC-CEDICT entry found.');
+      $('#translation-text').text('No dictionary entry found.');
       return;
     }
 
     $('#translation-text').text(mainText);
 
-    var detailText = detailParts.join('\n');
+    // Build final detail text with grouped sections
+    var detailText = '';
+    if (mandarinParts.length > 0) {
+      detailText += '普通話 (Mandarin):\n' + mandarinParts.join('\n');
+    }
+    if (cantoneseParts.length > 0) {
+      if (mandarinParts.length > 0) detailText += '\n\n';
+      detailText += '粵語 (Cantonese):\n' + cantoneseParts.join('\n');
+    }
     var infoEl = ensureTranslationInfo();
     if (infoEl) {
       if (detailText) {

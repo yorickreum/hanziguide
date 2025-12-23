@@ -1,59 +1,55 @@
-// CC-CEDICT parsing worker - Rewritten for clarity
+// CC-CEDICT and CC-Canto parsing worker
 var DICT_VERSION = 'cedict-20251223-12';
-var SOURCE_URL = '/assets/cedict_ts.u8?v=' + DICT_VERSION;
+var CEDICT_URL = '/assets/cedict_ts.u8?v=' + DICT_VERSION;
+var CCCANTO_URL = '/assets/cccanto.u8?v=' + DICT_VERSION;
 var dictPromise = null;
 
+// Shared utility functions
+function filterDefs(defs) {
+  var filtered = defs.filter(function(d) {
+    if (!d || d.length < 2) return false;
+    var lower = d.toLowerCase();
+    if (lower.indexOf('surname') !== -1) return false;
+    if (lower.indexOf('classifier') !== -1) return false;
+    if (lower.startsWith('variant of')) return false;
+    if (lower.startsWith('abbr.')) return false;
+    if (lower.startsWith('see ')) return false;
+    var first = d.charAt(0);
+    if (first && first === first.toUpperCase() && first !== first.toLowerCase()) return false;
+    return true;
+  });
+  return filtered.length > 0 ? filtered : defs;
+}
+
+function pickBestDefs(defs, maxCount, isSingleChar) {
+  var sorted;
+  if (isSingleChar) {
+    sorted = defs.slice().sort(function(a, b) {
+      return (a ? a.length : 999) - (b ? b.length : 999);
+    });
+  } else {
+    sorted = defs.slice().sort(function(a, b) {
+      return (b ? b.length : 0) - (a ? a.length : 0);
+    });
+  }
+  var result = [];
+  var seen = {};
+  for (var i = 0; i < sorted.length && result.length < maxCount; i++) {
+    var d = sorted[i];
+    if (d && !seen[d]) {
+      seen[d] = true;
+      result.push(d);
+    }
+  }
+  return result;
+}
+
+// Parse CC-CEDICT (Mandarin dictionary)
 function parseCedict(text) {
   var charMap = {};
   var wordMap = {};
   var lines = text.split('\n');
   var lineRe = /(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+\/(.+)\//;
-
-  // Filter definitions for single characters: remove surname/classifier/variant/proper nouns
-  function filterDefs(defs) {
-    var filtered = defs.filter(function(d) {
-      if (!d || d.length < 2) return false;
-      var lower = d.toLowerCase();
-      // Skip various unwanted patterns
-      if (lower.indexOf('surname') !== -1) return false;
-      if (lower.indexOf('classifier') !== -1) return false;
-      if (lower.startsWith('variant of')) return false;
-      if (lower.startsWith('abbr.')) return false;
-      if (lower.startsWith('see ')) return false;
-      // Skip proper nouns (starts with capital)
-      var first = d.charAt(0);
-      if (first && first === first.toUpperCase() && first !== first.toLowerCase()) return false;
-      return true;
-    });
-    return filtered.length > 0 ? filtered : defs;
-  }
-
-  // Pick best definitions: prefer shorter, more common glosses for single chars
-  function pickBestDefs(defs, maxCount, isSingleChar) {
-    // For single characters, prefer concise definitions (mountain > small bundle of straw for silkworms)
-    var sorted;
-    if (isSingleChar) {
-      // Prefer shorter, more direct definitions
-      sorted = defs.slice().sort(function(a, b) {
-        return (a ? a.length : 999) - (b ? b.length : 999);
-      });
-    } else {
-      // For words, prefer longer/more descriptive
-      sorted = defs.slice().sort(function(a, b) {
-        return (b ? b.length : 0) - (a ? a.length : 0);
-      });
-    }
-    var result = [];
-    var seen = {};
-    for (var i = 0; i < sorted.length && result.length < maxCount; i++) {
-      var d = sorted[i];
-      if (d && !seen[d]) {
-        seen[d] = true;
-        result.push(d);
-      }
-    }
-    return result;
-  }
 
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i];
@@ -69,12 +65,10 @@ function parseCedict(text) {
 
     // Store word-level entries with smart overwrite for single chars
     if (headwordLen === 1) {
-      // Apply same quality logic as charMap
       var filtered = filterDefs(rawDefs);
       var best = pickBestDefs(filtered, 3, true);
       var newDef = best[0] || rawDefs[0] || '';
       
-      // Check if we should overwrite existing wordMap entries
       var wordKeys = [trad, simp];
       for (var wk = 0; wk < wordKeys.length; wk++) {
         var wordKey = wordKeys[wk];
@@ -84,11 +78,9 @@ function parseCedict(text) {
         } else if (existingWord.len === 1) {
           var existingIsBad = existingWord.d && existingWord.d.toLowerCase().indexOf('surname') !== -1;
           var newIsBad = newDef && newDef.toLowerCase().indexOf('surname') !== -1;
-          // Replace bad with good
           if (existingIsBad && !newIsBad) {
             wordMap[wordKey] = { p: pinyin, d: newDef, len: headwordLen };
           }
-          // Don't replace good with bad (skip)
         }
       }
     } else {
@@ -175,7 +167,7 @@ function parseCedict(text) {
         charMap[ch] = {
           p: pinyin,
           d: rawDefs[0] || '',
-          defs: [rawDefs[0] || ''],
+          defs: pickBestDefs(rawDefs, 3, false),
           allDefs: rawDefs,
           len: headwordLen
         };
@@ -209,15 +201,118 @@ function parseCedict(text) {
   return { charMap: charMap, wordMap: wordMap };
 }
 
+// Parse CC-Canto (Cantonese dictionary with jyutping)
+function parseCanto(text) {
+  var charMap = {};
+  var wordMap = {};
+  var lines = text.split('\n');
+  var lineRe = /(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+\{([^\}]+)\}\s+\/(.+)\//;
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    if (!line || line.charAt(0) === '#') continue;
+    var match = lineRe.exec(line);
+    if (!match) continue;
+
+    var trad = match[1];
+    var simp = match[2];
+    var pinyin = match[3];
+    var jyutping = match[4];
+    var rawDefs = match[5].split('/').filter(Boolean);
+    var headwordLen = trad.length;
+
+    // Store word-level entries
+    if (headwordLen === 1) {
+      var filtered = filterDefs(rawDefs);
+      var best = pickBestDefs(filtered, 3, true);
+      var newDef = best[0] || rawDefs[0] || '';
+      
+      var wordKeys = [trad, simp];
+      for (var wk = 0; wk < wordKeys.length; wk++) {
+        var wordKey = wordKeys[wk];
+        if (!wordMap[wordKey]) {
+          wordMap[wordKey] = { j: jyutping, d: newDef, len: headwordLen };
+        }
+      }
+    } else {
+      if (!wordMap[trad]) {
+        wordMap[trad] = { j: jyutping, d: rawDefs[0] || '', len: headwordLen };
+      }
+      if (!wordMap[simp]) {
+        wordMap[simp] = { j: jyutping, d: rawDefs[0] || '', len: headwordLen };
+      }
+    }
+
+    // Process each character
+    var chars = trad + simp;
+    for (var j = 0; j < chars.length; j++) {
+      var ch = chars[j];
+      if (!ch) continue;
+
+      var existing = charMap[ch];
+      
+      // Single-character headwords have priority
+      if (headwordLen === 1) {
+        var filtered = filterDefs(rawDefs);
+        var best = pickBestDefs(filtered, 3, true);
+        var newDef = best[0] || rawDefs[0] || '';
+        
+        if (!existing || existing.len > 1) {
+          charMap[ch] = {
+            j: jyutping,
+            d: newDef,
+            defs: best,
+            allDefs: rawDefs,
+            len: 1
+          };
+        }
+        continue;
+      }
+
+      // Multi-char entries only if no single-char exists
+      if (!existing) {
+        charMap[ch] = {
+          j: jyutping,
+          d: rawDefs[0] || '',
+          defs: pickBestDefs(rawDefs, 3, false),
+          allDefs: rawDefs,
+          len: headwordLen
+        };
+      }
+    }
+  }
+
+  return { charMap: charMap, wordMap: wordMap };
+}
+
 function ensureDict() {
   if (dictPromise) return dictPromise;
-  dictPromise = fetch(SOURCE_URL, { cache: 'reload' })
-    .then(function(resp) {
-      if (!resp.ok) throw new Error('Failed to fetch CC-CEDICT: ' + resp.status);
-      return resp.text();
-    })
-    .then(function(text) {
-      return parseCedict(text);
+  dictPromise = Promise.all([
+    fetch(CEDICT_URL, { cache: 'reload' })
+      .then(function(resp) {
+        if (!resp.ok) throw new Error('Failed to fetch CC-CEDICT: ' + resp.status);
+        return resp.text();
+      }),
+    fetch(CCCANTO_URL, { cache: 'reload' })
+      .then(function(resp) {
+        if (!resp.ok) throw new Error('Failed to fetch CC-Canto: ' + resp.status);
+        return resp.text();
+      })
+  ])
+    .then(function(results) {
+      var cedictText = results[0];
+      var ccantoText = results[1];
+      
+      // Parse both dictionaries separately
+      var cedictData = parseCedict(cedictText);
+      var ccantoData = parseCanto(ccantoText);
+      
+      return { 
+        charMap: cedictData.charMap, 
+        wordMap: cedictData.wordMap,
+        cantoCharMap: ccantoData.charMap,
+        cantoWordMap: ccantoData.wordMap
+      };
     });
   return dictPromise;
 }
@@ -231,12 +326,19 @@ self.onmessage = function(evt) {
     .then(function(payload) {
       var charMap = payload.charMap;
       var wordMap = payload.wordMap;
+      var cantoCharMap = payload.cantoCharMap;
+      var cantoWordMap = payload.cantoWordMap;
       var result = {};
 
       // Full phrase lookup (exact)
       var trimmed = input.trim();
       if (trimmed && wordMap[trimmed]) {
         result._full = { p: wordMap[trimmed].p, d: wordMap[trimmed].d };
+      }
+      if (trimmed && cantoWordMap[trimmed]) {
+        if (!result._full) result._full = {};
+        result._full.cantoDef = cantoWordMap[trimmed].d;
+        result._full.cantoJyut = cantoWordMap[trimmed].j;
       }
 
       // Per-character lookup
@@ -251,6 +353,13 @@ self.onmessage = function(evt) {
             defs: charMap[ch].defs,
             allDefs: charMap[ch].allDefs 
           };
+        }
+        if (cantoCharMap[ch]) {
+          if (!result[ch]) result[ch] = {};
+          result[ch].cantoDef = cantoCharMap[ch].d;
+          result[ch].cantoJyut = cantoCharMap[ch].j;
+          result[ch].cantoDefs = cantoCharMap[ch].defs;
+          result[ch].cantoAllDefs = cantoCharMap[ch].allDefs;
         }
       }
 
