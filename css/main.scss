@@ -135,3 +135,18 @@ $on-laptop:        800px;
     background-color: transparent;
   }
 }
+
+// Beginner characters responsive styling
+@media (max-width: 768px) {
+  .beginner-chars {
+    max-width: 100% !important;
+  }
+  .beginner-chars-content {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .char-buttons {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
