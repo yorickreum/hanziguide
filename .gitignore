@@ -24,3 +24,7 @@ vendor/
 # Build artifacts
 *.gem
 Gemfile.lock
+
+# CC-CEDICT download
+assets/cedict_ts.u8
+assets/cedict_ts.u8.gz

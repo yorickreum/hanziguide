@@ -5,6 +5,11 @@ var updateTimeout = null;
 var isPlaying = false;
 var animationPromise = null;
 var strokeSpeedFactor = 1; // 1 = normal speed
+var translationTimeout = null;
+var cedictWorker = null;
+var cedictPending = {};
+var cedictSeq = 0;
+var translationInfoEl = null;
 
 // Initialize OpenCC converters
 var converterToTraditional = null;
@@ -33,10 +38,267 @@ function convertText(text, targetScript) {
   return text;
 }
 
+function ensureCedictWorker() {
+  if (cedictWorker) {
+    return cedictWorker;
+  }
+  cedictWorker = new Worker('/assets/js/cedict-worker.js');
+
+  cedictWorker.onmessage = function(evt) {
+    var msg = evt.data || {};
+    if (!msg.id || !cedictPending[msg.id]) return;
+    var pending = cedictPending[msg.id];
+    clearTimeout(pending.timer);
+    delete cedictPending[msg.id];
+    if (msg.error) {
+      pending.reject(new Error(msg.error));
+    } else {
+      pending.resolve(msg.result || {});
+    }
+  };
+
+  cedictWorker.onerror = function(err) {
+    console.error('CC-CEDICT worker error:', err);
+    // Reject all pending requests and clean up
+    for (var id in cedictPending) {
+      if (cedictPending.hasOwnProperty(id)) {
+        var pending = cedictPending[id];
+        clearTimeout(pending.timer);
+        pending.reject(new Error('CC-CEDICT worker error: ' + (err.message || err)));
+        delete cedictPending[id];
+      }
+    }
+  };
+
+  return cedictWorker;
+}
+
+function ensureTranslationInfo() {
+  if (translationInfoEl) return translationInfoEl;
+  var container = document.getElementById('translation-display');
+  if (!container) return null;
+  translationInfoEl = document.createElement('span');
+  translationInfoEl.id = 'translation-info';
+  translationInfoEl.style.marginLeft = '6px';
+  translationInfoEl.style.cursor = 'pointer';
+  translationInfoEl.style.color = '#888';
+  translationInfoEl.setAttribute('tabindex', '0');
+  translationInfoEl.setAttribute('role', 'button');
+  translationInfoEl.setAttribute('aria-label', 'Show detailed definitions');
+  translationInfoEl.innerHTML = '<i class="fas fa-info-circle"></i>';
+  container.appendChild(translationInfoEl);
+  
+  // Create toast element
+  var toastEl = document.createElement('div');
+  toastEl.id = 'definition-toast';
+  toastEl.style.position = 'fixed';
+  toastEl.style.top = '50%';
+  toastEl.style.left = '50%';
+  toastEl.style.transform = 'translate(-50%, -50%)';
+  toastEl.style.display = 'none';
+  toastEl.style.backgroundColor = '#fff';
+  toastEl.style.color = '#333';
+  toastEl.style.padding = '16px 20px';
+  toastEl.style.borderRadius = '8px';
+  toastEl.style.fontSize = '14px';
+  toastEl.style.zIndex = '1000';
+  toastEl.style.maxWidth = '450px';
+  toastEl.style.minWidth = '300px';
+  toastEl.style.whiteSpace = 'pre-wrap';
+  toastEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  toastEl.style.border = '1px solid #ddd';
+  toastEl.style.fontFamily = 'inherit';
+  toastEl.style.lineHeight = '1.5';
+  
+  var closeBtn = document.createElement('button');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '8px';
+  closeBtn.style.right = '12px';
+  closeBtn.style.border = 'none';
+  closeBtn.style.background = 'transparent';
+  closeBtn.style.fontSize = '24px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#999';
+  closeBtn.style.padding = '0';
+  closeBtn.style.lineHeight = '1';
+  closeBtn.setAttribute('aria-label', 'Close');
+  
+  var contentEl = document.createElement('div');
+  contentEl.style.paddingRight = '20px';
+  
+  toastEl.appendChild(closeBtn);
+  toastEl.appendChild(contentEl);
+  document.body.appendChild(toastEl);
+  
+  var isToastVisible = false;
+  
+  function showToast() {
+    var detail = translationInfoEl.getAttribute('data-detail') || translationInfoEl.getAttribute('title') || '';
+    if (!detail) return;
+    
+    contentEl.textContent = detail;
+    toastEl.style.display = 'block';
+    isToastVisible = true;
+  }
+  
+  function hideToast() {
+    toastEl.style.display = 'none';
+    isToastVisible = false;
+  }
+  
+  // Click info icon to toggle
+  translationInfoEl.onclick = function(e) {
+    e.stopPropagation();
+    if (isToastVisible) {
+      hideToast();
+    } else {
+      showToast();
+    }
+  };
+  
+  // Close button
+  closeBtn.onclick = function(e) {
+    e.stopPropagation();
+    hideToast();
+  };
+  
+  // Keyboard support
+  translationInfoEl.onkeydown = function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (isToastVisible) {
+        hideToast();
+      } else {
+        showToast();
+      }
+    }
+  };
+  
+  closeBtn.onkeydown = function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      hideToast();
+    }
+  };
+  
+  // Escape to close
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isToastVisible) {
+      hideToast();
+    }
+  });
+  
+  return translationInfoEl;
+}
+
+function lookupCedict(text) {
+  if (!text || text.trim() === '') {
+    return Promise.resolve({});
+  }
+
+  ensureCedictWorker();
+  return new Promise(function(resolve, reject) {
+    var id = 'cedict-' + (++cedictSeq);
+    
+    // Create timeout that auto-rejects after 30 seconds
+    var timer = setTimeout(function() {
+      if (cedictPending[id]) {
+        delete cedictPending[id];
+        reject(new Error('CC-CEDICT lookup timeout'));
+      }
+    }, 30000);
+    
+    cedictPending[id] = { resolve: resolve, reject: reject, timer: timer };
+    try {
+      cedictWorker.postMessage({ id: id, type: 'lookup', text: text });
+    } catch (err) {
+      clearTimeout(timer);
+      delete cedictPending[id];
+      reject(err);
+    }
+  });
+}
+
+// Function to get translation from CC-CEDICT via Web Worker
+async function getTranslation(characters) {
+  if (!characters || characters.trim() === '') {
+    $('#translation-display').hide();
+    return;
+  }
+
+  try {
+    $('#translation-text').text('....');
+    $('#translation-display').show();
+
+    var results = await lookupCedict(characters);
+    var mainText = '';
+    var detailParts = [];
+
+    var hasFull = false;
+    if (results._full && results._full.d) {
+      // Show only the main gloss for the phrase
+      hasFull = true;
+      mainText = results._full.d;
+      var fullDetail = characters + ': ' + results._full.d;
+      if (results._full.p) fullDetail += ' (' + results._full.p + ')';
+      detailParts.push(fullDetail);
+    }
+
+    var seen = {};
+    for (var i = 0; i < characters.length; i++) {
+      var ch = characters[i];
+      if (!ch || /\s/.test(ch)) continue;
+      if (seen[ch]) continue;
+      seen[ch] = true;
+      var entry = results[ch];
+      if (entry && entry.d) {
+        // Use allDefs for tooltip (includes all variants, surnames, etc.)
+        var defsText = entry.allDefs && entry.allDefs.length ? entry.allDefs.join(' / ') : entry.d;
+        var snippet = ch + ': ' + defsText;
+        if (entry.p) snippet += ' (' + entry.p + ')';
+        detailParts.push(snippet);
+        
+        if (!mainText) {
+          mainText = entry.d;
+        }
+      }
+    }
+
+    if (!mainText) {
+      $('#translation-text').text('No CC-CEDICT entry found.');
+      return;
+    }
+
+    $('#translation-text').text(mainText);
+
+    var detailText = detailParts.join('\n');
+    var infoEl = ensureTranslationInfo();
+    if (infoEl) {
+      if (detailText) {
+        infoEl.style.display = 'inline';
+        infoEl.setAttribute('title', detailText);
+        infoEl.setAttribute('data-detail', detailText);
+      } else {
+        infoEl.style.display = 'none';
+        infoEl.removeAttribute('title');
+        infoEl.removeAttribute('data-detail');
+      }
+    }
+    // Fallback tooltip on main text
+    $('#translation-text').attr('title', detailText || '');
+    $('#translation-display').show();
+  } catch (error) {
+    console.error('Translation error:', error);
+    $('#translation-display').hide();
+  }
+}
+
 function updateCharacter() {
   var inputText = $('#character-select').val().trim();
   if (!inputText) {
     $('#animation-target').html('<p style="padding: 20px; color: #999;">Enter characters above to see them here</p>');
+    $('#translation-display').hide();
     animationWriters = [];
     return;
   }
@@ -49,6 +311,14 @@ function updateCharacter() {
   // Clear old writers
   animationWriters = [];
   currentStrokeIndex = 0;
+
+  // Debounce translation API call
+  if (translationTimeout) {
+    clearTimeout(translationTimeout);
+  }
+  translationTimeout = setTimeout(function() {
+    getTranslation(characters);
+  }, 500); // Wait 500ms after user stops typing
 
   // Split into individual characters
   var charArray = characters.split('');

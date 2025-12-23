@@ -92,6 +92,14 @@ Copyright © CanCLID contributors
 
 ---
 
+### CC-CEDICT Dictionary Data
+
+Chinese-English definitions are sourced from [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cc-cedict) (latest public dump), licensed under [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/). You may reuse and adapt this data with proper attribution and share-alike terms.
+
+CC-CEDICT is maintained by the community; attribution should reference the CC-CEDICT project and the upstream download page above.
+
+---
+
 ### Privacy & Data
 
 Hanzi Guide does not collect, store, or transmit any personal data. The site uses browser `sessionStorage` locally to remember your character selections between page loads. This data never leaves your device and is automatically cleared when you close your browser. No cookies, analytics, or tracking scripts are used.
