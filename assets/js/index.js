@@ -253,11 +253,14 @@ async function getTranslation(characters) {
       seen[ch] = true;
       var entry = results[ch];
       if (entry && entry.d) {
-        // Use allDefs for tooltip (includes all variants, surnames, etc.)
-        var defsText = entry.allDefs && entry.allDefs.length ? entry.allDefs.join(' / ') : entry.d;
-        var snippet = ch + ': ' + defsText;
-        if (entry.p) snippet += ' (' + entry.p + ')';
-        detailParts.push(snippet);
+        // Skip adding per-character detail if we already have _full for a single character
+        if (!(hasFull && characters.length === 1)) {
+          // Use allDefs for tooltip (includes all variants, surnames, etc.)
+          var defsText = entry.allDefs && entry.allDefs.length ? entry.allDefs.join(' / ') : entry.d;
+          var snippet = ch + ': ' + defsText;
+          if (entry.p) snippet += ' (' + entry.p + ')';
+          detailParts.push(snippet);
+        }
         
         if (!mainText) {
           mainText = entry.d;
