@@ -67,6 +67,7 @@ zh:
   subtitle: "学习正确的笔画顺序书写汉字"
   nav:
     practice: "演示"
+    howto: "使用教程"
     github: "GitHub"
   stroke_order_animation: "笔画顺序动画"
   character_label: "汉字"
