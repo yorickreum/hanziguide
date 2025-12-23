@@ -3,6 +3,7 @@ en:
   subtitle: "Learn to write Hanzi with proper stroke order"
   nav:
     practice: "Practice"
+    howto: "How To"
     github: "GitHub"
   stroke_order_animation: "Stroke Order Animation"
   character_label: "Character(s)"
@@ -55,6 +56,11 @@ en:
     by Duolingo or any other language learning platform.
   back_to_top: "Back to top"
   stroke_speed: "Stroke speed"
+  beginner_chars_title: "Beginner Characters"
+  basic_numbers: "Numbers (1-10)"
+  common_greetings: "Common Characters"
+  simple_chars: "Simple Characters"
+  common_words: "Common Words"
 
 zh:
   title: "Hanzi Guide"
@@ -106,6 +112,11 @@ zh:
     本站与 Duolingo 或任何其他语言学习平台无关联或背书。
   back_to_top: "回到顶部"
   stroke_speed: "笔画速度"
+  beginner_chars_title: "初学者汉字"
+  basic_numbers: "数字 (1-10)"
+  common_greetings: "常用汉字"
+  simple_chars: "简单汉字"
+  common_words: "常用词语"
 
 
 zh-Hant:
@@ -113,6 +124,7 @@ zh-Hant:
   subtitle: "學習正確的筆畫順序書寫漢字"
   nav:
     practice: "演示"
+    howto: "使用教程"
     github: "GitHub"
   stroke_order_animation: "筆畫順序動畫"
   character_label: "漢字"
@@ -158,3 +170,8 @@ zh-Hant:
     本站與 Duolingo 或任何其他語言學習平台無關聯或背書。
   back_to_top: "回到頂部"
   stroke_speed: "筆畫速度"
+  beginner_chars_title: "初學者漢字"
+  basic_numbers: "數字 (1-10)"
+  common_greetings: "常用漢字"
+  simple_chars: "簡單漢字"
+  common_words: "常用詞語"

@@ -356,6 +356,29 @@ $(function() {
 			updateCharacter();
 		});
 
+		// Handle beginner character button clicks
+		$('.char-btn').on('click', function(evt) {
+			evt.preventDefault();
+			var char = $(this).data('char');
+			$('#character-select').val(char);
+			sessionStorage.setItem('hanziguide_chars', char);
+			updateCharacter();
+		});
+
+		// Handle beginner characters collapse/expand
+		$('#beginner-chars-toggle').on('click', function() {
+			var content = $('#beginner-chars-content');
+			var icon = $('#beginner-chars-icon');
+			
+			if (content.is(':visible')) {
+				content.slideUp(300);
+				icon.css('transform', 'rotate(0deg)');
+			} else {
+				content.slideDown(300);
+				icon.css('transform', 'rotate(180deg)');
+			}
+		});
+
 		// Also handle form submission (Enter key)
 		$('.js-char-form').on('submit', function(evt) {
 			evt.preventDefault();

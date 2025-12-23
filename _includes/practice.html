@@ -78,16 +78,83 @@
           <span id="speed-slider-label">1×</span>
         </small>
       </div>
-      <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; border: 1px solid #ddd;">
-        <div class="checkbox" style="margin-bottom: 8px;">
-          <label>
+      <div style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; border: 1px solid #ddd; display: inline-block;">
+        <div class="checkbox" style="margin-bottom: 5px;">
+          <label style="font-size: 14px;">
             <input type="checkbox" checked="checked" id="show-mandarin" /> {{ t.show_mandarin }}
           </label>
         </div>
         <div class="checkbox" style="margin-bottom: 0;">
-          <label>
+          <label style="font-size: 14px;">
             <input type="checkbox" id="show-cantonese" /> {{ t.show_cantonese }}
           </label>
+        </div>
+      </div>
+      <br><br>
+      <!-- Beginner Character Selection -->
+      <div class="beginner-chars" style="margin: 0; background-color: #f8f9fa; border-radius: 6px; border: 1px solid #dee2e6; display: inline-block; max-width: 100%;">
+        <div class="beginner-chars-header" style="padding: 10px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px;" id="beginner-chars-toggle">
+          <h6 style="margin: 0; color: #6c757d; white-space: nowrap; font-size: 14px; font-weight: 500;">{{ t.beginner_chars_title }}</h6>
+          <i class="fas fa-chevron-down" id="beginner-chars-icon" style="color: #999; transition: transform 0.3s; font-size: 12px;"></i>
+        </div>
+        <div class="beginner-chars-content" id="beginner-chars-content" style="display: none; padding: 10px 15px 15px 15px; min-width: 450px;">
+        
+        <div class="char-category" style="margin-bottom: 10px;">
+          <h6 style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500;">{{ t.basic_numbers }}</h6>
+          <div class="char-buttons">
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="一" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">一</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="二" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">二</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="三" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">三</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="四" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">四</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="五" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">五</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="六" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">六</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="七" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">七</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="八" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">八</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="九" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">九</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="十" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">十</button>
+          </div>
+        </div>
+
+        <div class="char-category" style="margin-bottom: 10px;">
+          <h6 style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500;">{{ t.common_greetings }}</h6>
+          <div class="char-buttons">
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="你" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">你</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="好" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">好</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="我" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">我</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="他" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">他</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="她" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">她</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="谢" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">谢</button>
+          </div>
+        </div>
+
+        <div class="char-category" style="margin-bottom: 10px;">
+          <h6 style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500;">{{ t.simple_chars }}</h6>
+          <div class="char-buttons">
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="人" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">人</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="口" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">口</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="日" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">日</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="月" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">月</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="水" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">水</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="火" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">火</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="木" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">木</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="山" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">山</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="田" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">田</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="大" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">大</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="小" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">小</button>
+          </div>
+        </div>
+
+        <div class="char-category">
+          <h6 style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500;">{{ t.common_words }}</h6>
+          <div class="char-buttons">
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="你好" style="margin: 2px; padding: 3px 8px; font-size: 13px;">你好</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="谢谢" style="margin: 2px; padding: 3px 8px; font-size: 13px;">谢谢</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="早上好" style="margin: 2px; padding: 3px 8px; font-size: 13px;">早上好</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="晚安" style="margin: 2px; padding: 3px 8px; font-size: 13px;">晚安</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="爸爸" style="margin: 2px; padding: 3px 8px; font-size: 13px;">爸爸</button>
+            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="妈妈" style="margin: 2px; padding: 3px 8px; font-size: 13px;">妈妈</button>
+          </div>
+        </div>
         </div>
       </div>
     </form>
