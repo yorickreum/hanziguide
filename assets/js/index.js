@@ -421,7 +421,7 @@ function updateCharacter() {
         
         // Get Mandarin pinyin
         if (showMandarin && typeof pinyinPro !== 'undefined') {
-          var pinyinText = pinyinPro.pinyin(char, { toneType: 'symbol' });
+          var pinyinText = pinyinPro.pinyin(char);
           if (pinyinText) {
             pronunciations.push(pinyinText + ' (P)');
           }
