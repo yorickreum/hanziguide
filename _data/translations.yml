@@ -54,6 +54,7 @@ en:
     language learning app to develop well-rounded Chinese language skills. Not affiliated with or endorsed
     by Duolingo or any other language learning platform.
   back_to_top: "Back to top"
+  stroke_speed: "Stroke speed"
 
 zh:
   title: "Hanzi Guide"
@@ -104,6 +105,8 @@ zh:
     而 Hanzi Guide 专注于正确的笔画顺序和书写技巧。与您喜爱的语言学习应用配合使用，全面发展中文语言技能。
     本站与 Duolingo 或任何其他语言学习平台无关联或背书。
   back_to_top: "回到顶部"
+  stroke_speed: "笔画速度"
+
 
 zh-Hant:
   title: "Hanzi Guide"
@@ -154,3 +157,4 @@ zh-Hant:
     而 Hanzi Guide 專注於正確的筆畫順序和書寫技巧。與您喜愛的語言學習應用配合使用，全面發展中文語言技能。
     本站與 Duolingo 或任何其他語言學習平台無關聯或背書。
   back_to_top: "回到頂部"
+  stroke_speed: "筆畫速度"

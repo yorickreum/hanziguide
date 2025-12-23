@@ -4,6 +4,7 @@ var currentStrokeIndex = 0;
 var updateTimeout = null;
 var isPlaying = false;
 var animationPromise = null;
+var strokeSpeedFactor = 1; // 1 = normal speed
 
 // Initialize OpenCC converters
 var converterToTraditional = null;
@@ -83,7 +84,58 @@ function updateCharacter() {
       height: size,
       padding: 5,
       showOutline: shouldShowOutline('animation'),
-      showCharacter: false
+      showCharacter: false, 
+      drawingWidth: 25, 
+      strokeWidth: 25,
+      charDataLoader: function(loadChar) {
+        return HanziWriter.loadCharacterData(loadChar).then(function(charData) {
+          var svg = document.querySelector('#' + animDiv.id + ' svg');
+          if (svg && !svg.getAttribute('data-has-grid')) {
+            var ns = 'http://www.w3.org/2000/svg';
+            var width = size;
+            var height = size;
+
+            var grid = document.createElementNS(ns, 'g');
+            grid.setAttribute('stroke', '#f48c8c');
+            grid.setAttribute('stroke-width', '1');
+            grid.setAttribute('stroke-dasharray', '4,4');
+
+            var centerV = document.createElementNS(ns, 'line');
+            centerV.setAttribute('x1', width / 2);
+            centerV.setAttribute('y1', 0);
+            centerV.setAttribute('x2', width / 2);
+            centerV.setAttribute('y2', height);
+
+            var centerH = document.createElementNS(ns, 'line');
+            centerH.setAttribute('x1', 0);
+            centerH.setAttribute('y1', height / 2);
+            centerH.setAttribute('x2', width);
+            centerH.setAttribute('y2', height / 2);
+
+            var diag1 = document.createElementNS(ns, 'line');
+            diag1.setAttribute('x1', 0);
+            diag1.setAttribute('y1', height);
+            diag1.setAttribute('x2', width);
+            diag1.setAttribute('y2', 0);
+
+            var diag2 = document.createElementNS(ns, 'line');
+            diag2.setAttribute('x1', 0);
+            diag2.setAttribute('y1', 0);
+            diag2.setAttribute('x2', width);
+            diag2.setAttribute('y2', height);
+
+            grid.appendChild(diag1);
+            grid.appendChild(diag2);
+            grid.appendChild(centerV);
+            grid.appendChild(centerH);
+
+            svg.insertBefore(grid, svg.firstChild);
+            svg.setAttribute('data-has-grid', 'true');
+          }
+
+          return charData;
+        });
+      }
     });
     
     // Try to access character data after writer is created
@@ -98,7 +150,7 @@ function updateCharacter() {
         if (showMandarin && typeof pinyinPro !== 'undefined') {
           var pinyinText = pinyinPro.pinyin(char, { toneType: 'symbol' });
           if (pinyinText) {
-            pronunciations.push(pinyinText + ' (M)');
+            pronunciations.push(pinyinText + ' (P)');
           }
         }
         
@@ -106,7 +158,7 @@ function updateCharacter() {
         if (showCantonese && typeof ToJyutping !== 'undefined') {
           var jyutpingText = ToJyutping.getJyutpingText(char);
           if (jyutpingText) {
-            pronunciations.push(jyutpingText + ' (C)');
+            pronunciations.push(jyutpingText + ' (J)');
           }
         }
         
@@ -134,8 +186,19 @@ function getTotalStrokes() {
   }, 0);
 }
 
+function updateStrokeSliderMax() {
+  var total = getTotalStrokes();
+  var slider = document.getElementById('stroke-slider');
+  var label = document.getElementById('stroke-slider-label');
+  if (!slider || !label) return;
+  slider.max = String(total);
+  slider.value = String(currentStrokeIndex);
+  label.textContent = currentStrokeIndex + ' / ' + total;
+}
+
 function renderCurrentState(animate) {
   if (animationWriters.length === 0) return;
+  updateStrokeSliderMax();
   
   if (currentStrokeIndex === 0) {
     // No strokes to show, hide everything
@@ -159,6 +222,7 @@ function renderCurrentState(animate) {
       for (var s = 0; s < charStrokes; s++) {
         if (strokeCount === currentStrokeIndex - 1) {
           writer.animateStroke(s, {
+							duration: 1500 / strokeSpeedFactor,
             onComplete: function() {
               var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
               animationWriters.forEach(function(writer) {
@@ -221,6 +285,19 @@ function renderCurrentState(animate) {
     }
   }
 }
+
+  // Stroke timeline slider
+  var strokeSlider = document.getElementById('stroke-slider');
+  if (strokeSlider) {
+    strokeSlider.addEventListener('input', function() {
+      var total = getTotalStrokes();
+      currentStrokeIndex = parseInt(this.value, 10) || 0;
+      if (currentStrokeIndex < 0) currentStrokeIndex = 0;
+      if (currentStrokeIndex >= total) currentStrokeIndex = total - 1; // Adjusted to prevent out of bounds
+      // Re-render without animation for scrubbing
+      renderCurrentState(false);
+    });
+  }
 
 function shouldShowOutline(demoType) {
 	return $('#' + demoType + '-show-outline').prop('checked');
@@ -323,30 +400,37 @@ $(function() {
 					var totalCharStrokes = writer._character ? writer._character.strokes.length : 0;
 					var strokeIdx = 0;
 					
-					var animateStrokeByStroke = function() {
-						if (!isPlaying) {
-							return;
-						}
-						if (strokeIdx >= totalCharStrokes) {
-							// Move to next character
-							setTimeout(function() {
-								if (isPlaying) {
-									animateNext(index + 1);
-								}
-							}, 300);
-							return;
-						}
-						
-						writer.animateStroke(strokeIdx, {
-							onComplete: function() {
-								currentStrokeIndex++;
-								strokeIdx++;
-								if (isPlaying) {
-									animateStrokeByStroke();
-								}
-							}
-						});
-					};
+            var animateStrokeByStroke = function() {
+              if (!isPlaying) {
+                return;
+              }
+              if (strokeIdx >= totalCharStrokes) {
+                // Move to next character after a small gap
+                var nextGap = 400 / strokeSpeedFactor;
+                setTimeout(function() {
+                  if (isPlaying) {
+                    animateNext(index + 1);
+                  }
+                }, nextGap);
+                return;
+              }
+							
+            writer.animateStroke(strokeIdx, {
+              duration: 1500 / strokeSpeedFactor,
+                onComplete: function() {
+                  currentStrokeIndex++;
+                  strokeIdx++;
+                  if (!isPlaying) return;
+                  // Gap between strokes also depends on speed
+                  var gap = 200 / strokeSpeedFactor;
+                  setTimeout(function() {
+                    if (isPlaying) {
+                      animateStrokeByStroke();
+                    }
+                  }, gap);
+                }
+              });
+            };
 					
 					animateStrokeByStroke();
 				};
@@ -354,6 +438,20 @@ $(function() {
 				animateNext(0);
 			}
 		});
+
+    // Stroke speed slider
+    var $speedSlider = $('#speed-slider');
+    var $speedLabel = $('#speed-slider-label');
+    if ($speedSlider.length) {
+      $speedSlider.on('input change', function() {
+        var val = parseFloat($(this).val()) || 1;
+        strokeSpeedFactor = val;
+        if ($speedLabel.length) {
+          var text = val.toFixed(2).replace(/\.00$/, '').replace(/\.50$/, '.5');
+          $speedLabel.text(text + '×');
+        }
+      });
+    }
 
     $('#animate-next').on('click', function(evt) {
       evt.preventDefault();
@@ -395,14 +493,19 @@ $(function() {
 			updateCharacter();
 		});
 
-	// Handle draw mode toggle
-	$('#draw-mode').on('change', function() {
-		if ($(this).is(':checked')) {
-			startDrawMode();
-		} else {
-			stopDrawMode();
-		}
-	});
+  // Handle draw mode toggle
+  $('#draw-mode').on('change', function() {
+    var isOn = $(this).is(':checked');
+    var $speedWrapper = $('#speed-slider').closest('div');
+    // Show slider only when NOT in draw mode
+    if (isOn) {
+      $speedWrapper.stop(true, true).fadeOut(200);
+      startDrawMode();
+    } else {
+      $speedWrapper.stop(true, true).fadeIn(200);
+      stopDrawMode();
+    }
+  });
 
     function startDrawMode() {
       // Disable navigation buttons in draw mode

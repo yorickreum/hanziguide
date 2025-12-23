@@ -43,6 +43,66 @@ $on-laptop:        800px;
     }
 }
 
+// Slider styling for speed control
+#speed-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: $grey-color-light;
+    outline: none;
+}
+
+#speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: $brand-color;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+#speed-slider::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: $grey-color-light;
+}
+
+#speed-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: $brand-color;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+#speed-slider::-ms-track {
+    height: 6px;
+    border-color: transparent;
+    color: transparent;
+    background: transparent;
+}
+
+#speed-slider::-ms-fill-lower,
+#speed-slider::-ms-fill-upper {
+    background: $grey-color-light;
+    border-radius: 3px;
+}
+
+#speed-slider::-ms-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: $brand-color;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
 
 
 // Import partials from `sass_dir` (defaults to `_sass`)
@@ -54,3 +114,12 @@ $on-laptop:        800px;
     "demo",
         "license"
 ;
+#speed-slider {
+  background: $grey-color-light;
+}
+
+#speed-slider::-webkit-slider-thumb,
+#speed-slider::-moz-range-thumb,
+#speed-slider::-ms-thumb {
+  background: $brand-color;
+}

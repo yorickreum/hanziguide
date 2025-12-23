@@ -69,6 +69,15 @@
       </div>
       <button class="btn btn-info" id="share-btn"><i class="fas fa-share-alt"></i> {{ t.share }}</button>
       <br><br>
+      <div style="width: 80%; margin: 0 auto 10px auto; text-align: center;">
+        <label for="speed-slider" class="text-muted" style="display:block;">
+        {{ t.stroke_speed }}
+        </label>
+        <input type="range" id="speed-slider" min="0.25" max="2" step="0.25" value="1" style="width: 100%;">
+        <small class="text-muted">
+          <span id="speed-slider-label">1×</span>
+        </small>
+      </div>
       <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; border: 1px solid #ddd;">
         <div class="checkbox" style="margin-bottom: 8px;">
           <label>
