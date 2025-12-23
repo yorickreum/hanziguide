@@ -1,7 +1,20 @@
 {% assign t = site.data.translations[page.lang] %}
 <script>
-  // Client-side router: extract chars from path immediately
+  // Client-side router: extract chars from hash or path
   (function() {
+    // First check for hash-based routing (e.g., /#三)
+    var hash = window.location.hash.substring(1); // Remove #
+    if (hash) {
+      try {
+        window.HANZI_PATH_CHARS = decodeURIComponent(hash);
+        console.log('Extracted chars from hash:', hash);
+        return;
+      } catch (e) {
+        console.error('Failed to decode hash:', e);
+      }
+    }
+    
+    // Fallback to path-based routing (e.g., /三)
     var path = window.location.pathname.replace(/^\/+|\/+$/g, '');
     // Strip language prefix if present
     if (path.startsWith('cn/')) {
@@ -12,7 +25,9 @@
     // Filter out language paths and special pages
     if (path && path !== '404.html' && path !== 'index.html' && path !== 'cn' && path !== 'tw' && !path.includes('.')) {
       // Store path for the demo script
-      window.HANZI_PATH_CHARS = decodeURIComponent(path);      console.log('Extracted chars from path:', path);    }
+      window.HANZI_PATH_CHARS = decodeURIComponent(path);
+      console.log('Extracted chars from path:', path);
+    }
   })();
 </script>
 <div class="demo container" id="practice">
