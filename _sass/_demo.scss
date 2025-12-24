@@ -42,6 +42,20 @@
 }
 .char-select-form {
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+}
+
+.beginner-chars-btn {
+  margin-left: 10px;
+  
+  @media (max-width: 768px) {
+    margin-left: 0;
+    margin-top: 10px;
+    display: inline-block;
+  }
 }
 
 .language-script-settings {
