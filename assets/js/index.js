@@ -717,21 +717,22 @@ $(function() {
 			var char = $(this).data('char');
 			$('#character-select').val(char);
 			sessionStorage.setItem('hanziguide_chars', char);
+			$('#beginner-chars-modal').fadeOut(200);
 			updateCharacter();
 		});
 
-		// Handle beginner characters collapse/expand
-		$('#beginner-chars-toggle').on('click', function() {
-			var content = $('#beginner-chars-content');
-			var icon = $('#beginner-chars-icon');
-			
-			if (content.is(':visible')) {
-				content.slideUp(300);
-				icon.css('transform', 'rotate(0deg)');
-			} else {
-				content.slideDown(300);
-				icon.css('transform', 'rotate(180deg)');
-			}
+		// Handle beginner characters modal
+		$('#open-beginner-chars-btn').on('click', function() {
+			$('#beginner-chars-modal').fadeIn(200);
+		});
+
+		$('#close-beginner-chars-btn, .beginner-chars-modal-overlay').on('click', function() {
+			$('#beginner-chars-modal').fadeOut(200);
+		});
+
+		// Prevent closing when clicking inside modal content
+		$('.beginner-chars-modal-content').on('click', function(e) {
+			e.stopPropagation();
 		});
 
 		// Also handle form submission (Enter key)

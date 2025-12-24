@@ -46,6 +46,9 @@
         {{ t.character_label }}
       </label>
       <input type="text" class="form-control character-select" id="character-select" placeholder="{{ t.character_placeholder }}" maxlength="6" value="你好" />
+      <button type="button" class="btn btn-default" id="open-beginner-chars-btn" style="margin-left: 10px;">
+        <i class="fas fa-list"></i> {{ t.beginner_chars_title }}
+      </button>
     </div>
   </form>
 
@@ -73,7 +76,6 @@
         <button class="btn btn-primary" id="animate-play"><i class="fas fa-play"></i> {{ t.play }}</button>
         <button class="btn btn-default" id="animate-next">{{ t.next }} <i class="fas fa-chevron-right"></i></button>
       </div>
-      <button class="btn btn-info" id="share-btn"><i class="fas fa-share-alt"></i> {{ t.share }}</button>
       <br><br>
       <!-- Settings -->
       <div class="language-script-settings">
@@ -103,74 +105,79 @@
           <small id="speed-slider-label">1×</small>
         </div>
       </div>
+      <br>
+      <button class="btn btn-info" id="share-btn"><i class="fas fa-share-alt"></i> {{ t.share }}</button>
       <br><br>
-      <!-- Beginner Character Selection -->
-      <div class="beginner-chars" style="margin: 0; background-color: #f8f9fa; border-radius: 6px; border: 1px solid #dee2e6; display: inline-block; max-width: 100%;">
-        <div class="beginner-chars-header" style="padding: 10px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px;" id="beginner-chars-toggle">
-          <span style="margin: 0; color: #6c757d; white-space: nowrap; font-size: 14px; font-weight: 500;">{{ t.beginner_chars_title }}</span>
-          <i class="fas fa-chevron-down" id="beginner-chars-icon" style="color: #999; transition: transform 0.3s; font-size: 12px;"></i>
-        </div>
-        <div class="beginner-chars-content" id="beginner-chars-content" style="display: none; padding: 10px 15px 15px 15px; min-width: 450px;">
-        
-        <div class="char-category" style="margin-bottom: 10px;">
-          <span style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500; display: block;">{{ t.basic_numbers }}</span>
-          <div class="char-buttons">
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="一" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">一</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="二" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">二</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="三" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">三</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="四" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">四</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="五" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">五</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="六" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">六</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="七" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">七</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="八" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">八</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="九" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">九</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="十" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">十</button>
-          </div>
-        </div>
+    </form>
+  </div>
+</div>
 
-        <div class="char-category" style="margin-bottom: 10px;">
-          <span style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500; display: block;">{{ t.common_greetings }}</span>
-          <div class="char-buttons">
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="你" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">你</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="好" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">好</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="我" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">我</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="他" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">他</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="她" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">她</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="谢" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">谢</button>
-          </div>
-        </div>
-
-        <div class="char-category" style="margin-bottom: 10px;">
-          <span style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500; display: block;">{{ t.simple_chars }}</span>
-          <div class="char-buttons">
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="人" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">人</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="口" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">口</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="日" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">日</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="月" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">月</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="水" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">水</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="火" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">火</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="木" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">木</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="山" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">山</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="田" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">田</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="大" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">大</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="小" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">小</button>
-          </div>
-        </div>
-
-        <div class="char-category">
-          <span style="font-size: 12px; color: #999; margin-bottom: 5px; font-weight: 500; display: block;">{{ t.common_words }}</span>
-          <div class="char-buttons">
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="你好" style="margin: 2px; padding: 3px 8px; font-size: 13px;">你好</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="谢谢" style="margin: 2px; padding: 3px 8px; font-size: 13px;">谢谢</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="早上好" style="margin: 2px; padding: 3px 8px; font-size: 13px;">早上好</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="晚安" style="margin: 2px; padding: 3px 8px; font-size: 13px;">晚安</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="爸爸" style="margin: 2px; padding: 3px 8px; font-size: 13px;">爸爸</button>
-            <button class="btn btn-sm btn-outline-secondary char-btn" data-char="妈妈" style="margin: 2px; padding: 3px 8px; font-size: 13px;">妈妈</button>
-          </div>
-        </div>
+<!-- Beginner Characters Modal -->
+<div id="beginner-chars-modal" class="beginner-chars-modal" style="display: none;">
+  <div class="beginner-chars-modal-overlay"></div>
+  <div class="beginner-chars-modal-content">
+    <div class="beginner-chars-modal-header">
+      <h4 style="margin: 0; font-size: 18px;">{{ t.beginner_chars_title }}</h4>
+      <button type="button" class="close-modal-btn" id="close-beginner-chars-btn">×</button>
+    </div>
+    <div class="beginner-chars-modal-body">
+      <div class="char-category" style="margin-bottom: 15px;">
+        <span style="font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; display: block;">{{ t.basic_numbers }}</span>
+        <div class="char-buttons">
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="一" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">一</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="二" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">二</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="三" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">三</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="四" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">四</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="五" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">五</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="六" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">六</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="七" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">七</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="八" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">八</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="九" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">九</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="十" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">十</button>
         </div>
       </div>
-    </form>
+
+      <div class="char-category" style="margin-bottom: 15px;">
+        <span style="font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; display: block;">{{ t.common_greetings }}</span>
+        <div class="char-buttons">
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="你" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">你</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="好" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">好</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="我" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">我</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="他" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">他</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="她" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">她</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="谢" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">谢</button>
+        </div>
+      </div>
+
+      <div class="char-category" style="margin-bottom: 15px;">
+        <span style="font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; display: block;">{{ t.simple_chars }}</span>
+        <div class="char-buttons">
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="人" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">人</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="口" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">口</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="日" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">日</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="月" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">月</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="水" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">水</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="火" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">火</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="木" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">木</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="山" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">山</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="田" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">田</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="大" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">大</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="小" style="margin: 2px; min-width: 38px; padding: 3px 8px; font-size: 13px;">小</button>
+        </div>
+      </div>
+
+      <div class="char-category">
+        <span style="font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; display: block;">{{ t.common_words }}</span>
+        <div class="char-buttons">
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="你好" style="margin: 2px; padding: 3px 8px; font-size: 13px;">你好</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="谢谢" style="margin: 2px; padding: 3px 8px; font-size: 13px;">谢谢</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="早上好" style="margin: 2px; padding: 3px 8px; font-size: 13px;">早上好</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="晚安" style="margin: 2px; padding: 3px 8px; font-size: 13px;">晚安</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="爸爸" style="margin: 2px; padding: 3px 8px; font-size: 13px;">爸爸</button>
+          <button class="btn btn-sm btn-outline-secondary char-btn" data-char="妈妈" style="margin: 2px; padding: 3px 8px; font-size: 13px;">妈妈</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

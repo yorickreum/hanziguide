@@ -259,3 +259,70 @@
     margin-right: auto;
   }
 }
+
+// Beginner Characters Modal
+.beginner-chars-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  
+  .beginner-chars-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .beginner-chars-modal-content {
+    position: relative;
+    background: white;
+    margin: 50px auto;
+    max-width: 600px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1051;
+    
+    @media (max-width: 768px) {
+      margin: 20px;
+      max-height: calc(100vh - 40px);
+    }
+  }
+  
+  .beginner-chars-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    
+    .close-modal-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      line-height: 1;
+      color: #999;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+  
+  .beginner-chars-modal-body {
+    padding: 20px;
+  }
+}
