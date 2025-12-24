@@ -232,9 +232,11 @@ async function getTranslation(characters) {
     $('#translation-display').show();
 
     var results = await lookupCedict(characters);
+    var showMandarin = $('#show-mandarin').prop('checked');
+    var showCantonese = $('#show-cantonese').prop('checked');
+    
     var mainText = '';
-    var mandarinParts = [];
-    var cantoneseParts = [];
+    var detailParts = [];
 
     var hasFull = false;
     if (results._full && (results._full.d || results._full.cantoDef)) {
@@ -243,26 +245,38 @@ async function getTranslation(characters) {
       var hasMandarin = !!results._full.d;
       var hasCanto = !!results._full.cantoDef;
       
-      // Build main text - prefer one clear definition
-      if (hasCanto && hasMandarin) {
-        mainText = results._full.cantoDef + ' 粵 | ' + results._full.d + ' 普';
+      // Build main text based on user preferences
+      if (showMandarin && showCantonese && hasMandarin && hasCanto) {
+        // Both selected and available - show both with labels
+        mainText = '粵 ' + results._full.cantoDef + ' | 普 ' + results._full.d;
+      } else if (showCantonese && hasCanto) {
+        mainText = results._full.cantoDef;
+      } else if (showMandarin && hasMandarin) {
+        mainText = results._full.d;
       } else if (hasCanto) {
-        mainText = results._full.cantoDef + ' (粵語)';
-      } else {
+        mainText = results._full.cantoDef;
+      } else if (hasMandarin) {
         mainText = results._full.d;
       }
       
-      // Add to appropriate sections
-      if (hasMandarin) {
-        var mandarinEntry = characters + ': ' + results._full.d;
-        if (results._full.p) mandarinEntry += ' (' + results._full.p + ')';
-        mandarinParts.push(mandarinEntry);
+      // Build detail based on preferences
+      var detail = '';
+      if (showMandarin && showCantonese && hasMandarin && hasCanto) {
+        // Both selected - show with section headers
+        detail += '【粵語 Cantonese】\n';
+        detail += characters + ': ' + results._full.cantoDef;
+        if (results._full.cantoJyut) detail += ' (' + results._full.cantoJyut + ')';
+        detail += '\n\n【普通話 Mandarin】\n';
+        detail += characters + ': ' + results._full.d;
+        if (results._full.p) detail += ' (' + results._full.p + ')';
+      } else if (showMandarin && hasMandarin) {
+        detail += characters + ': ' + results._full.d;
+        if (results._full.p) detail += ' (' + results._full.p + ')';
+      } else if (showCantonese && hasCanto) {
+        detail += characters + ': ' + results._full.cantoDef;
+        if (results._full.cantoJyut) detail += ' (' + results._full.cantoJyut + ')';
       }
-      if (hasCanto) {
-        var cantoEntry = characters + ': ' + results._full.cantoDef;
-        if (results._full.cantoJyut) cantoEntry += ' (' + results._full.cantoJyut + ')';
-        cantoneseParts.push(cantoEntry);
-      }
+      if (detail) detailParts.push(detail);
     }
 
     var seen = {};
@@ -281,31 +295,46 @@ async function getTranslation(characters) {
       var hasMandarin = !!entry.d;
       var hasCanto = !!entry.cantoDef;
       
-      // Add to Mandarin section
-      if (hasMandarin) {
-        var defsText = entry.allDefs && entry.allDefs.length ? 
-          entry.allDefs.join(' / ') : entry.d;
-        var mandarinEntry = ch + ': ' + defsText;
-        if (entry.p) mandarinEntry += ' (' + entry.p + ')';
-        mandarinParts.push(mandarinEntry);
-      }
-      
-      // Add to Cantonese section
-      if (hasCanto) {
+      // Build detail based on preferences
+      var detail = '';
+      if (showMandarin && showCantonese && hasMandarin && hasCanto) {
+        // Both selected - show with section headers
+        detail += '【粵語 Cantonese】\n';
         var cantoDefsText = entry.cantoAllDefs && entry.cantoAllDefs.length ? 
           entry.cantoAllDefs.join(' / ') : entry.cantoDef;
-        var cantoEntry = ch + ': ' + cantoDefsText;
-        if (entry.cantoJyut) cantoEntry += ' (' + entry.cantoJyut + ')';
-        cantoneseParts.push(cantoEntry);
+        detail += ch + ': ' + cantoDefsText;
+        if (entry.cantoJyut) detail += ' (' + entry.cantoJyut + ')';
+        detail += '\n\n【普通話 Mandarin】\n';
+        var defsText = entry.allDefs && entry.allDefs.length ? 
+          entry.allDefs.join(' / ') : entry.d;
+        detail += ch + ': ' + defsText;
+        if (entry.p) detail += ' (' + entry.p + ')';
+      } else if (showMandarin && hasMandarin) {
+        var defsText = entry.allDefs && entry.allDefs.length ? 
+          entry.allDefs.join(' / ') : entry.d;
+        detail += ch + ': ' + defsText;
+        if (entry.p) detail += ' (' + entry.p + ')';
+      } else if (showCantonese && hasCanto) {
+        var cantoDefsText = entry.cantoAllDefs && entry.cantoAllDefs.length ? 
+          entry.cantoAllDefs.join(' / ') : entry.cantoDef;
+        detail += ch + ': ' + cantoDefsText;
+        if (entry.cantoJyut) detail += ' (' + entry.cantoJyut + ')';
       }
+      
+      if (detail) detailParts.push(detail);
       
       // Set main text if not already set
       if (!mainText) {
-        if (hasCanto && hasMandarin) {
-          mainText = entry.cantoDef + ' 粵 | ' + entry.d + ' 普';
+        if (showMandarin && showCantonese && hasMandarin && hasCanto) {
+          // Both selected and available - show both with labels
+          mainText = '粵 ' + entry.cantoDef + ' | 普 ' + entry.d;
+        } else if (showCantonese && hasCanto) {
+          mainText = entry.cantoDef;
+        } else if (showMandarin && hasMandarin) {
+          mainText = entry.d;
         } else if (hasCanto) {
-          mainText = entry.cantoDef + ' (粵語)';
-        } else {
+          mainText = entry.cantoDef;
+        } else if (hasMandarin) {
           mainText = entry.d;
         }
       }
@@ -318,15 +347,7 @@ async function getTranslation(characters) {
 
     $('#translation-text').text(mainText);
 
-    // Build final detail text with grouped sections
-    var detailText = '';
-    if (mandarinParts.length > 0) {
-      detailText += '普通話 (Mandarin):\n' + mandarinParts.join('\n');
-    }
-    if (cantoneseParts.length > 0) {
-      if (mandarinParts.length > 0) detailText += '\n\n';
-      detailText += '粵語 (Cantonese):\n' + cantoneseParts.join('\n');
-    }
+    var detailText = detailParts.join('\n\n');
     var infoEl = ensureTranslationInfo();
     if (infoEl) {
       if (detailText) {
@@ -658,6 +679,16 @@ $(function() {
 			}
 		}
 		
+		// Restore checkbox states from sessionStorage before first render
+		var showMandarin = sessionStorage.getItem('show-mandarin');
+		var showCantonese = sessionStorage.getItem('show-cantonese');
+		if (showMandarin !== null) {
+			$('#show-mandarin').prop('checked', showMandarin === 'true');
+		}
+		if (showCantonese !== null) {
+			$('#show-cantonese').prop('checked', showCantonese === 'true');
+		}
+		
 		updateCharacter();
 
 		// Auto-update on typing with debounce
@@ -837,6 +868,9 @@ $(function() {
 
 		// Add listeners for pronunciation checkboxes
 		$('#show-mandarin, #show-cantonese').on('change', function() {
+			var id = $(this).attr('id');
+			var isChecked = $(this).prop('checked');
+			sessionStorage.setItem(id, isChecked);
 			updateCharacter();
 		});
 

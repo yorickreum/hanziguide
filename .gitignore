@@ -28,3 +28,7 @@ Gemfile.lock
 # CC-CEDICT download
 assets/cedict_ts.u8
 assets/cedict_ts.u8.gz
+
+# CC-Canto download
+assets/cccanto.u8
+assets/cccanto.zip

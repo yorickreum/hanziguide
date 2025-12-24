@@ -38,6 +38,17 @@
   
   <hr class="demo-divider" />
 
+  <!-- Language Selection -->
+  <div style="background-color: #f5f5f5; padding: 10px 15px; border: 1px solid #ddd; display: inline-block; margin-bottom: 20px;">
+    <label class="checkbox" style="font-size: 14px; font-weight: normal; margin: 0 15px 0 0; display: inline-flex; align-items: center;">
+      <input type="checkbox" checked="checked" id="show-mandarin" style="margin: 0 6px 0 0;" /> {{ t.mandarin_label }}
+    </label>
+    <label class="checkbox" style="font-size: 14px; font-weight: normal; margin: 0; display: inline-flex; align-items: center;">
+      <input type="checkbox" id="show-cantonese" style="margin: 0 6px 0 0;" /> {{ t.cantonese_label }}
+    </label>
+  </div>
+  <br>
+
   <!-- <h4>{{ t.stroke_order_animation }}</h4>-->
   
   <form class="form-inline char-select-form js-char-form">
@@ -93,18 +104,6 @@
         <small class="text-muted">
           <span id="speed-slider-label">1×</span>
         </small>
-      </div>
-      <div style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; border: 1px solid #ddd; display: inline-block;">
-        <div class="checkbox" style="margin-bottom: 5px;">
-          <label style="font-size: 14px;">
-            <input type="checkbox" checked="checked" id="show-mandarin" /> {{ t.show_mandarin }}
-          </label>
-        </div>
-        <div class="checkbox" style="margin-bottom: 0;">
-          <label style="font-size: 14px;">
-            <input type="checkbox" id="show-cantonese" /> {{ t.show_cantonese }}
-          </label>
-        </div>
       </div>
       <br><br>
       <!-- Beginner Character Selection -->
