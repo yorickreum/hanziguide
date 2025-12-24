@@ -1,0 +1,304 @@
+---
+layout: default
+title: How To – Stroke Order
+permalink: /howto/stroke-order/
+---
+
+<style>
+  .char {
+    font-size: 2em;
+    font-weight: 600;
+  }
+  .example-box {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+  }
+  .example-item {
+    margin-bottom: 8px;
+  }
+  .example-item:last-child {
+    margin-bottom: 0;
+  }
+  .char-grid {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 15px;
+    background-color: #f8f9fa;
+    padding: 0 10px; /* tighter vertical padding on desktop */
+    border-radius: 6px;
+    margin: 0;
+    flex-wrap: wrap;
+  }
+  .char-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex: 0 1 calc(33.333% - 20px);
+    max-width: calc(33.333% - 10px);
+  }
+  .char-item .char {
+    font-size: 24px;
+    line-height: 1.1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .char-item .desc {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    text-align: center;
+    margin-top: 0;
+  }
+  .char-grid.single-row {
+    flex-wrap: nowrap;
+  }
+  .char-grid.single-row .char-item {
+    flex: 0 0 auto;
+    max-width: none;
+    min-width: auto;
+  }
+  .char-grid.stroke-grid .char-item {
+    flex: 0 1 calc(25% - 15px);
+    max-width: calc(25% - 15px);
+    margin-bottom: 5px;
+  }
+  .char-grid.stroke-grid .char-item .char {
+    font-size: 2em;
+  }
+  @media (width: 768px) {
+    .char-grid {
+      flex-wrap: wrap;
+    }
+    .char-grid.single-row {
+      flex-wrap: wrap;
+    }
+    .char-item {
+      flex: 0 1 calc(50% - 15px);
+      max-width: calc(50% - 15px);
+    }
+    .char-grid.stroke-grid .char-item {
+      flex: 0 1 calc(33.333% - 12px);
+      max-width: calc(33.333% - 12px);
+    }
+  }
+
+  /* Extra vertical padding for stroke grid only on small screens */
+  @media (max-width: 600px) {
+    .char-grid.stroke-grid {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+  /* Stroke rules table buttons */
+  .stroke-rules-table .btn {
+    font-size: 18px;
+    padding: 5px 8px;
+    border-radius: 3px;
+  }
+
+  /* Align rule text and arrows in first column */
+  .stroke-rule-left,
+  .stroke-rule-arrow,
+  .stroke-rule-right {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .stroke-rule-left {
+    min-width: 120px; /* desktop alignment */
+  }
+  .stroke-rule-arrow {
+    width: 24px;
+    text-align: center;
+  }
+  .stroke-rule-right {
+    margin-left: 85px; /* desktop spacing */
+  }
+
+  /* Align arrow text nicely in first column (desktop) */
+  .stroke-rules-table td:first-child {
+    white-space: nowrap;
+  }
+
+  /* Prevent horizontal scrolling – page should scroll vertically only */
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Make main container responsive on small screens */
+  .container[style*="width: 800px"] {
+    width: 100% !important;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+
+  /* Ensure stroke rules table fits viewport width */
+  .stroke-rules-table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  .stroke-rules-table td,
+  .stroke-rules-table th {
+    word-wrap: break-word;
+  }
+
+  /* Relax table alignment rules on small screens */
+  @media (max-width: 600px) {
+    .stroke-rules-table td:first-child {
+      white-space: normal; /* allow wrapping on phone */
+    }
+    .stroke-rule-left,
+    .stroke-rule-arrow,
+    .stroke-rule-right {
+      min-width: 0;
+      width: auto;
+      margin: 0;
+    }
+    .stroke-rule-right {
+      margin-left: 4px; /* small gap after arrow */
+    }
+  }
+
+  /* Make stroke rules table columns roughly 50% / 50% */
+  .stroke-rules-table td:first-child,
+  .stroke-rules-table th:first-child {
+    width: 60%;
+  }
+  .stroke-rules-table td:last-child,
+  .stroke-rules-table th:last-child {
+    width: 40%;
+  }
+</style>
+
+<div class="container" style="width: 800px; padding-top: 40px; padding-bottom: 60px;">
+
+<h1>Stroke Order Basics</h1>
+
+<p>Stroke order is very important. It helps writing speed, recognition, dictionary lookup, and most importantly, it will help you to remember the characters better.</p>
+
+
+<h2>Basic Stroke Types</h2>
+<p>Chinese characters are built from basic strokes. Here are the main categories:</p>
+<div class="char-grid stroke-grid">
+  <div class="char-item"><span class="desc">横 (héng)</span><span class="char">一</span><span class="desc">horizontal</span></div>
+  <div class="char-item"><span class="desc">豎 (shù)</span><span class="char">丨</span><span class="desc">vertical</span></div>
+  <div class="char-item"><span class="desc">撇 (piě)</span><span class="char">丿</span><span class="desc">left diagonal</span></div>
+  <div class="char-item"><span class="desc">捺 (nà)</span><span class="char">㇏</span><span class="desc">right diagonal</span></div>
+  <div class="char-item"><span class="desc">點 (diǎn)</span><span class="char">丶</span><span class="desc">dot</span></div>
+  <div class="char-item"><span class="desc">挑 (tí)</span><span class="char">㇀</span><span class="desc">upward</span></div>
+  <div class="char-item"><span class="desc">鈎 (gōu)</span><span class="char">亅</span><span class="desc">hook</span></div>
+  <div class="char-item"><span class="desc">折 (zhé)</span><span class="char">乛</span><span class="desc">bend</span></div>
+</div>
+
+<h2>Stroke Order Rules</h2>
+<table class="table table-bordered stroke-rules-table" style="max-width: 100%; background-color: #f8f9fa;">
+  <tbody>
+    <tr>
+      <td><strong>Basic Rules</strong></td>
+      <td><strong>Try</strong></td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">Top</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">Bottom</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/#三">三</a>
+        <a class="btn btn-xs btn-default" href="/#言">言</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">Left</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">Right</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/#川">川</a>
+        <a class="btn btn-xs btn-default" href="/#明">明</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">Horizontal</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">Vertical</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/#十">十</a>
+        <a class="btn btn-xs btn-default" href="/#苦">苦</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">Left Diagonal</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">Right Diagonal</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/#八">八</a>
+        <a class="btn btn-xs btn-default" href="/#公">公</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">Outside</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">Inside</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/#回">回</a>
+        <a class="btn btn-xs btn-default" href="/#向">向</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">Inside</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">Closing stroke last</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/#日">日</a>
+        <a class="btn btn-xs btn-default" href="/#因">因</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">Center vertical</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">Sides</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/#小">小</a>
+        <a class="btn btn-xs btn-default" href="/#水">水</a>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+
+<h2>Writing Tips</h2>
+<ul>
+  <li>Use squared paper (田字格 grid).</li>
+  <li>Practice slowly with correct stroke order.</li>
+  <li>Memorize characters by <strong>chunks</strong>, not random strokes.</li>
+  <li>Don't draw — <strong>write</strong> with confidence and firm strokes.</li>
+  <li>Review often — repetition matters.</li>
+</ul>
+
+<p>
+  Ready to practice? Go back to the <a href="/">interactive practice tool</a> and watch the animated stroke order for any character.
+</p>
+
+</div>
