@@ -44,6 +44,91 @@
   margin-bottom: 20px;
 }
 
+.language-script-settings {
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  
+  .settings-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    white-space: nowrap;
+    
+    label {
+      display: inline-flex;
+      align-items: center;
+      font-size: 14px;
+      font-weight: normal;
+      margin: 0;
+      cursor: pointer;
+      white-space: nowrap;
+      
+      input {
+        margin: 0 6px 0 0;
+        cursor: pointer;
+      }
+    }
+    
+    &.speed-slider-group {
+      gap: 8px;
+      
+      label {
+        font-size: 13px;
+      }
+      
+      input[type="range"] {
+        width: 120px;
+      }
+      
+      small {
+        min-width: 28px;
+        text-align: center;
+        color: #6c757d;
+        font-size: 13px;
+      }
+    }
+  }
+  
+  .settings-divider {
+    width: 1px;
+    height: 30px;
+    background-color: #ddd;
+    align-self: stretch;
+  }
+  
+  @media (max-width: 1000px) {
+    flex-wrap: wrap;
+    gap: 10px;
+    
+    .settings-divider {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    
+    .settings-group {
+      justify-content: center;
+      
+      &.speed-slider-group {
+        input[type="range"] {
+          flex: 1;
+          min-width: 120px;
+        }
+      }
+    }
+  }
+}
+
 .demo-controls {
   margin: 10px auto;
   padding: 10px;

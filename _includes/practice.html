@@ -38,17 +38,6 @@
   
   <hr class="demo-divider" />
 
-  <!-- Language Selection -->
-  <div style="background-color: #f5f5f5; padding: 10px 15px; border: 1px solid #ddd; display: inline-block; margin-bottom: 20px;">
-    <label class="checkbox" style="font-size: 14px; font-weight: normal; margin: 0 15px 0 0; display: inline-flex; align-items: center;">
-      <input type="checkbox" checked="checked" id="show-mandarin" style="margin: 0 6px 0 0;" /> {{ t.mandarin_label }}
-    </label>
-    <label class="checkbox" style="font-size: 14px; font-weight: normal; margin: 0; display: inline-flex; align-items: center;">
-      <input type="checkbox" id="show-cantonese" style="margin: 0 6px 0 0;" /> {{ t.cantonese_label }}
-    </label>
-  </div>
-  <br>
-
   <!-- <h4>{{ t.stroke_order_animation }}</h4>-->
   
   <form class="form-inline char-select-form js-char-form">
@@ -57,24 +46,14 @@
         {{ t.character_label }}
       </label>
       <input type="text" class="form-control character-select" id="character-select" placeholder="{{ t.character_placeholder }}" maxlength="6" value="你好" />
-      <div id="translation-display" class="translation-display-position" style="margin-top: 10px; display: none; width: fit-content; text-align: left;" role="status" aria-live="polite" aria-atomic="true">
-        <strong>{{ t.translation_label }}</strong> <span id="translation-text"></span>
-      </div>
-    </div>
-    <div class="form-group script-selector">
-      <label class="radio-label">
-        <input type="radio" name="script-type" value="simplified" checked />
-        <span>{{ t.script_simplified }}</span>
-      </label>
-      <label class="radio-label">
-        <input type="radio" name="script-type" value="traditional" />
-        <span>{{ t.script_traditional }}</span>
-      </label>
     </div>
   </form>
 
   <p>{{ t.watch_description }}</p>
   <div class="demo-target" id="animation-target"></div>
+  <div id="translation-display" class="translation-display-position" style="margin: 15px auto; display: none; width: fit-content; max-width: 90%; text-align: left;" role="status" aria-live="polite" aria-atomic="true">
+    <strong>{{ t.translation_label }}</strong> <span id="translation-text"></span>
+  </div>
   <div class="demo-controls">
     <form class="form-inline">
       <div class="checkbox">
@@ -96,14 +75,33 @@
       </div>
       <button class="btn btn-info" id="share-btn"><i class="fas fa-share-alt"></i> {{ t.share }}</button>
       <br><br>
-      <div style="width: 80%; margin: 0 auto 10px auto; text-align: center;">
-        <label for="speed-slider" class="text-muted" style="display:block;">
-        {{ t.stroke_speed }}
-        </label>
-        <input type="range" id="speed-slider" min="0.25" max="2" step="0.25" value="1" style="width: 100%;">
-        <small class="text-muted">
-          <span id="speed-slider-label">1×</span>
-        </small>
+      <!-- Settings -->
+      <div class="language-script-settings">
+        <div class="settings-group">
+          <label>
+            <input type="checkbox" checked="checked" id="show-mandarin" /> {{ t.mandarin_label }}
+          </label>
+          <label>
+            <input type="checkbox" id="show-cantonese" /> {{ t.cantonese_label }}
+          </label>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-group">
+          <label>
+            <input type="radio" name="script-type" value="simplified" checked /> {{ t.script_simplified }}
+          </label>
+          <label>
+            <input type="radio" name="script-type" value="traditional" /> {{ t.script_traditional }}
+          </label>
+        </div>
+        <div class="settings-divider"></div>
+        <div class="settings-group speed-slider-group">
+          <label for="speed-slider">
+            {{ t.stroke_speed }}
+          </label>
+          <input type="range" id="speed-slider" min="0.25" max="2" step="0.25" value="1">
+          <small id="speed-slider-label">1×</small>
+        </div>
       </div>
       <br><br>
       <!-- Beginner Character Selection -->
