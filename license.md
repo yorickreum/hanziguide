@@ -102,7 +102,14 @@ CC-CEDICT is maintained by the community; attribution should reference the CC-CE
 
 ### Privacy & Data
 
-Hanzi Guide does not collect, store, or transmit any personal data. The site uses browser `sessionStorage` locally to remember your character selections between page loads. This data never leaves your device and is automatically cleared when you close your browser. No cookies, analytics, or tracking scripts are used.
+Hanzi Guide is designed with privacy in mind. We use a self-hosted instance of **Matomo**, a privacy-respecting analytics platform, to understand how the site is used and improve the experience for learners. 
+
+- **Self-hosted:** All data stays on our own server and is never shared with third parties.
+- **Privacy-friendly:** IP addresses are anonymized, and we respect "Do Not Track" settings.
+- **No Cookies:** Matomo is configured to run without using any tracking cookies.
+- **Local Storage:** The site uses browser `sessionStorage` locally to remember your character selections between page loads. This data never leaves your device and is automatically cleared when you close your browser.
+
+For more details, please see our [Impressum](/impressum.html).
 
 ---
 
