@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+assets_dir="${root_dir}/assets"
+
+mkdir -p "${assets_dir}"
+
+cedict_url="https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz"
+cedict_gz="${assets_dir}/cedict_ts.u8.gz"
+cedict_out="${assets_dir}/cedict_ts.u8"
+
+echo "Downloading CC-CEDICT..."
+curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
+  "${cedict_url}" -o "${cedict_gz}"
+gunzip -f "${cedict_gz}"
+ls -lh "${cedict_out}"
+
+cccanto_url="https://cantonese.org/cccanto-170202.zip"
+cccanto_zip="${assets_dir}/cccanto.zip"
+cccanto_out="${assets_dir}/cccanto.u8"
+
+echo "Downloading CC-Canto..."
+curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
+  "${cccanto_url}" -o "${cccanto_zip}"
+unzip -o "${cccanto_zip}" -d "${assets_dir}"
+mv "${assets_dir}/cccanto-webdist.txt" "${cccanto_out}"
+rm "${cccanto_zip}"
+ls -lh "${cccanto_out}"

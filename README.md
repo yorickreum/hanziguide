@@ -39,12 +39,17 @@
    bundle install
    ```
 
-3. **Run the development server**:
+3. **Download dictionary data**:
+   ```bash
+   ./scripts/fetch-dicts.sh
+   ```
+
+4. **Run the development server**:
    ```bash
    bundle exec jekyll serve
    ```
 
-4. **View the site**: Open your browser and navigate to `http://localhost:4000`
+5. **View the site**: Open your browser and navigate to `http://localhost:4000`
 
 ## 🛠️ Technology Stack
 

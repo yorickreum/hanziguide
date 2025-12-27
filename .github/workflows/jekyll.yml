@@ -37,24 +37,8 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
 
-      - name: Download latest CC-CEDICT
-        run: |
-          mkdir -p assets
-          curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
-            https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz \
-            -o assets/cedict_ts.u8.gz
-          gunzip -f assets/cedict_ts.u8.gz
-          ls -lh assets/cedict_ts.u8
-
-      - name: Download CC-Canto
-        run: |
-          curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
-            https://cantonese.org/cccanto-170202.zip \
-            -o assets/cccanto.zip
-          unzip -o assets/cccanto.zip -d assets
-          mv assets/cccanto-webdist.txt assets/cccanto.u8
-          rm assets/cccanto.zip
-          ls -lh assets/cccanto.u8
+      - name: Fetch dictionaries
+        run: bash scripts/fetch-dicts.sh
 
       - name: Build with Jekyll
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
