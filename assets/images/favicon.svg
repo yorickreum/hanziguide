@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
-  <rect width="120" height="120" fill="#2b2b2b"/>
-  <text x="60" y="85" dominant-baseline="middle" text-anchor="middle"
+  <rect width="110" height="110" x="5" y="5" rx="20" fill="#2b2b2b"/>
+  <text x="60" y="64" dominant-baseline="middle" text-anchor="middle"
         font-family="Noto Serif SC, 'Microsoft YaHei', 'PingFang SC', serif"
-        font-size="80" fill="white" font-weight="bold">
+        font-size="70" fill="white" font-weight="bold">
     漢
   </text>
 </svg>
