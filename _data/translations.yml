@@ -4,6 +4,8 @@ en:
   nav:
     practice: "Practice"
     howto: "How To"
+    stroke_order: "Stroke Order"
+    radicals: "Radicals"
     github: "GitHub"
   stroke_order_animation: "Stroke Order Animation"
   character_label: "Character(s)"
@@ -70,8 +72,10 @@ zh:
   title: "Hanzi Guide"
   subtitle: "学习正确的笔画顺序书写汉字"
   nav:
-    practice: "演示"
+    practice: "演示和练习"
     howto: "使用教程"
+    stroke_order: "笔画顺序"
+    radicals: "部首"
     github: "GitHub"
   stroke_order_animation: "笔画顺序动画"
   character_label: "汉字"
@@ -136,8 +140,10 @@ zh-Hant:
   title: "Hanzi Guide"
   subtitle: "學習正確的筆畫順序書寫漢字"
   nav:
-    practice: "演示"
+    practice: "演示和練習"
     howto: "使用教程"
+    stroke_order: "筆畫順序"
+    radicals: "部首"
     github: "GitHub"
   stroke_order_animation: "筆畫順序動畫"
   character_label: "漢字"

@@ -1,7 +1,7 @@
 ---
-layout: default
+layout: default.zh-Hant
 title: How To – Stroke Order
-permalink: /howto/stroke-order/
+permalink: /tw/howto/stroke-order/
 ---
 
 <style>
@@ -137,6 +137,14 @@ permalink: /howto/stroke-order/
     overflow-x: hidden;
   }
 
+  /* Make main container responsive on small screens */
+  .container[style*="width: 800px"] {
+    width: 100% !important;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+
   /* Ensure stroke rules table fits viewport width */
   .stroke-rules-table {
     width: 100%;
@@ -183,13 +191,15 @@ permalink: /howto/stroke-order/
 
 <div class="container" style="max-width: 1200px; margin: 0 auto; padding-top: 40px; padding-bottom: 60px;">
 
-<h1>Stroke Order Basics</h1>
+<h1>筆畫順序基礎</h1>
 
-<p>Stroke order is very important. It helps writing speed, recognition, dictionary lookup, and most importantly, it will help you to remember the characters better.</p>
+<p>筆畫順序非常重要。 
+      它有助於書寫速度、識別、查字典， 
+      最重要的是，它將幫助你更好地記住漢字。</p>
 
 
-<h2>Basic Stroke Types</h2>
-<p>Chinese characters are built from basic strokes. Here are the main categories:</p>
+<h2>基本筆畫類型</h2>
+<p>漢字由基本筆畫組成。以下是主要類別：</p>
 <div class="char-grid stroke-grid">
   <div class="char-item">
     <span class="desc"><strong>横</strong> - <strong>Horizontal</strong></span>
@@ -233,88 +243,88 @@ permalink: /howto/stroke-order/
   </div>
 </div>
 
-<h2>Stroke Order Rules</h2>
+<h2>筆畫順序規則</h2>
 <table class="table table-bordered stroke-rules-table" style="max-width: 100%; background-color: #f8f9fa;">
   <tbody>
     <tr>
-      <td><strong>Basic Rules</strong></td>
-      <td><strong>Try</strong></td>
+      <td><strong>基本規則</strong></td>
+      <td><strong>嘗試</strong></td>
     </tr>
     <tr>
       <td>
-        <span class="stroke-rule-left">Top</span>
+        <span class="stroke-rule-left">上</span>
         <span class="stroke-rule-arrow">➜</span>
-        <span class="stroke-rule-right">Bottom</span>
+        <span class="stroke-rule-right">下</span>
       </td>
       <td>
-        <a class="btn btn-xs btn-default" href="/#三">三</a>
-        <a class="btn btn-xs btn-default" href="/#言">言</a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <span class="stroke-rule-left">Left</span>
-        <span class="stroke-rule-arrow">➜</span>
-        <span class="stroke-rule-right">Right</span>
-      </td>
-      <td>
-        <a class="btn btn-xs btn-default" href="/#川">川</a>
-        <a class="btn btn-xs btn-default" href="/#明">明</a>
+        <a class="btn btn-xs btn-default" href="/tw/#三">三</a>
+        <a class="btn btn-xs btn-default" href="/tw/#言">言</a>
       </td>
     </tr>
     <tr>
       <td>
-        <span class="stroke-rule-left">Horizontal</span>
+        <span class="stroke-rule-left">左</span>
         <span class="stroke-rule-arrow">➜</span>
-        <span class="stroke-rule-right">Vertical</span>
+        <span class="stroke-rule-right">右</span>
       </td>
       <td>
-        <a class="btn btn-xs btn-default" href="/#十">十</a>
-        <a class="btn btn-xs btn-default" href="/#苦">苦</a>
+        <a class="btn btn-xs btn-default" href="/tw/#川">川</a>
+        <a class="btn btn-xs btn-default" href="/tw/#明">明</a>
       </td>
     </tr>
     <tr>
       <td>
-        <span class="stroke-rule-left">Left Diagonal</span>
+        <span class="stroke-rule-left">橫</span>
         <span class="stroke-rule-arrow">➜</span>
-        <span class="stroke-rule-right">Right Diagonal</span>
+        <span class="stroke-rule-right">豎</span>
       </td>
       <td>
-        <a class="btn btn-xs btn-default" href="/#八">八</a>
-        <a class="btn btn-xs btn-default" href="/#公">公</a>
+        <a class="btn btn-xs btn-default" href="/tw/#十">十</a>
+        <a class="btn btn-xs btn-default" href="/tw/#苦">苦</a>
       </td>
     </tr>
     <tr>
       <td>
-        <span class="stroke-rule-left">Outside</span>
+        <span class="stroke-rule-left">撇</span>
         <span class="stroke-rule-arrow">➜</span>
-        <span class="stroke-rule-right">Inside</span>
+        <span class="stroke-rule-right">捺</span>
       </td>
       <td>
-        <a class="btn btn-xs btn-default" href="/#回">回</a>
-        <a class="btn btn-xs btn-default" href="/#向">向</a>
+        <a class="btn btn-xs btn-default" href="/tw/#八">八</a>
+        <a class="btn btn-xs btn-default" href="/tw/#公">公</a>
       </td>
     </tr>
     <tr>
       <td>
-        <span class="stroke-rule-left">Inside</span>
+        <span class="stroke-rule-left">外</span>
         <span class="stroke-rule-arrow">➜</span>
-        <span class="stroke-rule-right">Closing stroke last</span>
+        <span class="stroke-rule-right">內</span>
       </td>
       <td>
-        <a class="btn btn-xs btn-default" href="/#日">日</a>
-        <a class="btn btn-xs btn-default" href="/#因">因</a>
+        <a class="btn btn-xs btn-default" href="/tw/#回">回</a>
+        <a class="btn btn-xs btn-default" href="/tw/#向">向</a>
       </td>
     </tr>
     <tr>
       <td>
-        <span class="stroke-rule-left">Center vertical</span>
+        <span class="stroke-rule-left">內</span>
         <span class="stroke-rule-arrow">➜</span>
-        <span class="stroke-rule-right">Sides</span>
+        <span class="stroke-rule-right">閉合</span>
       </td>
       <td>
-        <a class="btn btn-xs btn-default" href="/#小">小</a>
-        <a class="btn btn-xs btn-default" href="/#水">水</a>
+        <a class="btn btn-xs btn-default" href="/tw/#日">日</a>
+        <a class="btn btn-xs btn-default" href="/tw/#因">因</a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span class="stroke-rule-left">中間</span>
+        <span class="stroke-rule-arrow">➜</span>
+        <span class="stroke-rule-right">兩側</span>
+      </td>
+      <td>
+        <a class="btn btn-xs btn-default" href="/tw/#小">小</a>
+        <a class="btn btn-xs btn-default" href="/tw/#水">水</a>
       </td>
     </tr>
 
@@ -322,17 +332,17 @@ permalink: /howto/stroke-order/
 </table>
 
 
-<h2>Writing Tips</h2>
+<h2>書寫技巧</h2>
 <ul>
-  <li>Use squared paper (田字格 grid).</li>
-  <li>Practice slowly with correct stroke order.</li>
-  <li>Memorize characters by <strong>chunks</strong>, not random strokes.</li>
-  <li>Don't draw, <strong>write</strong> with confidence and firm strokes.</li>
-  <li>Review often! Repetition matters.</li>
+  <li>使用田字格紙。</li>
+  <li>慢慢練習，確保筆畫順序正確。</li>
+  <li>按塊記憶漢字，而不是隨機筆畫。</li>
+  <li>不要畫，要自信地<strong>寫</strong>，筆畫要有力。</li>
+  <li>經常複習！重複很重要。</li>
 </ul>
 
 <p>
-  Ready to practice? Go back to the <a href="/">interactive practice tool</a> and watch the animated stroke order for any character.
+  準備好練習了嗎？返回<a href="/tw/">互動練習工具</a>，觀看任何漢字的動畫筆畫順序演示。
 </p>
 
 </div>
