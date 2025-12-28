@@ -100,6 +100,13 @@ permalink: /tw/howto/stroke-order/
       padding-bottom: 10px;
     }
   }
+    .char-grid.stroke-grid .char-item {
+      flex: 0 1 calc(50% - 10px); /* Adjusted width for better spacing */
+      max-width: calc(50% - 10px); /* Ensures proper alignment */
+    }
+    .char-item .desc strong {
+      display: block; /* Moves the dash line and words to separate lines */
+    }
 
   /* Stroke rules table buttons */
   .stroke-rules-table .btn {
