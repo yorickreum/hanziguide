@@ -12,6 +12,7 @@ var cedictSeq = 0;
 var translationInfoEl = null;
 var lastTrackedInput = null;
 var lastTrackedLanguageState = null;
+var lastTrackedTranslation = null;
 
 function trackMatomoEvent(category, action, name, value) {
   if (typeof window === 'undefined' || !window._paq || typeof window._paq.push !== 'function') {
@@ -45,6 +46,28 @@ function trackPracticeInput(chars) {
   }
   lastTrackedInput = trimmed;
   trackMatomoEvent('Practice', 'Input', trimmed, trimmed.length);
+}
+
+function normalizeMatomoText(text, maxLen) {
+  var clean = (text || '').replace(/\s+/g, ' ').trim();
+  if (maxLen && clean.length > maxLen) {
+    return clean.slice(0, maxLen) + '…';
+  }
+  return clean;
+}
+
+function trackPracticeTranslation(chars, translationText) {
+  var trimmedChars = (chars || '').trim();
+  var trimmedTranslation = normalizeMatomoText(translationText, 200);
+  if (!trimmedChars || !trimmedTranslation) {
+    return;
+  }
+  var key = trimmedChars + '|' + trimmedTranslation;
+  if (key === lastTrackedTranslation) {
+    return;
+  }
+  lastTrackedTranslation = key;
+  trackMatomoEvent('Practice', 'Translation', trimmedTranslation, trimmedChars.length);
 }
 
 // Initialize OpenCC converters
@@ -399,6 +422,7 @@ async function getTranslation(characters) {
     // Fallback tooltip on main text
     $('#translation-text').attr('title', detailText || '');
     $('#translation-display').show();
+    trackPracticeTranslation(characters, mainText);
   } catch (error) {
     console.error('Translation error:', error);
     $('#translation-display').hide();
