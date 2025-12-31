@@ -10,6 +10,42 @@ var cedictWorker = null;
 var cedictPending = {};
 var cedictSeq = 0;
 var translationInfoEl = null;
+var lastTrackedInput = null;
+var lastTrackedLanguageState = null;
+
+function trackMatomoEvent(category, action, name, value) {
+  if (typeof window === 'undefined' || !window._paq || typeof window._paq.push !== 'function') {
+    return;
+  }
+  var payload = ['trackEvent', category, action];
+  if (name !== undefined && name !== null) {
+    payload.push(name);
+    if (value !== undefined && value !== null) {
+      payload.push(value);
+    }
+  }
+  window._paq.push(payload);
+}
+
+function trackPracticeLanguageState(showMandarin, showCantonese, scriptType) {
+  var state = 'mandarin=' + (showMandarin ? '1' : '0') +
+    ';cantonese=' + (showCantonese ? '1' : '0') +
+    ';script=' + (scriptType || 'unknown');
+  if (state === lastTrackedLanguageState) {
+    return;
+  }
+  lastTrackedLanguageState = state;
+  trackMatomoEvent('Practice', 'LanguageState', state);
+}
+
+function trackPracticeInput(chars) {
+  var trimmed = (chars || '').trim();
+  if (!trimmed || trimmed === lastTrackedInput) {
+    return;
+  }
+  lastTrackedInput = trimmed;
+  trackMatomoEvent('Practice', 'Input', trimmed, trimmed.length);
+}
 
 // Initialize OpenCC converters
 var converterToTraditional = null;
@@ -702,12 +738,23 @@ $(function() {
 				} else {
 					sessionStorage.removeItem('hanziguide_chars');
 				}
+				trackPracticeLanguageState(
+					$('#show-mandarin').prop('checked'),
+					$('#show-cantonese').prop('checked'),
+					getScriptType()
+				);
+				trackPracticeInput(chars);
 				updateCharacter();
 			}, 500); // 500ms delay after user stops typing
 		});
 
 		// Handle script type change (simplified/traditional)
 		$('input[name="script-type"]').on('change', function() {
+			trackPracticeLanguageState(
+				$('#show-mandarin').prop('checked'),
+				$('#show-cantonese').prop('checked'),
+				getScriptType()
+			);
 			updateCharacter();
 		});
 
@@ -718,6 +765,12 @@ $(function() {
 			$('#character-select').val(char);
 			sessionStorage.setItem('hanziguide_chars', char);
 			$('#beginner-chars-modal').fadeOut(200);
+			trackPracticeLanguageState(
+				$('#show-mandarin').prop('checked'),
+				$('#show-cantonese').prop('checked'),
+				getScriptType()
+			);
+			trackPracticeInput(char);
 			updateCharacter();
 		});
 
@@ -739,6 +792,13 @@ $(function() {
 		$('.js-char-form').on('submit', function(evt) {
 			evt.preventDefault();
 			clearTimeout(updateTimeout);
+			var chars = $('#character-select').val();
+			trackPracticeLanguageState(
+				$('#show-mandarin').prop('checked'),
+				$('#show-cantonese').prop('checked'),
+				getScriptType()
+			);
+			trackPracticeInput(chars);
 			updateCharacter();
 		});
 
@@ -872,6 +932,11 @@ $(function() {
 			var id = $(this).attr('id');
 			var isChecked = $(this).prop('checked');
 			sessionStorage.setItem(id, isChecked);
+			trackPracticeLanguageState(
+				$('#show-mandarin').prop('checked'),
+				$('#show-cantonese').prop('checked'),
+				getScriptType()
+			);
 			updateCharacter();
 		});
 
