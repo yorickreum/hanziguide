@@ -1,0 +1,22 @@
+{
+  "name": "Hanzi Guide",
+  "short_name": "Hanzi Guide",
+  "description": "Learn to write Traditional and Simplified Chinese characters with animated stroke order. Practice Mandarin and Cantonese with 9000+ characters.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#2b2b2b",
+  "theme_color": "#2b2b2b",
+  "icons": [
+    {
+      "src": "/assets/images/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
