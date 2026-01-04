@@ -611,7 +611,80 @@ function setCharacterInput(chars) {
     getScriptType()
   );
   if (value) trackPracticeInput(value);
+  if (value) addRecentChars(value);
   updateCharacter();
+}
+
+var recentCharsKey = 'hanziguide_recent_chars';
+
+function loadRecentChars() {
+  try {
+    var raw = localStorage.getItem(recentCharsKey);
+    if (!raw) return [];
+    var parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveRecentChars(list) {
+  try {
+    localStorage.setItem(recentCharsKey, JSON.stringify(list));
+  } catch (e) {
+    // Ignore storage failures (private mode, quota, etc.).
+  }
+}
+
+function clearRecentChars() {
+  try {
+    localStorage.removeItem(recentCharsKey);
+  } catch (e) {
+    // Ignore storage failures.
+  }
+  renderRecentChars([]);
+}
+
+function addRecentChars(value) {
+  var trimmed = (value || '').trim();
+  if (!trimmed) return;
+  var list = loadRecentChars();
+  list = list.filter(function(item) {
+    return item !== trimmed;
+  });
+  list.unshift(trimmed);
+  list = list.slice(0, 12);
+  saveRecentChars(list);
+  renderRecentChars(list);
+}
+
+function renderRecentChars(list) {
+  var container = document.getElementById('recent-chars-container');
+  var section = document.getElementById('recent-chars-section');
+  if (!container || !section) return;
+  container.innerHTML = '';
+  var items = Array.isArray(list) ? list : loadRecentChars();
+  if (!items.length) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  items.forEach(function(item) {
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-sm btn-outline-secondary recent-char-btn';
+    btn.setAttribute('data-char', item);
+    btn.type = 'button';
+    btn.style.margin = '2px';
+    btn.style.minWidth = '38px';
+    btn.style.padding = '3px 8px';
+    btn.style.fontSize = '13px';
+    btn.textContent = item;
+    btn.addEventListener('click', function() {
+      setCharacterInput(item);
+      $('#beginner-chars-modal').fadeOut(200);
+    });
+    container.appendChild(btn);
+  });
 }
 
 var kidsDataPromise = null;
@@ -1007,6 +1080,7 @@ $(function() {
 		}
 		
 		updateCharacter();
+		renderRecentChars();
 
 		// Auto-update on typing with debounce
 		$('#character-select').on('input', function() {
@@ -1026,6 +1100,7 @@ $(function() {
 				);
 				trackPracticeInput(chars);
 				updateCharacter();
+				addRecentChars(chars);
 			}, 500); // 500ms delay after user stops typing
 		});
 
@@ -1045,6 +1120,11 @@ $(function() {
 			var char = $(this).data('char');
 			setCharacterInput(char);
 			$('#beginner-chars-modal').fadeOut(200);
+		});
+
+		$('#clear-recent-chars-btn').on('click', function(evt) {
+			evt.preventDefault();
+			clearRecentChars();
 		});
 
 		// Handle beginner characters modal

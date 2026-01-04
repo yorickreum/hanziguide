@@ -121,6 +121,16 @@
       <button type="button" class="close-modal-btn" id="close-beginner-chars-btn">×</button>
     </div>
     <div class="beginner-chars-modal-body">
+      <div class="char-category" id="recent-chars-section" style="margin-bottom: 15px; display: none;">
+        <div style="font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; display: flex; align-items: center;">
+          <span>{{ t.recent_chars_title }}</span>
+          <button type="button" class="btn btn-link btn-xs" id="clear-recent-chars-btn" style="padding: 0 0 0 8px; font-size: 12px; color: #999; text-decoration: none; line-height: 1;">
+            <i class="fas fa-times"></i> {{ t.clear_recent_chars }}
+          </button>
+        </div>
+        <div class="char-buttons" id="recent-chars-container"></div>
+      </div>
+
       <div class="char-category" style="margin-bottom: 15px;">
         <span style="font-size: 12px; color: #999; margin-bottom: 8px; font-weight: 500; display: block;">{{ t.basic_numbers }}</span>
         <div class="char-buttons">
