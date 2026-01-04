@@ -764,6 +764,17 @@ function extractKidsComponents(ids) {
   return unique;
 }
 
+function needsHeavyComponentsFont(components) {
+  return components.some(function(component) {
+    var codepoint = component.codePointAt(0);
+    if (!codepoint) return false;
+    if (codepoint >= 0xE000 && codepoint <= 0xF8FF) return true; // BMP PUA
+    if (codepoint >= 0xF0000 && codepoint <= 0xFFFFD) return true; // Plane 15 PUA
+    if (codepoint >= 0x100000 && codepoint <= 0x10FFFD) return true; // Plane 16 PUA
+    return false;
+  });
+}
+
 function ensureComponentsToast() {
   if (componentsToastEl) return;
   componentsToastEl = document.createElement('div');
@@ -886,12 +897,19 @@ function renderKidsComponents(char, targetEl) {
     var ids = kidsMap[char];
     if (!ids) {
       targetEl.style.display = 'none';
+      targetEl.classList.remove('components-heavy-font');
       return;
     }
     var components = extractKidsComponents(ids);
     if (!components.length) {
       targetEl.style.display = 'none';
+      targetEl.classList.remove('components-heavy-font');
       return;
+    }
+    if (needsHeavyComponentsFont(components)) {
+      targetEl.classList.add('components-heavy-font');
+    } else {
+      targetEl.classList.remove('components-heavy-font');
     }
     var missing = components.filter(function(component) {
       return componentDefinitionCache[component] === undefined;

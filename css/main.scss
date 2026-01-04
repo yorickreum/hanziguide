@@ -142,11 +142,15 @@ body {
 }
 
 .components-line {
-  font-family: "HanaMinExtA", "HanaMinExtB", "HanaMinA", "HanaMinB", $base-font-family;
+  font-family: $base-font-family;
 }
 
 .components-line .components-label {
   font-family: $base-font-family;
+}
+
+.components-line.components-heavy-font {
+  font-family: "HanaMinExtA", "HanaMinExtB", "HanaMinA", "HanaMinB", $base-font-family;
 }
 
 .char-unavailable {
