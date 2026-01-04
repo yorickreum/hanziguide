@@ -100,6 +100,14 @@ CC-CEDICT is maintained by the community; attribution should reference the CC-CE
 
 ---
 
+### IDS Component Data
+
+Character component breakdowns (IDS/kIDS) are sourced from the [CHISE IDS dataset](https://github.com/chise/ids). This data is used to display component structure hints for individual characters.
+
+Please refer to the CHISE repository for licensing and attribution details.
+
+---
+
 ### Privacy & Data
 
 Hanzi Guide is designed with privacy in mind. We use a self-hosted instance of **Matomo**, a privacy-respecting analytics platform, to understand how the site is used and improve the experience for learners. 

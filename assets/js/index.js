@@ -815,11 +815,36 @@ function hideComponentsToast() {
   componentsToastVisible = false;
 }
 
+function formatComponentDefinition(entry, showMandarin, showCantonese) {
+  if (!entry) return '';
+  var hasMandarin = !!entry.d;
+  var hasCanto = !!entry.cantoDef;
+  if (showMandarin && showCantonese) {
+    if (hasMandarin && hasCanto) {
+      return '粵 ' + entry.cantoDef + ' | 普 ' + entry.d;
+    }
+    if (hasCanto) return entry.cantoDef;
+    if (hasMandarin) return entry.d;
+    return '';
+  }
+  if (showCantonese && hasCanto) return entry.cantoDef;
+  if (showMandarin && hasMandarin) return entry.d;
+  return hasCanto ? entry.cantoDef : (entry.d || '');
+}
+
 function buildComponentsDetail(ids, components) {
   var lines = [];
+  var showMandarin = $('#show-mandarin').prop('checked');
+  var showCantonese = $('#show-cantonese').prop('checked');
   components.forEach(function(component) {
-    var def = componentDefinitionCache[component];
-    if (def) lines.push(component + ': ' + def);
+    var entry = componentDefinitionCache[component];
+    var def = formatComponentDefinition(entry, showMandarin, showCantonese);
+    if (!def) return;
+    var extra = [];
+    if (showCantonese && entry && entry.cantoJyut) extra.push(entry.cantoJyut);
+    if (showMandarin && entry && entry.p) extra.push(entry.p);
+    var suffix = extra.length ? ' (' + extra.join(' / ') + ')' : '';
+    lines.push(component + ': ' + def + suffix);
   });
   if (ids && !/&[^;]+;/.test(ids)) lines.push('IDS: ' + ids);
   return lines.join('\n');
@@ -845,7 +870,7 @@ function renderKidsComponents(char, targetEl) {
           .then(function(result) {
             missing.forEach(function(component) {
               var entry = result[component];
-              componentDefinitionCache[component] = entry && entry.d ? entry.d : '';
+              componentDefinitionCache[component] = entry || null;
             });
           })
           .catch(function() {})
@@ -870,7 +895,10 @@ function renderKidsComponents(char, targetEl) {
         componentSpan.setAttribute('tabindex', '0');
         componentSpan.setAttribute('role', 'button');
         componentSpan.setAttribute('aria-label', 'Load component ' + component);
-        var def = componentDefinitionCache[component];
+        var entry = componentDefinitionCache[component];
+        var showMandarin = $('#show-mandarin').prop('checked');
+        var showCantonese = $('#show-cantonese').prop('checked');
+        var def = formatComponentDefinition(entry, showMandarin, showCantonese);
         if (def) {
           componentSpan.setAttribute('title', component + ': ' + def);
         }
