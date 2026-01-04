@@ -455,8 +455,8 @@ function updateCharacter() {
     getTranslation(characters);
   }, 500); // Wait 500ms after user stops typing
 
-  // Split into individual characters
-  var charArray = characters.split('');
+  // Split into individual characters (handle surrogate pairs)
+  var charArray = Array.from(characters);
   var charCount = charArray.length;
   var size = charCount === 1 ? 300 : (charCount <= 3 ? 200 : 150);
 
@@ -480,6 +480,7 @@ function updateCharacter() {
     // Create components display
     var componentsDiv = document.createElement('div');
     componentsDiv.id = 'components-' + index;
+    componentsDiv.className = 'components-line';
     componentsDiv.style.fontSize = '12px';
     componentsDiv.style.color = '#888';
     componentsDiv.style.marginBottom = '5px';
@@ -503,53 +504,59 @@ function updateCharacter() {
       drawingWidth: 25, 
       strokeWidth: 25,
       charDataLoader: function(loadChar) {
-        return HanziWriter.loadCharacterData(loadChar).then(function(charData) {
-          var svg = document.querySelector('#' + animDiv.id + ' svg');
-          if (svg && !svg.getAttribute('data-has-grid')) {
-            var ns = 'http://www.w3.org/2000/svg';
-            var width = size;
-            var height = size;
+        return HanziWriter.loadCharacterData(loadChar)
+          .then(function(charData) {
+            var svg = document.querySelector('#' + animDiv.id + ' svg');
+            if (svg && !svg.getAttribute('data-has-grid')) {
+              var ns = 'http://www.w3.org/2000/svg';
+              var width = size;
+              var height = size;
 
-            var grid = document.createElementNS(ns, 'g');
-            grid.setAttribute('stroke', '#f48c8c');
-            grid.setAttribute('stroke-width', '1');
-            grid.setAttribute('stroke-dasharray', '4,4');
+              var grid = document.createElementNS(ns, 'g');
+              grid.setAttribute('stroke', '#f48c8c');
+              grid.setAttribute('stroke-width', '1');
+              grid.setAttribute('stroke-dasharray', '4,4');
 
-            var centerV = document.createElementNS(ns, 'line');
-            centerV.setAttribute('x1', width / 2);
-            centerV.setAttribute('y1', 0);
-            centerV.setAttribute('x2', width / 2);
-            centerV.setAttribute('y2', height);
+              var centerV = document.createElementNS(ns, 'line');
+              centerV.setAttribute('x1', width / 2);
+              centerV.setAttribute('y1', 0);
+              centerV.setAttribute('x2', width / 2);
+              centerV.setAttribute('y2', height);
 
-            var centerH = document.createElementNS(ns, 'line');
-            centerH.setAttribute('x1', 0);
-            centerH.setAttribute('y1', height / 2);
-            centerH.setAttribute('x2', width);
-            centerH.setAttribute('y2', height / 2);
+              var centerH = document.createElementNS(ns, 'line');
+              centerH.setAttribute('x1', 0);
+              centerH.setAttribute('y1', height / 2);
+              centerH.setAttribute('x2', width);
+              centerH.setAttribute('y2', height / 2);
 
-            var diag1 = document.createElementNS(ns, 'line');
-            diag1.setAttribute('x1', 0);
-            diag1.setAttribute('y1', height);
-            diag1.setAttribute('x2', width);
-            diag1.setAttribute('y2', 0);
+              var diag1 = document.createElementNS(ns, 'line');
+              diag1.setAttribute('x1', 0);
+              diag1.setAttribute('y1', height);
+              diag1.setAttribute('x2', width);
+              diag1.setAttribute('y2', 0);
 
-            var diag2 = document.createElementNS(ns, 'line');
-            diag2.setAttribute('x1', 0);
-            diag2.setAttribute('y1', 0);
-            diag2.setAttribute('x2', width);
-            diag2.setAttribute('y2', height);
+              var diag2 = document.createElementNS(ns, 'line');
+              diag2.setAttribute('x1', 0);
+              diag2.setAttribute('y1', 0);
+              diag2.setAttribute('x2', width);
+              diag2.setAttribute('y2', height);
 
-            grid.appendChild(diag1);
-            grid.appendChild(diag2);
-            grid.appendChild(centerV);
-            grid.appendChild(centerH);
+              grid.appendChild(diag1);
+              grid.appendChild(diag2);
+              grid.appendChild(centerV);
+              grid.appendChild(centerH);
 
-            svg.insertBefore(grid, svg.firstChild);
-            svg.setAttribute('data-has-grid', 'true');
-          }
+              svg.insertBefore(grid, svg.firstChild);
+              svg.setAttribute('data-has-grid', 'true');
+            }
 
-          return charData;
-        });
+            return charData;
+          })
+          .catch(function(error) {
+            console.warn('Failed to load char data for', loadChar, error);
+            animDiv.innerHTML = '<div class="char-unavailable">' + getCharUnavailableText() + '</div>';
+            return { strokes: [], medians: [] };
+          });
       }
     });
     
@@ -605,7 +612,7 @@ function setCharacterInput(chars) {
   } else {
     sessionStorage.removeItem('hanziguide_chars');
   }
-  updateUrlHash(value);
+  updateUrlHash(value, true);
   trackPracticeLanguageState(
     $('#show-mandarin').prop('checked'),
     $('#show-cantonese').prop('checked'),
@@ -616,14 +623,21 @@ function setCharacterInput(chars) {
   updateCharacter();
 }
 
-function updateUrlHash(value) {
+function updateUrlHash(value, shouldPush) {
   if (typeof history === 'undefined' || !history.replaceState) return;
   var hash = value ? '#' + value : '';
+  if (hash === lastUrlHash) return;
+  lastUrlHash = hash;
   var base = window.location.pathname + window.location.search;
-  history.replaceState(null, '', base + hash);
+  if (shouldPush && history.pushState) {
+    history.pushState(null, '', base + hash);
+  } else {
+    history.replaceState(null, '', base + hash);
+  }
 }
 
 var recentCharsKey = 'hanziguide_recent_chars';
+var lastUrlHash = null;
 
 function loadRecentChars() {
   try {
@@ -697,6 +711,7 @@ function renderRecentChars(list) {
 
 var kidsDataPromise = null;
 var componentsLabelCache = null;
+var charUnavailableCache = null;
 var idsOperatorRegex = /[⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻]/g;
 var componentDefinitionCache = {};
 var componentsToastEl = null;
@@ -710,6 +725,14 @@ function getComponentsLabel() {
   var label = practiceEl ? practiceEl.getAttribute('data-components-label') : '';
   componentsLabelCache = label || 'Components:';
   return componentsLabelCache;
+}
+
+function getCharUnavailableText() {
+  if (charUnavailableCache !== null) return charUnavailableCache;
+  var practiceEl = document.getElementById('practice');
+  var text = practiceEl ? practiceEl.getAttribute('data-char-unavailable') : '';
+  charUnavailableCache = text || 'Character not available';
+  return charUnavailableCache;
 }
 
 function loadKidsData() {
@@ -731,7 +754,7 @@ function loadKidsData() {
 function extractKidsComponents(ids) {
   if (!ids) return [];
   var cleaned = ids.replace(/&[^;]+;/g, '').replace(idsOperatorRegex, '');
-  var parts = cleaned.split('').filter(function(part) {
+  var parts = Array.from(cleaned).filter(function(part) {
     return part && part.trim();
   });
   var unique = [];
@@ -891,6 +914,7 @@ function renderKidsComponents(char, targetEl) {
 
       var labelSpan = document.createElement('span');
       labelSpan.textContent = getComponentsLabel();
+      labelSpan.className = 'components-label';
       targetEl.appendChild(labelSpan);
 
       var detailText = buildComponentsDetail(ids, components);
@@ -1117,6 +1141,7 @@ $(function() {
 		
 		updateCharacter();
 		renderRecentChars();
+		updateUrlHash($('#character-select').val().trim(), false);
 
 		// Auto-update on typing with debounce
 		$('#character-select').on('input', function() {
@@ -1137,7 +1162,7 @@ $(function() {
 				trackPracticeInput(chars);
 				updateCharacter();
 				addRecentChars(chars);
-				updateUrlHash((chars || '').trim());
+				updateUrlHash((chars || '').trim(), true);
 			}, 500); // 500ms delay after user stops typing
 		});
 
@@ -1162,6 +1187,17 @@ $(function() {
 		$('#clear-recent-chars-btn').on('click', function(evt) {
 			evt.preventDefault();
 			clearRecentChars();
+		});
+
+		window.addEventListener('popstate', function() {
+			var hashChars = window.location.hash ? window.location.hash.substring(1) : '';
+			var decoded = hashChars;
+			try {
+				decoded = decodeURIComponent(hashChars);
+			} catch (e) {
+				decoded = hashChars;
+			}
+			setCharacterInput(decoded);
 		});
 
 		// Handle beginner characters modal

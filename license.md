@@ -108,6 +108,14 @@ Please refer to the CHISE repository for licensing and attribution details.
 
 ---
 
+### HanaMin Font
+
+Component glyph coverage is improved by loading the [HanaMin (Hanazono) fonts](https://github.com/cjkvi/HanaMinAFDKO/releases) locally for IDS components that are not covered by standard system fonts.
+
+Please refer to the HanaMinAFDKO release page for licensing and attribution details.
+
+---
+
 ### Privacy & Data
 
 Hanzi Guide is designed with privacy in mind. We use a self-hosted instance of **Matomo**, a privacy-respecting analytics platform, to understand how the site is used and improve the experience for learners. 

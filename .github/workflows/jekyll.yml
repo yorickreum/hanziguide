@@ -40,6 +40,9 @@ jobs:
       - name: Fetch dictionaries
         run: bash scripts/fetch-dicts.sh
 
+      - name: Fetch fonts
+        run: bash scripts/fetch-fonts.sh
+
       - name: Build with Jekyll
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
