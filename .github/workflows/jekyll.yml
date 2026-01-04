@@ -37,6 +37,18 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
 
+      - name: Cache dictionaries and fonts
+        uses: actions/cache@v4
+        with:
+          path: |
+            assets/cedict_ts.u8
+            assets/cccanto.u8
+            assets/kids.json
+            assets/fonts/
+          key: assets-${{ runner.os }}-${{ hashFiles('scripts/fetch-dicts.sh', 'scripts/fetch-fonts.sh') }}
+          restore-keys: |
+            assets-${{ runner.os }}-
+
       - name: Fetch dictionaries
         run: bash scripts/fetch-dicts.sh
 
