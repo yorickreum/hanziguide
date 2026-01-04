@@ -1159,6 +1159,10 @@ $(function() {
 		
 		updateCharacter();
 		renderRecentChars();
+		var initialChars = $('#character-select').val().trim();
+		if (initialChars) {
+			addRecentChars(initialChars);
+		}
 		updateUrlHash($('#character-select').val().trim(), false);
 
 		// Auto-update on typing with debounce
