@@ -476,6 +476,16 @@ function updateCharacter() {
     pinyinDiv.style.marginBottom = '5px';
     pinyinDiv.style.minHeight = '20px';
     charContainer.appendChild(pinyinDiv);
+
+    // Create components display
+    var componentsDiv = document.createElement('div');
+    componentsDiv.id = 'components-' + index;
+    componentsDiv.style.fontSize = '12px';
+    componentsDiv.style.color = '#888';
+    componentsDiv.style.marginBottom = '5px';
+    componentsDiv.style.minHeight = '16px';
+    componentsDiv.style.display = 'none';
+    charContainer.appendChild(componentsDiv);
     
     // Create animation writer
     var animDiv = document.createElement('div');
@@ -577,12 +587,259 @@ function updateCharacter() {
         console.error('Error getting pronunciation:', e);
       }
     }, 100);
+
+    renderKidsComponents(char, componentsDiv);
     
     animationWriters.push(animWriter);
   });
 
   // expose writers for debugging
   window.animationWriters = animationWriters;
+}
+
+function setCharacterInput(chars) {
+  var value = (chars || '').trim();
+  $('#character-select').val(value);
+  if (value) {
+    sessionStorage.setItem('hanziguide_chars', value);
+  } else {
+    sessionStorage.removeItem('hanziguide_chars');
+  }
+  trackPracticeLanguageState(
+    $('#show-mandarin').prop('checked'),
+    $('#show-cantonese').prop('checked'),
+    getScriptType()
+  );
+  if (value) trackPracticeInput(value);
+  updateCharacter();
+}
+
+var kidsDataPromise = null;
+var componentsLabelCache = null;
+var idsOperatorRegex = /[⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻]/g;
+var componentDefinitionCache = {};
+var componentsToastEl = null;
+var componentsToastContentEl = null;
+var componentsToastVisible = false;
+var componentsToastLast = '';
+
+function getComponentsLabel() {
+  if (componentsLabelCache !== null) return componentsLabelCache;
+  var practiceEl = document.getElementById('practice');
+  var label = practiceEl ? practiceEl.getAttribute('data-components-label') : '';
+  componentsLabelCache = label || 'Components:';
+  return componentsLabelCache;
+}
+
+function loadKidsData() {
+  if (kidsDataPromise) return kidsDataPromise;
+  kidsDataPromise = fetch('/assets/kids.json', { cache: 'force-cache' })
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Failed to load kIDS data');
+      }
+      return response.json();
+    })
+    .catch(function(error) {
+      console.warn('kIDS data unavailable:', error);
+      return {};
+    });
+  return kidsDataPromise;
+}
+
+function extractKidsComponents(ids) {
+  if (!ids) return [];
+  var cleaned = ids.replace(/&[^;]+;/g, '').replace(idsOperatorRegex, '');
+  var parts = cleaned.split('').filter(function(part) {
+    return part && part.trim();
+  });
+  var unique = [];
+  parts.forEach(function(part) {
+    if (unique.indexOf(part) === -1) unique.push(part);
+  });
+  return unique;
+}
+
+function ensureComponentsToast() {
+  if (componentsToastEl) return;
+  componentsToastEl = document.createElement('div');
+  componentsToastEl.id = 'components-toast';
+  componentsToastEl.style.position = 'fixed';
+  componentsToastEl.style.top = '50%';
+  componentsToastEl.style.left = '50%';
+  componentsToastEl.style.transform = 'translate(-50%, -50%)';
+  componentsToastEl.style.display = 'none';
+  componentsToastEl.style.backgroundColor = '#fff';
+  componentsToastEl.style.color = '#333';
+  componentsToastEl.style.padding = '16px 20px';
+  componentsToastEl.style.borderRadius = '8px';
+  componentsToastEl.style.fontSize = '14px';
+  componentsToastEl.style.zIndex = '1000';
+  componentsToastEl.style.maxWidth = '450px';
+  componentsToastEl.style.minWidth = '300px';
+  componentsToastEl.style.whiteSpace = 'pre-wrap';
+  componentsToastEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  componentsToastEl.style.border = '1px solid #ddd';
+  componentsToastEl.style.fontFamily = 'inherit';
+  componentsToastEl.style.lineHeight = '1.5';
+
+  var closeBtn = document.createElement('button');
+  closeBtn.innerHTML = '&times;';
+  closeBtn.style.position = 'absolute';
+  closeBtn.style.top = '8px';
+  closeBtn.style.right = '12px';
+  closeBtn.style.border = 'none';
+  closeBtn.style.background = 'transparent';
+  closeBtn.style.fontSize = '24px';
+  closeBtn.style.cursor = 'pointer';
+  closeBtn.style.color = '#999';
+  closeBtn.style.padding = '0';
+  closeBtn.style.lineHeight = '1';
+  closeBtn.setAttribute('aria-label', 'Close');
+
+  componentsToastContentEl = document.createElement('div');
+  componentsToastContentEl.style.paddingRight = '20px';
+
+  componentsToastEl.appendChild(closeBtn);
+  componentsToastEl.appendChild(componentsToastContentEl);
+  document.body.appendChild(componentsToastEl);
+
+  closeBtn.onclick = function(e) {
+    e.stopPropagation();
+    hideComponentsToast();
+  };
+
+  closeBtn.onkeydown = function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      hideComponentsToast();
+    }
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && componentsToastVisible) {
+      hideComponentsToast();
+    }
+  });
+}
+
+function showComponentsToast(text) {
+  if (!text) return;
+  ensureComponentsToast();
+  if (componentsToastVisible && componentsToastLast === text) {
+    hideComponentsToast();
+    return;
+  }
+  componentsToastLast = text;
+  componentsToastContentEl.textContent = text;
+  componentsToastEl.style.display = 'block';
+  componentsToastVisible = true;
+}
+
+function hideComponentsToast() {
+  if (!componentsToastEl) return;
+  componentsToastEl.style.display = 'none';
+  componentsToastVisible = false;
+}
+
+function buildComponentsDetail(ids, components) {
+  var lines = [];
+  components.forEach(function(component) {
+    var def = componentDefinitionCache[component];
+    if (def) lines.push(component + ': ' + def);
+  });
+  if (ids && !/&[^;]+;/.test(ids)) lines.push('IDS: ' + ids);
+  return lines.join('\n');
+}
+
+function renderKidsComponents(char, targetEl) {
+  loadKidsData().then(function(kidsMap) {
+    var ids = kidsMap[char];
+    if (!ids) {
+      targetEl.style.display = 'none';
+      return;
+    }
+    var components = extractKidsComponents(ids);
+    if (!components.length) {
+      targetEl.style.display = 'none';
+      return;
+    }
+    var missing = components.filter(function(component) {
+      return componentDefinitionCache[component] === undefined;
+    });
+    var lookupPromise = missing.length
+      ? lookupCedict(missing.join(''))
+          .then(function(result) {
+            missing.forEach(function(component) {
+              var entry = result[component];
+              componentDefinitionCache[component] = entry && entry.d ? entry.d : '';
+            });
+          })
+          .catch(function() {})
+      : Promise.resolve();
+
+    lookupPromise.then(function() {
+      targetEl.textContent = '';
+      targetEl.setAttribute('title', ids);
+      targetEl.style.display = 'block';
+
+      var labelSpan = document.createElement('span');
+      labelSpan.textContent = getComponentsLabel();
+      targetEl.appendChild(labelSpan);
+
+      var detailText = buildComponentsDetail(ids, components);
+      targetEl.appendChild(document.createTextNode(' '));
+
+      components.forEach(function(component, idx) {
+        var componentSpan = document.createElement('span');
+        componentSpan.textContent = component;
+        componentSpan.style.cursor = 'pointer';
+        componentSpan.setAttribute('tabindex', '0');
+        componentSpan.setAttribute('role', 'button');
+        componentSpan.setAttribute('aria-label', 'Load component ' + component);
+        var def = componentDefinitionCache[component];
+        if (def) {
+          componentSpan.setAttribute('title', component + ': ' + def);
+        }
+        componentSpan.onclick = function(e) {
+          e.stopPropagation();
+          setCharacterInput(component);
+        };
+        componentSpan.onkeydown = function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setCharacterInput(component);
+          }
+        };
+        targetEl.appendChild(componentSpan);
+        if (idx < components.length - 1) {
+          targetEl.appendChild(document.createTextNode(' '));
+        }
+      });
+
+      if (detailText) {
+        var infoIcon = document.createElement('span');
+        infoIcon.style.marginLeft = '6px';
+        infoIcon.style.cursor = 'pointer';
+        infoIcon.style.color = '#888';
+        infoIcon.setAttribute('tabindex', '0');
+        infoIcon.setAttribute('role', 'button');
+        infoIcon.setAttribute('aria-label', 'Show component meanings');
+        infoIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+        infoIcon.onclick = function(e) {
+          e.stopPropagation();
+          showComponentsToast(detailText);
+        };
+        infoIcon.onkeydown = function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            showComponentsToast(detailText);
+          }
+        };
+        targetEl.appendChild(infoIcon);
+      }
+    });
+  });
 }
 
 function getTotalStrokes() {
@@ -786,16 +1043,8 @@ $(function() {
 		$('.char-btn').on('click', function(evt) {
 			evt.preventDefault();
 			var char = $(this).data('char');
-			$('#character-select').val(char);
-			sessionStorage.setItem('hanziguide_chars', char);
+			setCharacterInput(char);
 			$('#beginner-chars-modal').fadeOut(200);
-			trackPracticeLanguageState(
-				$('#show-mandarin').prop('checked'),
-				$('#show-cantonese').prop('checked'),
-				getScriptType()
-			);
-			trackPracticeInput(char);
-			updateCharacter();
 		});
 
 		// Handle beginner characters modal

@@ -32,3 +32,9 @@ assets/cedict_ts.u8.gz
 # CC-Canto download
 assets/cccanto.u8
 assets/cccanto.zip
+
+# Unihan + kIDS output
+assets/unihan.zip
+assets/unihan/
+assets/kids.json
+assets/ids-ucs-basic.txt

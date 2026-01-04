@@ -67,6 +67,7 @@ en:
   common_greetings: "Common Characters"
   simple_chars: "Simple Characters"
   common_words: "Common Words"
+  components_label: "Components:"
 
 zh:
   title: "Hanzi Guide"
@@ -134,6 +135,7 @@ zh:
   common_greetings: "常用汉字"
   simple_chars: "简单汉字"
   common_words: "常用词语"
+  components_label: "组件："
 
 
 zh-Hant:
@@ -198,3 +200,4 @@ zh-Hant:
   common_greetings: "常用漢字"
   simple_chars: "簡單漢字"
   common_words: "常用詞語"
+  components_label: "部件："

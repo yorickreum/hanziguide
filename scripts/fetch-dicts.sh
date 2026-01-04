@@ -27,3 +27,23 @@ unzip -o "${cccanto_zip}" -d "${assets_dir}"
 mv "${assets_dir}/cccanto-webdist.txt" "${cccanto_out}"
 rm "${cccanto_zip}"
 ls -lh "${cccanto_out}"
+
+unihan_url="https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip"
+unihan_zip="${assets_dir}/unihan.zip"
+unihan_dir="${assets_dir}/unihan"
+kids_out="${assets_dir}/kids.json"
+ids_url="https://raw.githubusercontent.com/chise/ids/master/IDS-UCS-Basic.txt"
+ids_file="${assets_dir}/ids-ucs-basic.txt"
+
+echo "Downloading Unihan..."
+curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
+  "${unihan_url}" -o "${unihan_zip}"
+rm -rf "${unihan_dir}"
+unzip -o "${unihan_zip}" -d "${unihan_dir}"
+
+echo "Downloading IDS (CHISE)..."
+curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
+  "${ids_url}" -o "${ids_file}"
+
+node "${root_dir}/scripts/build-kids.js" "${unihan_dir}" "${ids_file}" "${kids_out}"
+ls -lh "${kids_out}"
