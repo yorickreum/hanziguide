@@ -1285,7 +1285,7 @@ function renderRadicalLine(targetEl, radicalChar, remainderText, remainderParts,
   targetEl.appendChild(radicalSpan);
 
   if (remainderText) {
-    targetEl.appendChild(document.createTextNode(' + '));
+    targetEl.appendChild(document.createTextNode(' '));
     var remainder = Array.isArray(remainderParts) && remainderParts.length
       ? remainderParts
       : [remainderText];
@@ -1308,7 +1308,7 @@ function renderRadicalLine(targetEl, radicalChar, remainderText, remainderParts,
       };
       targetEl.appendChild(remainderSpan);
       if (idx < remainder.length - 1) {
-        targetEl.appendChild(document.createTextNode(''));
+        targetEl.appendChild(document.createTextNode(' '));
       }
     });
   }
