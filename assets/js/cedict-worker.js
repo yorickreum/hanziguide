@@ -1,5 +1,5 @@
 // CC-CEDICT and CC-Canto parsing worker
-var DICT_VERSION = 'cedict-20251223-12';
+var DICT_VERSION = 'cedict-20251223-13';
 var CEDICT_URL = '/assets/cedict_ts.u8?v=' + DICT_VERSION;
 var CCCANTO_URL = '/assets/cccanto.u8?v=' + DICT_VERSION;
 var dictPromise = null;
@@ -42,6 +42,21 @@ function pickBestDefs(defs, maxCount, isSingleChar) {
     }
   }
   return result;
+}
+
+function pickPreferredDef(defs) {
+  if (!defs || !defs.length) return '';
+  for (var i = 0; i < defs.length; i++) {
+    var d = defs[i];
+    if (!d) continue;
+    if (d.toLowerCase().indexOf('slang') !== -1) continue;
+    return d;
+  }
+  return defs[0] || '';
+}
+
+function isSlangDef(definition) {
+  return !!(definition && definition.toLowerCase().indexOf('slang') !== -1);
 }
 
 // Parse CC-CEDICT (Mandarin dictionary)
@@ -225,13 +240,19 @@ function parseCanto(text) {
     if (headwordLen === 1) {
       var filtered = filterDefs(rawDefs);
       var best = pickBestDefs(filtered, 3, true);
-      var newDef = best[0] || rawDefs[0] || '';
+      var newDef = pickPreferredDef(best) || pickPreferredDef(rawDefs);
       
       var wordKeys = [trad, simp];
       for (var wk = 0; wk < wordKeys.length; wk++) {
         var wordKey = wordKeys[wk];
         if (!wordMap[wordKey]) {
           wordMap[wordKey] = { j: jyutping, d: newDef, len: headwordLen };
+        } else if (wordMap[wordKey].len === 1) {
+          var existingIsSlang = isSlangDef(wordMap[wordKey].d);
+          var newIsSlang = isSlangDef(newDef);
+          if (existingIsSlang && !newIsSlang) {
+            wordMap[wordKey] = { j: jyutping, d: newDef, len: headwordLen };
+          }
         }
       }
     } else {
@@ -255,7 +276,7 @@ function parseCanto(text) {
       if (headwordLen === 1) {
         var filtered = filterDefs(rawDefs);
         var best = pickBestDefs(filtered, 3, true);
-        var newDef = best[0] || rawDefs[0] || '';
+        var newDef = pickPreferredDef(best) || pickPreferredDef(rawDefs);
         
         if (!existing || existing.len > 1) {
           charMap[ch] = {
@@ -265,6 +286,18 @@ function parseCanto(text) {
             allDefs: rawDefs,
             len: 1
           };
+        } else if (existing.len === 1) {
+          var existingIsSlang = isSlangDef(existing.d);
+          var newIsSlang = isSlangDef(newDef);
+          if (existingIsSlang && !newIsSlang) {
+            charMap[ch] = {
+              j: jyutping,
+              d: newDef,
+              defs: best,
+              allDefs: rawDefs,
+              len: 1
+            };
+          }
         }
         continue;
       }
