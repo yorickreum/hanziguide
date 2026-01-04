@@ -942,6 +942,13 @@ $(function() {
       animationWriters.forEach(function(writer) {
         writer[method]();
       });
+      // Restart quiz if draw mode is active
+      animationWriters.forEach(function(writer) {
+        writer.cancelQuiz();
+      });
+      if ($('#draw-mode').is(':checked')) {
+        startDrawMode();
+      }
     });
 
 		$('#animation-show-outline').on('click', function() {
