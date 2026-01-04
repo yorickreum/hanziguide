@@ -605,6 +605,7 @@ function setCharacterInput(chars) {
   } else {
     sessionStorage.removeItem('hanziguide_chars');
   }
+  updateUrlHash(value);
   trackPracticeLanguageState(
     $('#show-mandarin').prop('checked'),
     $('#show-cantonese').prop('checked'),
@@ -613,6 +614,13 @@ function setCharacterInput(chars) {
   if (value) trackPracticeInput(value);
   if (value) addRecentChars(value);
   updateCharacter();
+}
+
+function updateUrlHash(value) {
+  if (typeof history === 'undefined' || !history.replaceState) return;
+  var hash = value ? '#' + value : '';
+  var base = window.location.pathname + window.location.search;
+  history.replaceState(null, '', base + hash);
 }
 
 var recentCharsKey = 'hanziguide_recent_chars';
@@ -1129,6 +1137,7 @@ $(function() {
 				trackPracticeInput(chars);
 				updateCharacter();
 				addRecentChars(chars);
+				updateUrlHash((chars || '').trim());
 			}, 500); // 500ms delay after user stops typing
 		});
 
@@ -1408,8 +1417,14 @@ $(function() {
         alert('Enter some characters first!');
         return;
       }
-      
-      var shareUrl = window.location.origin + '/#' + encodeURIComponent(characters);
+
+      var shareChars = characters;
+      try {
+        shareChars = decodeURIComponent(characters);
+      } catch (e) {
+        shareChars = characters;
+      }
+      var shareUrl = window.location.origin + '/#' + shareChars;
       var shareText = 'Learn to write: ' + characters;
       
       // Use Web Share API if available (mobile)
