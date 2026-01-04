@@ -33,13 +33,13 @@ assets/cedict_ts.u8.gz
 assets/cccanto.u8
 assets/cccanto.zip
 
-# Unihan + kIDS output
+# Unihan + decomposition output
 assets/unihan.zip
 assets/unihan/
 assets/kids.json
-assets/ids-ucs-basic.txt
 assets/radicals.json
 assets/radical-bases.json
+assets/cjk-decomp.txt
 
 # Hanazono fonts download
 assets/fonts/

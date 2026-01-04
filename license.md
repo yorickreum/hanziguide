@@ -100,11 +100,11 @@ CC-CEDICT is maintained by the community; attribution should reference the CC-CE
 
 ---
 
-### IDS Component Data
+### Component Decomposition Data
 
-Character component breakdowns (IDS/kIDS) are sourced from the [CHISE IDS dataset](https://github.com/chise/ids). This data is used to display component structure hints for individual characters.
+Character component breakdowns are sourced from the [cjk-decomp dataset](https://github.com/amake/cjk-decomp). This data is used to display component structure hints for individual characters.
 
-Please refer to the CHISE repository for licensing and attribution details.
+Please refer to the cjk-decomp repository for licensing and attribution details.
 
 ---
 
@@ -118,7 +118,7 @@ Please refer to the Unicode Unihan data files for licensing and attribution deta
 
 ### HanaMin Font
 
-Component glyph coverage is improved by loading the [HanaMin (Hanazono) fonts](https://github.com/cjkvi/HanaMinAFDKO/releases) locally for IDS components that are not covered by standard system fonts.
+Component glyph coverage is improved by loading the [HanaMin (Hanazono) fonts](https://github.com/cjkvi/HanaMinAFDKO/releases) locally for decomposition components that are not covered by standard system fonts.
 
 Please refer to the HanaMinAFDKO release page for licensing and attribution details.
 

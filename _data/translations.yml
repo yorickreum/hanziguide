@@ -27,8 +27,6 @@ en:
   share: "Share"
   script_simplified: "Simplified"
   script_traditional: "Traditional"
-  remaining_strokes: "Remaining strokes:"
-  remainder_label: "Remainder:"
   features:
     characters_count: "9000+ characters"
     characters_desc: "Access over 9000 of the most common simplified and traditional Hanzi characters."
@@ -68,7 +66,7 @@ en:
   recent_chars_title: "Recent Characters"
   clear_recent_chars: "Clear"
   char_unavailable: "Character not available"
-  radical_label: "Radical:"
+  radical_label: "Radicals:"
   basic_numbers: "Numbers (1-10)"
   common_greetings: "Common Characters"
   simple_chars: "Simple Characters"
@@ -108,8 +106,6 @@ zh:
   share: "分享"
   script_simplified: "简体"
   script_traditional: "繁体"
-  remaining_strokes: "剩余笔画："
-  remainder_label: "剩余部分："
   features:
     characters_count: "9000+ 汉字"
     characters_desc: "支持 9000 多个常用简体字和繁体字。汉字数据来自 <a target=\"_blank\" href=\"https://github.com/skishore/makemeahanzi\">Make Me a Hanzi</a> 项目。"
@@ -179,8 +175,6 @@ zh-Hant:
   share: "分享"
   script_simplified: "簡體"
   script_traditional: "繁體"
-  remaining_strokes: "剩餘筆畫："
-  remainder_label: "剩餘部分："
   features:
     characters_count: "9000+ 漢字"
     characters_desc: "支持 9000 多個常用簡體字和繁體字。漢字數據來自 <a target=\"_blank\" href=\"https://github.com/skishore/makemeahanzi\">Make Me a Hanzi</a> 項目。"

@@ -6,6 +6,7 @@ var isPlaying = false;
 var animationPromise = null;
 var strokeSpeedFactor = 1; // 1 = normal speed
 var translationTimeout = null;
+var DECOMP_VERSION = 'cjk-decomp-20260104-1';
 var cedictWorker = null;
 var cedictPending = {};
 var cedictSeq = 0;
@@ -732,9 +733,6 @@ var radicalBaseMap = null;
 var componentsLabelCache = null;
 var charUnavailableCache = null;
 var radicalLabelCache = null;
-var remainingLabelCache = null;
-var remainderLabelCache = null;
-var idsOperatorRegex = /[⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻]/g;
 var componentDefinitionCache = {};
 var componentsToastEl = null;
 var componentsToastContentEl = null;
@@ -775,33 +773,17 @@ function getRadicalLabel() {
   return radicalLabelCache;
 }
 
-function getRemainingLabel() {
-  if (remainingLabelCache !== null) return remainingLabelCache;
-  var practiceEl = document.getElementById('practice');
-  var label = practiceEl ? practiceEl.getAttribute('data-remaining-label') : '';
-  remainingLabelCache = label || 'Remaining strokes:';
-  return remainingLabelCache;
-}
-
-function getRemainderLabel() {
-  if (remainderLabelCache !== null) return remainderLabelCache;
-  var practiceEl = document.getElementById('practice');
-  var label = practiceEl ? practiceEl.getAttribute('data-remainder-label') : '';
-  remainderLabelCache = label || 'Remainder:';
-  return remainderLabelCache;
-}
-
 function loadKidsData() {
   if (kidsDataPromise) return kidsDataPromise;
-  kidsDataPromise = fetch('/assets/kids.json', { cache: 'force-cache' })
+  kidsDataPromise = fetch('/assets/kids.json?v=' + DECOMP_VERSION, { cache: 'force-cache' })
     .then(function(response) {
       if (!response.ok) {
-        throw new Error('Failed to load kIDS data');
+        throw new Error('Failed to load decomposition data');
       }
       return response.json();
     })
     .catch(function(error) {
-      console.warn('kIDS data unavailable:', error);
+      console.warn('Decomposition data unavailable:', error);
       return {};
     });
   return kidsDataPromise;
@@ -844,71 +826,60 @@ function loadRadicalBaseMap() {
   return radicalBasePromise;
 }
 
-function extractKidsComponents(ids) {
-  if (!ids) return [];
-  var cleaned = ids.replace(/&[^;]+;/g, '').replace(idsOperatorRegex, '');
-  var parts = Array.from(cleaned).filter(function(part) {
-    return part && part.trim();
-  });
-  var unique = [];
-  parts.forEach(function(part) {
-    if (unique.indexOf(part) === -1) unique.push(part);
-  });
-  return unique;
+function isIntermediateKey(key) {
+  return /^\d+$/.test(key);
 }
 
-function extractKidsComponentsOrdered(ids) {
-  if (!ids) return [];
-  var cleaned = ids.replace(/&[^;]+;/g, '').replace(idsOperatorRegex, '');
-  return Array.from(cleaned).filter(function(part) {
-    return part && part.trim();
-  });
+function getDecompEntry(kidsMap, key) {
+  if (!kidsMap || !key) return null;
+  var entry = kidsMap[key];
+  if (!entry || !entry.c || !entry.c.length) return null;
+  return entry;
 }
 
-function parseIdsTree(ids) {
-  if (!ids) return null;
-  var cleaned = ids.replace(/&[^;]+;/g, '').trim();
-  if (!cleaned) return null;
-  var tokens = Array.from(cleaned);
-  var idx = 0;
-
-  function nextNode() {
-    if (idx >= tokens.length) return null;
-    var token = tokens[idx++];
-    if (!token) return null;
-    if (idsOperatorRegex.test(token)) {
-      var arity = (token === '⿲' || token === '⿳') ? 3 : 2;
-      var children = [];
-      for (var i = 0; i < arity; i++) {
-        var child = nextNode();
-        if (child) children.push(child);
-      }
-      return { op: token, children: children };
-    }
-    return { char: token };
+function expandDecompComponent(kidsMap, component, seen) {
+  if (!component) return [];
+  if (seen[component]) return [];
+  var entry = getDecompEntry(kidsMap, component);
+  if (entry) {
+    seen[component] = true;
+    var expanded = [];
+    entry.c.forEach(function(child) {
+      expanded = expanded.concat(expandDecompComponent(kidsMap, child, seen));
+    });
+    delete seen[component];
+    if (expanded.length) return expanded;
+    return isIntermediateKey(component) ? [] : [component];
   }
-
-  return nextNode();
+  if (isIntermediateKey(component)) return [];
+  return [component];
 }
 
-function flattenIdsTree(node) {
-  if (!node) return [];
-  if (node.char) return [node.char];
-  var result = [];
-  if (!node.children) return result;
-  node.children.forEach(function(child) {
-    result = result.concat(flattenIdsTree(child));
+function expandDecompComponents(kidsMap, components) {
+  var expanded = [];
+  (components || []).forEach(function(component) {
+    expanded = expanded.concat(expandDecompComponent(kidsMap, component, {}));
   });
-  return result;
+  return expanded;
 }
 
-function containsRadicalInTree(node, radicalChar) {
-  if (!node) return false;
-  if (node.char) return matchesRadical(node.char, radicalChar);
-  if (!node.children) return false;
-  return node.children.some(function(child) {
-    return containsRadicalInTree(child, radicalChar);
+function componentContainsRadical(kidsMap, component, radicalChar, seen) {
+  if (!component) return false;
+  if (matchesRadical(component, radicalChar)) return true;
+  if (seen[component]) return false;
+  var entry = getDecompEntry(kidsMap, component);
+  if (!entry) return false;
+  seen[component] = true;
+  var found = entry.c.some(function(child) {
+    return componentContainsRadical(kidsMap, child, radicalChar, seen);
   });
+  delete seen[component];
+  return found;
+}
+
+function buildDecompRaw(entry) {
+  if (!entry) return '';
+  return entry.t + '(' + entry.c.join(',') + ')';
 }
 
 var radicalVariantMap = {
@@ -1135,7 +1106,7 @@ function formatComponentDefinition(entry, showMandarin, showCantonese) {
   return hasCanto ? entry.cantoDef : (entry.d || '');
 }
 
-function buildComponentsDetail(ids, components) {
+function buildComponentsDetail(raw, components) {
   var lines = [];
   var showMandarin = $('#show-mandarin').prop('checked');
   var showCantonese = $('#show-cantonese').prop('checked');
@@ -1149,7 +1120,7 @@ function buildComponentsDetail(ids, components) {
     var suffix = extra.length ? ' (' + extra.join(' / ') + ')' : '';
     lines.push(component + ': ' + def + suffix);
   });
-  if (ids && !/&[^;]+;/.test(ids)) lines.push('IDS: ' + ids);
+  if (raw) lines.push('Decomp: ' + raw);
   return lines.join('\n');
 }
 
@@ -1160,13 +1131,14 @@ function renderKidsComponents(char, targetEl) {
     return;
   }
   loadKidsData().then(function(kidsMap) {
-    var ids = kidsMap[char];
-    if (!ids) {
+    var entry = getDecompEntry(kidsMap, char);
+    if (!entry) {
       targetEl.style.display = 'none';
       targetEl.classList.remove('components-heavy-font');
       return;
     }
-    var components = extractKidsComponents(ids);
+    var raw = buildDecompRaw(entry);
+    var components = expandDecompComponents(kidsMap, entry.c);
     if (!components.length) {
       targetEl.style.display = 'none';
       targetEl.classList.remove('components-heavy-font');
@@ -1193,7 +1165,7 @@ function renderKidsComponents(char, targetEl) {
 
     lookupPromise.then(function() {
       targetEl.textContent = '';
-      targetEl.setAttribute('title', ids);
+      targetEl.setAttribute('title', raw);
       targetEl.style.display = 'block';
 
       var labelSpan = document.createElement('span');
@@ -1201,7 +1173,7 @@ function renderKidsComponents(char, targetEl) {
       labelSpan.className = 'components-label';
       targetEl.appendChild(labelSpan);
 
-      var detailText = buildComponentsDetail(ids, components);
+      var detailText = buildComponentsDetail(raw, components);
       targetEl.appendChild(document.createTextNode(' '));
 
       components.forEach(function(component, idx) {
@@ -1241,37 +1213,32 @@ function renderKidsComponents(char, targetEl) {
   });
 }
 
-function getRadicalRemainder(ids, radicalChar) {
-  if (!ids || !radicalChar) return { main: '', all: [] };
-  var parsed = parseIdsTree(ids);
-  if (parsed && parsed.op && parsed.children && parsed.children.length >= 2) {
-    var matches = parsed.children.map(function(child) {
-      return containsRadicalInTree(child, radicalChar);
+function getRadicalRemainder(kidsMap, entry, radicalChar) {
+  if (!entry || !radicalChar) return { main: '', all: [] };
+  var components = entry.c || [];
+  if (!components.length) return { main: '', all: [] };
+  var matches = components.map(function(component) {
+    return componentContainsRadical(kidsMap, component, radicalChar, {});
+  });
+  var matchCount = matches.filter(Boolean).length;
+  if (matchCount === 1) {
+    var remainderComponents = components.filter(function(component, index) {
+      return !matches[index];
     });
-    var matchCount = matches.filter(Boolean).length;
-    if (matchCount === 1) {
-      var remainderNodes = parsed.children.filter(function(child, index) {
-        return !matches[index];
-      });
-      var remainderChars = [];
-      remainderNodes.forEach(function(child) {
-        remainderChars = remainderChars.concat(flattenIdsTree(child));
-      });
-      if (remainderChars.length) {
-        return { main: remainderChars[0], all: remainderChars };
-      }
+    var remainderChars = expandDecompComponents(kidsMap, remainderComponents);
+    if (remainderChars.length) {
+      return { main: remainderChars[0], all: remainderChars };
     }
   }
 
-  var parts = extractKidsComponentsOrdered(ids);
-  if (!parts.length) return { main: '', all: [] };
-  var remainder = parts.filter(function(part) {
+  var expanded = expandDecompComponents(kidsMap, components);
+  var remainder = expanded.filter(function(part) {
     return !matchesRadical(part, radicalChar);
   });
   return { main: remainder[0] || '', all: remainder };
 }
 
-function buildRadicalDetail(radicalChar, remainderParts, ids) {
+function buildRadicalDetail(radicalChar, remainderParts, raw) {
   var lines = [];
   var showMandarin = $('#show-mandarin').prop('checked');
   var showCantonese = $('#show-cantonese').prop('checked');
@@ -1286,16 +1253,12 @@ function buildRadicalDetail(radicalChar, remainderParts, ids) {
     var suffix = extra.length ? ' (' + extra.join(' / ') + ')' : '';
     lines.push(ch + ': ' + def + suffix);
   });
-  if (ids && !/&[^;]+;/.test(ids)) lines.push('IDS: ' + ids);
+  if (raw) lines.push('Decomp: ' + raw);
   return lines.join('\n');
 }
 
 function renderRadicalLine(targetEl, radicalChar, remainderText, remainderParts, detailText) {
   if (!targetEl || !radicalChar) return;
-  var label = getRadicalLabel() + ' ';
-  if (remainderText) {
-    label += ' + ' + remainderText;
-  }
   targetEl.textContent = '';
   var labelSpan = document.createElement('span');
   labelSpan.textContent = getRadicalLabel();
@@ -1361,9 +1324,10 @@ function renderRadical(char, targetEl, index) {
       targetEl.style.display = 'none';
       return;
     }
-    var ids = kidsMap[char] || '';
+    var entry = getDecompEntry(kidsMap, char);
+    var raw = entry ? buildDecompRaw(entry) : '';
     var displayRadical = normalizeRadicalChar(radical);
-    var remainder = getRadicalRemainder(ids, displayRadical);
+    var remainder = getRadicalRemainder(kidsMap, entry, displayRadical);
     var detailChars = [displayRadical].concat(remainder.all || []);
     var missing = detailChars.filter(function(component) {
       return componentDefinitionCache[component] === undefined;
@@ -1380,7 +1344,7 @@ function renderRadical(char, targetEl, index) {
       : Promise.resolve();
 
     lookupPromise.then(function() {
-      var detail = buildRadicalDetail(displayRadical, remainder.all, ids);
+      var detail = buildRadicalDetail(displayRadical, remainder.all, raw);
       renderRadicalLine(targetEl, displayRadical, remainder.main, remainder.all, detail);
       targetEl.style.display = 'block';
     });

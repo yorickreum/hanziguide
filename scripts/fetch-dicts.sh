@@ -34,8 +34,8 @@ unihan_dir="${assets_dir}/unihan"
 kids_out="${assets_dir}/kids.json"
 radicals_out="${assets_dir}/radicals.json"
 radical_bases_out="${assets_dir}/radical-bases.json"
-ids_url="https://raw.githubusercontent.com/chise/ids/master/IDS-UCS-Basic.txt"
-ids_file="${assets_dir}/ids-ucs-basic.txt"
+cjk_decomp_url="https://raw.githubusercontent.com/amake/cjk-decomp/master/cjk-decomp.txt"
+cjk_decomp_file="${assets_dir}/cjk-decomp.txt"
 
 echo "Downloading Unihan..."
 curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
@@ -43,11 +43,11 @@ curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
 rm -rf "${unihan_dir}"
 unzip -o "${unihan_zip}" -d "${unihan_dir}"
 
-echo "Downloading IDS (CHISE)..."
+echo "Downloading cjk-decomp..."
 curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
-  "${ids_url}" -o "${ids_file}"
+  "${cjk_decomp_url}" -o "${cjk_decomp_file}"
 
-node "${root_dir}/scripts/build-kids.js" "${unihan_dir}" "${ids_file}" "${kids_out}"
+node "${root_dir}/scripts/build-kids.js" "${cjk_decomp_file}" "${kids_out}"
 ls -lh "${kids_out}"
 
 node "${root_dir}/scripts/build-radicals.js" "${unihan_dir}/Unihan_IRGSources.txt" "${radicals_out}"
