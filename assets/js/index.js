@@ -435,6 +435,7 @@ function updateCharacter() {
     $('#animation-target').html('<p style="padding: 20px; color: #999;">Enter characters above to see them here</p>');
     $('#translation-display').hide();
     animationWriters = [];
+    updateStrokeSliderMax();
     return;
   }
 
@@ -477,6 +478,11 @@ function updateCharacter() {
     pinyinDiv.style.minHeight = '20px';
     charContainer.appendChild(pinyinDiv);
 
+    // Create animation writer
+    var animDiv = document.createElement('div');
+    animDiv.id = 'anim-char-' + index;
+    charContainer.appendChild(animDiv);
+
     // Create components display
     var componentsDiv = document.createElement('div');
     componentsDiv.id = 'components-' + index;
@@ -487,11 +493,17 @@ function updateCharacter() {
     componentsDiv.style.minHeight = '16px';
     componentsDiv.style.display = 'none';
     charContainer.appendChild(componentsDiv);
-    
-    // Create animation writer
-    var animDiv = document.createElement('div');
-    animDiv.id = 'anim-char-' + index;
-    charContainer.appendChild(animDiv);
+
+    // Create radical display
+    var radicalDiv = document.createElement('div');
+    radicalDiv.id = 'radical-' + index;
+    radicalDiv.className = 'radical-line';
+    radicalDiv.style.fontSize = '12px';
+    radicalDiv.style.color = '#888';
+    radicalDiv.style.marginBottom = '5px';
+    radicalDiv.style.minHeight = '16px';
+    radicalDiv.style.display = 'none';
+    charContainer.appendChild(radicalDiv);
     
     document.getElementById('animation-target').appendChild(charContainer);
 
@@ -550,6 +562,7 @@ function updateCharacter() {
               svg.setAttribute('data-has-grid', 'true');
             }
 
+            updateStrokeSliderMax();
             return charData;
           })
           .catch(function(error) {
@@ -596,9 +609,12 @@ function updateCharacter() {
     }, 100);
 
     renderKidsComponents(char, componentsDiv);
+    renderRadical(char, radicalDiv, index);
     
     animationWriters.push(animWriter);
   });
+
+  updateStrokeSliderMax();
 
   // expose writers for debugging
   window.animationWriters = animationWriters;
@@ -710,8 +726,14 @@ function renderRecentChars(list) {
 }
 
 var kidsDataPromise = null;
+var radicalsDataPromise = null;
+var radicalBasePromise = null;
+var radicalBaseMap = null;
 var componentsLabelCache = null;
 var charUnavailableCache = null;
+var radicalLabelCache = null;
+var remainingLabelCache = null;
+var remainderLabelCache = null;
 var idsOperatorRegex = /[⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻]/g;
 var componentDefinitionCache = {};
 var componentsToastEl = null;
@@ -727,12 +749,46 @@ function getComponentsLabel() {
   return componentsLabelCache;
 }
 
+function shouldShowComponents() {
+  try {
+    var stored = localStorage.getItem('hanziguide_show_components');
+    if (stored === null) return false;
+    return stored !== 'false' && stored !== '0';
+  } catch (e) {
+    return false;
+  }
+}
+
 function getCharUnavailableText() {
   if (charUnavailableCache !== null) return charUnavailableCache;
   var practiceEl = document.getElementById('practice');
   var text = practiceEl ? practiceEl.getAttribute('data-char-unavailable') : '';
   charUnavailableCache = text || 'Character not available';
   return charUnavailableCache;
+}
+
+function getRadicalLabel() {
+  if (radicalLabelCache !== null) return radicalLabelCache;
+  var practiceEl = document.getElementById('practice');
+  var label = practiceEl ? practiceEl.getAttribute('data-radical-label') : '';
+  radicalLabelCache = label || 'Radical:';
+  return radicalLabelCache;
+}
+
+function getRemainingLabel() {
+  if (remainingLabelCache !== null) return remainingLabelCache;
+  var practiceEl = document.getElementById('practice');
+  var label = practiceEl ? practiceEl.getAttribute('data-remaining-label') : '';
+  remainingLabelCache = label || 'Remaining strokes:';
+  return remainingLabelCache;
+}
+
+function getRemainderLabel() {
+  if (remainderLabelCache !== null) return remainderLabelCache;
+  var practiceEl = document.getElementById('practice');
+  var label = practiceEl ? practiceEl.getAttribute('data-remainder-label') : '';
+  remainderLabelCache = label || 'Remainder:';
+  return remainderLabelCache;
 }
 
 function loadKidsData() {
@@ -751,6 +807,43 @@ function loadKidsData() {
   return kidsDataPromise;
 }
 
+function loadRadicalsData() {
+  if (radicalsDataPromise) return radicalsDataPromise;
+  radicalsDataPromise = fetch('/assets/radicals.json', { cache: 'force-cache' })
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Failed to load radicals data');
+      }
+      return response.json();
+    })
+    .catch(function(error) {
+      console.warn('Radicals data unavailable:', error);
+      return {};
+    });
+  return radicalsDataPromise;
+}
+
+function loadRadicalBaseMap() {
+  if (radicalBasePromise) return radicalBasePromise;
+  radicalBasePromise = fetch('/assets/radical-bases.json', { cache: 'force-cache' })
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Failed to load radical base map');
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      radicalBaseMap = data || {};
+      return radicalBaseMap;
+    })
+    .catch(function(error) {
+      console.warn('Radical base map unavailable:', error);
+      radicalBaseMap = null;
+      return {};
+    });
+  return radicalBasePromise;
+}
+
 function extractKidsComponents(ids) {
   if (!ids) return [];
   var cleaned = ids.replace(/&[^;]+;/g, '').replace(idsOperatorRegex, '');
@@ -762,6 +855,104 @@ function extractKidsComponents(ids) {
     if (unique.indexOf(part) === -1) unique.push(part);
   });
   return unique;
+}
+
+function extractKidsComponentsOrdered(ids) {
+  if (!ids) return [];
+  var cleaned = ids.replace(/&[^;]+;/g, '').replace(idsOperatorRegex, '');
+  return Array.from(cleaned).filter(function(part) {
+    return part && part.trim();
+  });
+}
+
+function parseIdsTree(ids) {
+  if (!ids) return null;
+  var cleaned = ids.replace(/&[^;]+;/g, '').trim();
+  if (!cleaned) return null;
+  var tokens = Array.from(cleaned);
+  var idx = 0;
+
+  function nextNode() {
+    if (idx >= tokens.length) return null;
+    var token = tokens[idx++];
+    if (!token) return null;
+    if (idsOperatorRegex.test(token)) {
+      var arity = (token === '⿲' || token === '⿳') ? 3 : 2;
+      var children = [];
+      for (var i = 0; i < arity; i++) {
+        var child = nextNode();
+        if (child) children.push(child);
+      }
+      return { op: token, children: children };
+    }
+    return { char: token };
+  }
+
+  return nextNode();
+}
+
+function flattenIdsTree(node) {
+  if (!node) return [];
+  if (node.char) return [node.char];
+  var result = [];
+  if (!node.children) return result;
+  node.children.forEach(function(child) {
+    result = result.concat(flattenIdsTree(child));
+  });
+  return result;
+}
+
+function containsRadicalInTree(node, radicalChar) {
+  if (!node) return false;
+  if (node.char) return matchesRadical(node.char, radicalChar);
+  if (!node.children) return false;
+  return node.children.some(function(child) {
+    return containsRadicalInTree(child, radicalChar);
+  });
+}
+
+var radicalVariantMap = {
+  '衣': ['衣', '衤', '𧘇'],
+  '雨': ['雨', '⻗', '⾬'],
+  '水': ['水', '氵'],
+  '心': ['心', '忄', '⺗'],
+  '手': ['手', '扌'],
+  '火': ['火', '灬'],
+  '人': ['人', '亻'],
+  '竹': ['竹', '⺮'],
+  '言': ['言', '讠'],
+  '金': ['金', '钅'],
+  '糸': ['糸', '纟'],
+  '食': ['食', '饣'],
+  '犬': ['犬', '犭'],
+  '草': ['艹', '艸', '草'],
+  '門': ['門', '门'],
+  '馬': ['馬', '马'],
+  '車': ['車', '车'],
+  '魚': ['魚', '鱼'],
+  '鳥': ['鳥', '鸟'],
+  '貝': ['貝', '贝'],
+  '頁': ['頁', '页']
+};
+
+function normalizeRadicalChar(radicalChar) {
+  if (!radicalChar) return radicalChar;
+  if (radicalBaseMap && radicalBaseMap[radicalChar]) return radicalBaseMap[radicalChar];
+  try {
+    var normalized = radicalChar.normalize('NFKD');
+    return normalized || radicalChar;
+  } catch (e) {
+    return radicalChar;
+  }
+}
+
+function matchesRadical(component, radicalChar) {
+  if (!component || !radicalChar) return false;
+  var normalized = normalizeRadicalChar(radicalChar);
+  if (component === radicalChar || component === normalized) return true;
+  var variants = radicalVariantMap[normalized];
+  if (!variants) return false;
+  return variants.indexOf(component) !== -1;
 }
 
 function needsHeavyComponentsFont(components) {
@@ -797,6 +988,7 @@ function ensureComponentsToast() {
   componentsToastEl.style.border = '1px solid #ddd';
   componentsToastEl.style.fontFamily = 'inherit';
   componentsToastEl.style.lineHeight = '1.5';
+  componentsToastEl.style.cursor = 'move';
 
   var closeBtn = document.createElement('button');
   closeBtn.innerHTML = '&times;';
@@ -836,6 +1028,47 @@ function ensureComponentsToast() {
       hideComponentsToast();
     }
   });
+
+  var dragState = {
+    active: false,
+    offsetX: 0,
+    offsetY: 0
+  };
+
+  var startDrag = function(e) {
+    if (e.button && e.button !== 0) return;
+    if (e.target === closeBtn) return;
+    var rect = componentsToastEl.getBoundingClientRect();
+    componentsToastEl.style.transform = 'none';
+    componentsToastEl.style.left = rect.left + 'px';
+    componentsToastEl.style.top = rect.top + 'px';
+    dragState.active = true;
+    dragState.offsetX = e.clientX - rect.left;
+    dragState.offsetY = e.clientY - rect.top;
+    componentsToastEl.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  };
+
+  var moveDrag = function(e) {
+    if (!dragState.active) return;
+    var nextLeft = e.clientX - dragState.offsetX;
+    var nextTop = e.clientY - dragState.offsetY;
+    componentsToastEl.style.left = nextLeft + 'px';
+    componentsToastEl.style.top = nextTop + 'px';
+  };
+
+  var endDrag = function(e) {
+    if (!dragState.active) return;
+    dragState.active = false;
+    try {
+      componentsToastEl.releasePointerCapture(e.pointerId);
+    } catch (err) {}
+  };
+
+  componentsToastEl.addEventListener('pointerdown', startDrag);
+  componentsToastEl.addEventListener('pointermove', moveDrag);
+  componentsToastEl.addEventListener('pointerup', endDrag);
+  componentsToastEl.addEventListener('pointercancel', endDrag);
 }
 
 function showComponentsToast(text) {
@@ -855,6 +1088,34 @@ function hideComponentsToast() {
   if (!componentsToastEl) return;
   componentsToastEl.style.display = 'none';
   componentsToastVisible = false;
+}
+
+function showInfoToast(text) {
+  showComponentsToast(text);
+}
+
+function appendInfoIcon(targetEl, detailText, ariaLabel) {
+  if (!detailText || !targetEl) return;
+  var infoIcon = document.createElement('span');
+  infoIcon.style.marginLeft = '6px';
+  infoIcon.style.cursor = 'pointer';
+  infoIcon.style.color = '#888';
+  infoIcon.setAttribute('tabindex', '0');
+  infoIcon.setAttribute('role', 'button');
+  infoIcon.setAttribute('aria-label', ariaLabel || 'Show details');
+  infoIcon.setAttribute('title', detailText);
+  infoIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+  infoIcon.onclick = function(e) {
+    e.stopPropagation();
+    showInfoToast(detailText);
+  };
+  infoIcon.onkeydown = function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      showInfoToast(detailText);
+    }
+  };
+  targetEl.appendChild(infoIcon);
 }
 
 function formatComponentDefinition(entry, showMandarin, showCantonese) {
@@ -893,6 +1154,11 @@ function buildComponentsDetail(ids, components) {
 }
 
 function renderKidsComponents(char, targetEl) {
+  if (!shouldShowComponents()) {
+    targetEl.style.display = 'none';
+    targetEl.classList.remove('components-heavy-font');
+    return;
+  }
   loadKidsData().then(function(kidsMap) {
     var ids = kidsMap[char];
     if (!ids) {
@@ -969,26 +1235,154 @@ function renderKidsComponents(char, targetEl) {
       });
 
       if (detailText) {
-        var infoIcon = document.createElement('span');
-        infoIcon.style.marginLeft = '6px';
-        infoIcon.style.cursor = 'pointer';
-        infoIcon.style.color = '#888';
-        infoIcon.setAttribute('tabindex', '0');
-        infoIcon.setAttribute('role', 'button');
-        infoIcon.setAttribute('aria-label', 'Show component meanings');
-        infoIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
-        infoIcon.onclick = function(e) {
-          e.stopPropagation();
-          showComponentsToast(detailText);
-        };
-        infoIcon.onkeydown = function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            showComponentsToast(detailText);
-          }
-        };
-        targetEl.appendChild(infoIcon);
+        appendInfoIcon(targetEl, detailText, 'Show component meanings');
       }
+    });
+  });
+}
+
+function getRadicalRemainder(ids, radicalChar) {
+  if (!ids || !radicalChar) return { main: '', all: [] };
+  var parsed = parseIdsTree(ids);
+  if (parsed && parsed.op && parsed.children && parsed.children.length >= 2) {
+    var matches = parsed.children.map(function(child) {
+      return containsRadicalInTree(child, radicalChar);
+    });
+    var matchCount = matches.filter(Boolean).length;
+    if (matchCount === 1) {
+      var remainderNodes = parsed.children.filter(function(child, index) {
+        return !matches[index];
+      });
+      var remainderChars = [];
+      remainderNodes.forEach(function(child) {
+        remainderChars = remainderChars.concat(flattenIdsTree(child));
+      });
+      if (remainderChars.length) {
+        return { main: remainderChars[0], all: remainderChars };
+      }
+    }
+  }
+
+  var parts = extractKidsComponentsOrdered(ids);
+  if (!parts.length) return { main: '', all: [] };
+  var remainder = parts.filter(function(part) {
+    return !matchesRadical(part, radicalChar);
+  });
+  return { main: remainder[0] || '', all: remainder };
+}
+
+function buildRadicalDetail(radicalChar, remainderParts, ids) {
+  var lines = [];
+  var showMandarin = $('#show-mandarin').prop('checked');
+  var showCantonese = $('#show-cantonese').prop('checked');
+  var chars = [radicalChar].concat(remainderParts || []);
+  chars.forEach(function(ch) {
+    var entry = componentDefinitionCache[ch];
+    var def = formatComponentDefinition(entry, showMandarin, showCantonese);
+    if (!def) return;
+    var extra = [];
+    if (showCantonese && entry && entry.cantoJyut) extra.push(entry.cantoJyut);
+    if (showMandarin && entry && entry.p) extra.push(entry.p);
+    var suffix = extra.length ? ' (' + extra.join(' / ') + ')' : '';
+    lines.push(ch + ': ' + def + suffix);
+  });
+  if (ids && !/&[^;]+;/.test(ids)) lines.push('IDS: ' + ids);
+  return lines.join('\n');
+}
+
+function renderRadicalLine(targetEl, radicalChar, remainderText, remainderParts, detailText) {
+  if (!targetEl || !radicalChar) return;
+  var label = getRadicalLabel() + ' ';
+  if (remainderText) {
+    label += ' + ' + remainderText;
+  }
+  targetEl.textContent = '';
+  var labelSpan = document.createElement('span');
+  labelSpan.textContent = getRadicalLabel();
+  labelSpan.className = 'components-label';
+  targetEl.appendChild(labelSpan);
+  targetEl.appendChild(document.createTextNode(' '));
+
+  var radicalSpan = document.createElement('span');
+  radicalSpan.textContent = radicalChar;
+  radicalSpan.style.cursor = 'pointer';
+  radicalSpan.setAttribute('tabindex', '0');
+  radicalSpan.setAttribute('role', 'button');
+  radicalSpan.setAttribute('aria-label', 'Load radical ' + radicalChar);
+  radicalSpan.onclick = function(e) {
+    e.stopPropagation();
+    setCharacterInput(radicalChar);
+  };
+  radicalSpan.onkeydown = function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setCharacterInput(radicalChar);
+    }
+  };
+  targetEl.appendChild(radicalSpan);
+
+  if (remainderText) {
+    targetEl.appendChild(document.createTextNode(' + '));
+    var remainder = Array.isArray(remainderParts) && remainderParts.length
+      ? remainderParts
+      : [remainderText];
+    remainder.forEach(function(part, idx) {
+      var remainderSpan = document.createElement('span');
+      remainderSpan.textContent = part;
+      remainderSpan.style.cursor = 'pointer';
+      remainderSpan.setAttribute('tabindex', '0');
+      remainderSpan.setAttribute('role', 'button');
+      remainderSpan.setAttribute('aria-label', 'Load component ' + part);
+      remainderSpan.onclick = function(e) {
+        e.stopPropagation();
+        setCharacterInput(part);
+      };
+      remainderSpan.onkeydown = function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setCharacterInput(part);
+        }
+      };
+      targetEl.appendChild(remainderSpan);
+      if (idx < remainder.length - 1) {
+        targetEl.appendChild(document.createTextNode(''));
+      }
+    });
+  }
+  appendInfoIcon(targetEl, detailText, 'Show radical and remainder');
+}
+
+function renderRadical(char, targetEl, index) {
+  Promise.all([loadRadicalsData(), loadKidsData(), loadRadicalBaseMap()]).then(function(results) {
+    var radicalsMap = results[0];
+    var kidsMap = results[1];
+    var radical = radicalsMap[char];
+    if (!radical) {
+      targetEl.style.display = 'none';
+      return;
+    }
+    var ids = kidsMap[char] || '';
+    var displayRadical = normalizeRadicalChar(radical);
+    var remainder = getRadicalRemainder(ids, displayRadical);
+    var detailChars = [displayRadical].concat(remainder.all || []);
+    var missing = detailChars.filter(function(component) {
+      return componentDefinitionCache[component] === undefined;
+    });
+    var lookupPromise = missing.length
+      ? lookupCedict(missing.join(''))
+          .then(function(result) {
+            missing.forEach(function(component) {
+              var entry = result[component];
+              componentDefinitionCache[component] = entry || null;
+            });
+          })
+          .catch(function() {})
+      : Promise.resolve();
+
+    lookupPromise.then(function() {
+      var detail = buildRadicalDetail(displayRadical, remainder.all, ids);
+      renderRadicalLine(targetEl, displayRadical, remainder.main, remainder.all, detail);
+      targetEl.style.display = 'block';
     });
   });
 }
@@ -1003,10 +1397,14 @@ function updateStrokeSliderMax() {
   var total = getTotalStrokes();
   var slider = document.getElementById('stroke-slider');
   var label = document.getElementById('stroke-slider-label');
-  if (!slider || !label) return;
-  slider.max = String(total);
-  slider.value = String(currentStrokeIndex);
-  label.textContent = currentStrokeIndex + ' / ' + total;
+  var safeCurrent = Math.min(currentStrokeIndex, total);
+  if (slider) {
+    slider.max = String(total);
+    slider.value = String(safeCurrent);
+  }
+  if (label) {
+    label.textContent = safeCurrent + ' / ' + total;
+  }
 }
 
 function renderCurrentState(animate) {
@@ -1306,6 +1704,7 @@ $(function() {
               duration: 1500 / strokeSpeedFactor,
                 onComplete: function() {
                   currentStrokeIndex++;
+                  updateStrokeSliderMax();
                   strokeIdx++;
                   if (!isPlaying) return;
                   // Gap between strokes also depends on speed
@@ -1358,6 +1757,7 @@ $(function() {
     $('#animate-reset').on('click', function(evt) {
       evt.preventDefault();
       currentStrokeIndex = 0;
+      updateStrokeSliderMax();
       // Hide all strokes
       animationWriters.forEach(function(writer) {
         writer.hideCharacter();
@@ -1442,6 +1842,7 @@ $(function() {
           // Advance to next stroke
           if (currentStrokeIndex < getTotalStrokes()) {
             currentStrokeIndex++;
+            updateStrokeSliderMax();
             
             // Check if we need to move to next character's quiz
             if (currentStrokeIndex < getTotalStrokes()) {

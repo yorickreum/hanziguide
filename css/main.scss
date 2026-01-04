@@ -153,6 +153,10 @@ body {
   font-family: "HanaMinExtA", "HanaMinExtB", "HanaMinA", "HanaMinB", $base-font-family;
 }
 
+.radical-line {
+  font-family: $base-font-family;
+}
+
 .char-unavailable {
   color: $grey-color;
   font-size: 12px;

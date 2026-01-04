@@ -32,6 +32,8 @@ unihan_url="https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip"
 unihan_zip="${assets_dir}/unihan.zip"
 unihan_dir="${assets_dir}/unihan"
 kids_out="${assets_dir}/kids.json"
+radicals_out="${assets_dir}/radicals.json"
+radical_bases_out="${assets_dir}/radical-bases.json"
 ids_url="https://raw.githubusercontent.com/chise/ids/master/IDS-UCS-Basic.txt"
 ids_file="${assets_dir}/ids-ucs-basic.txt"
 
@@ -47,3 +49,9 @@ curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
 
 node "${root_dir}/scripts/build-kids.js" "${unihan_dir}" "${ids_file}" "${kids_out}"
 ls -lh "${kids_out}"
+
+node "${root_dir}/scripts/build-radicals.js" "${unihan_dir}/Unihan_IRGSources.txt" "${radicals_out}"
+ls -lh "${radicals_out}"
+
+node "${root_dir}/scripts/build-radical-bases.js" "${radical_bases_out}"
+ls -lh "${radical_bases_out}"

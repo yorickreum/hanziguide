@@ -38,6 +38,8 @@ assets/unihan.zip
 assets/unihan/
 assets/kids.json
 assets/ids-ucs-basic.txt
+assets/radicals.json
+assets/radical-bases.json
 
 # Hanazono fonts download
 assets/fonts/

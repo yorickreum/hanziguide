@@ -108,6 +108,14 @@ Please refer to the CHISE repository for licensing and attribution details.
 
 ---
 
+### Radical Data
+
+Semantic radicals are derived from the Unicode Unihan database (`kRSUnicode` field), published by the Unicode Consortium.
+
+Please refer to the Unicode Unihan data files for licensing and attribution details.
+
+---
+
 ### HanaMin Font
 
 Component glyph coverage is improved by loading the [HanaMin (Hanazono) fonts](https://github.com/cjkvi/HanaMinAFDKO/releases) locally for IDS components that are not covered by standard system fonts.
