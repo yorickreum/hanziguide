@@ -1447,53 +1447,34 @@ function renderCurrentState(animate) {
       }
     }
   } else {
-    // For prev button: reset everything and redraw all strokes up to currentStrokeIndex
-    animationWriters.forEach(function(writer) {
-      writer.hideCharacter();
-    });
-    
+    // For prev button: update stroke visibility instantly instead of re-animating.
     var strokeCount = 0;
-    var strokesToDraw = [];
-    
-    for (var i = 0; i < animationWriters.length; i++) {
-      var writer = animationWriters[i];
-      var charStrokes = writer._character ? writer._character.strokes.length : 0;
-      
+    animationWriters.forEach(function(writer) {
+      if (!writer._character || !writer._renderState) return;
+      try {
+        writer.cancelAnimation();
+      } catch (e) {}
+      var charStrokes = writer._character.strokes.length;
+      var visibleCount = Math.max(Math.min(currentStrokeIndex - strokeCount, charStrokes), 0);
+      strokeCount += charStrokes;
+      var strokeState = {};
       for (var s = 0; s < charStrokes; s++) {
-        if (strokeCount < currentStrokeIndex) {
-          strokesToDraw.push({writer: writer, strokeIndex: s});
+        var visible = s < visibleCount;
+        strokeState[s] = { opacity: visible ? 1 : 0, displayPortion: visible ? 1 : 0 };
+      }
+      writer._renderState.updateState({
+        character: {
+          main: {
+            opacity: visibleCount > 0 ? 1 : 0,
+            strokes: strokeState
+          }
         }
-        strokeCount++;
-      }
-    }
-    
-    // Draw all strokes in sequence with callbacks
-    var drawIndex = 0;
-    var drawNext = function() {
-      if (drawIndex >= strokesToDraw.length) {
-        var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
-        animationWriters.forEach(function(writer) {
-          writer[method]();
-        });
-        return;
-      }
-      
-      var item = strokesToDraw[drawIndex];
-      drawIndex++;
-      item.writer.animateStroke(item.strokeIndex, {
-        immediate: true,
-        onComplete: drawNext
       });
-    };
-    
-    if (strokesToDraw.length > 0) {
-      drawNext();
-    } else {
-      var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
-      animationWriters.forEach(function(writer) {
-        writer[method]();
-      });
-    }
+    });
+    var method = shouldShowOutline('animation') ? 'showOutline' : 'hideOutline';
+    animationWriters.forEach(function(writer) {
+      writer[method]();
+    });
   }
 }
 
