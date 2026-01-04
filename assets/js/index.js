@@ -1217,20 +1217,6 @@ function getRadicalRemainder(kidsMap, entry, radicalChar) {
   if (!entry || !radicalChar) return { main: '', all: [] };
   var components = entry.c || [];
   if (!components.length) return { main: '', all: [] };
-  var matches = components.map(function(component) {
-    return componentContainsRadical(kidsMap, component, radicalChar, {});
-  });
-  var matchCount = matches.filter(Boolean).length;
-  if (matchCount === 1) {
-    var remainderComponents = components.filter(function(component, index) {
-      return !matches[index];
-    });
-    var remainderChars = expandDecompComponents(kidsMap, remainderComponents);
-    if (remainderChars.length) {
-      return { main: remainderChars[0], all: remainderChars };
-    }
-  }
-
   var expanded = expandDecompComponents(kidsMap, components);
   var remainder = expanded.filter(function(part) {
     return !matchesRadical(part, radicalChar);
