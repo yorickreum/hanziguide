@@ -2,8 +2,8 @@
 title: Hanzi Guide
 email: tech@yorickreum.de
 description: >
-  Learn to write Traditional and Simplified Chinese characters with animated stroke order.
-  Practice Mandarin and Cantonese with 9000+ characters.
+  Hanzi Guide is a free educational tool with animated Chinese stroke order, radical decomposition,
+  and Mandarin and Cantonese support for simplified & traditional characters.
 baseurl: "/" # the subpath of your site, e.g. /blog/
 url: "https://www.hanzi.guide" # the base hostname & protocol for your site
 github_username:  yorickreum
