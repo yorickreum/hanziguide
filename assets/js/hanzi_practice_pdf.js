@@ -416,9 +416,9 @@ export async function generateHanziPracticePdf(options = {}) {
     const dataUrl = await renderStrokeDiagramDataUrl(charData, opts);
     const hintDataUrl = await renderPracticeHintDataUrl(charData, opts);
 
-    const diagramX = opts.marginMm;
     const diagramY = opts.marginMm;
     const diagramSize = opts.diagramSizeMm;
+    const diagramX = (pageWidth - diagramSize) / 2;
     doc.addImage(dataUrl, "PNG", diagramX, diagramY, diagramSize, diagramSize);
 
     // Hanzi Guide logo (top right)
@@ -451,8 +451,8 @@ export async function generateHanziPracticePdf(options = {}) {
     const heading = `Practice Sheet for ${char}`;
     doc.setFontSize(16);
     doc.setTextColor(30, 30, 30);
-    const headingX = diagramX + diagramSize + 6;
-    const headingY = diagramY + diagramSize - 14;
+    const headingX = opts.marginMm;
+    const headingY = opts.marginMm + 6;
     doc.text(heading, headingX, headingY);
     const underlineWidth = doc.getTextWidth(heading);
     doc.setDrawColor(30, 30, 30);
