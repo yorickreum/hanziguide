@@ -343,20 +343,13 @@ async function svgToPngDataUrl(svg, sizePx) {
   }
 }
 
-async function renderStrokeDiagramDataUrl(charData, opts) {
-  const svg = buildStrokeDiagramSvg(charData, opts);
-  return svgToPngDataUrl(svg, opts.diagramPx);
-}
-
-async function renderPracticeHintDataUrl(charData, opts) {
-  const hintOpts = {
-    ...opts,
-    showMedians: false,
-    showNumbers: false,
-    strokeColor: "#d6d6d6"
-  };
-  const svg = buildStrokeDiagramSvg(charData, hintOpts);
-  return svgToPngDataUrl(svg, opts.diagramPx);
+async function renderSvgToPdf(doc, svg, x, y, width, height) {
+  if (typeof doc.svg === "function") {
+    await doc.svg(svg, { x, y, width, height });
+    return;
+  }
+  const dataUrl = await svgToPngDataUrl(svg, DEFAULTS.diagramPx);
+  doc.addImage(dataUrl, "PNG", x, y, width, height);
 }
 
 function drawPracticeGrid(doc, x, y, width, height, rows, cols, opts) {
@@ -413,13 +406,11 @@ export async function generateHanziPracticePdf(options = {}) {
     if (i > 0) doc.addPage();
 
     const charData = await HanziWriter.loadCharacterData(char);
-    const dataUrl = await renderStrokeDiagramDataUrl(charData, opts);
-    const hintDataUrl = await renderPracticeHintDataUrl(charData, opts);
-
     const diagramY = opts.marginMm;
     const diagramSize = opts.diagramSizeMm;
     const diagramX = (pageWidth - diagramSize) / 2;
-    doc.addImage(dataUrl, "PNG", diagramX, diagramY, diagramSize, diagramSize);
+    const diagramSvg = buildStrokeDiagramSvg(charData, opts);
+    await renderSvgToPdf(doc, diagramSvg, diagramX, diagramY, diagramSize, diagramSize);
 
     // Hanzi Guide logo (top right)
     const logoText = "Hanzi Guide";
@@ -483,14 +474,20 @@ export async function generateHanziPracticePdf(options = {}) {
     );
 
     // First row hints (light gray)
+    const hintSvg = buildStrokeDiagramSvg(charData, {
+      ...opts,
+      showMedians: false,
+      showNumbers: false,
+      strokeColor: "#d6d6d6"
+    });
     const hintPadding = 2;
     for (let col = 0; col < opts.practiceCols; col += 1) {
       const boxX = gridLayout.startX + col * gridLayout.boxSize;
       const boxY = gridLayout.startY;
       const size = gridLayout.boxSize - hintPadding * 2;
-      doc.addImage(
-        hintDataUrl,
-        "PNG",
+      await renderSvgToPdf(
+        doc,
+        hintSvg,
         boxX + hintPadding,
         boxY + hintPadding,
         size,
