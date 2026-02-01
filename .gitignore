@@ -43,3 +43,8 @@ assets/cjk-decomp.txt
 
 # Hanazono fonts download
 assets/fonts/
+!assets/fonts/
+assets/fonts/*
+!assets/fonts/NotoSansSC-Regular.ttf
+!assets/fonts/OFL.txt
+!assets/fonts/NOTICE.txt

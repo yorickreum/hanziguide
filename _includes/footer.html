@@ -19,5 +19,12 @@
 <script src="/assets/cdn/bootstrap/bootstrap.min.js"></script>
 
 {% if page.js %}
-  <script type="application/javascript" src="{{ page.js }}"></script>
+  {% if page.js == "assets/js/index.js" or page.js == "assets/js/pdf.js" %}
+    <script src="/assets/cdn/jspdf/jspdf.umd.min.js"></script>
+  {% endif %}
+  {% if page.module %}
+    <script type="module" src="{{ page.js }}"></script>
+  {% else %}
+    <script type="application/javascript" src="{{ page.js }}"></script>
+  {% endif %}
 {% endif %}

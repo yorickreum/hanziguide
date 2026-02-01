@@ -1,0 +1,4 @@
+Noto Sans SC Regular
+
+Source: https://fonts.google.com/noto/specimen/Noto+Sans+SC
+License: SIL Open Font License 1.1 (see OFL.txt)

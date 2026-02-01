@@ -25,6 +25,8 @@ en:
   play: "Play"
   next: "Next"
   share: "Share"
+  practice_pdf: "Practice PDF"
+  practice_pdf_description: "Create printable PDF practice sheets with stroke order and tracing boxes."
   script_simplified: "Simplified"
   script_traditional: "Traditional"
   features:
@@ -104,6 +106,8 @@ zh:
   play: "播放"
   next: "下一笔"
   share: "分享"
+  practice_pdf: "练习 PDF"
+  practice_pdf_description: "生成可打印的练习 PDF，包含笔顺示范与描红方格。"
   script_simplified: "简体"
   script_traditional: "繁体"
   features:
@@ -173,6 +177,8 @@ zh-Hant:
   play: "播放"
   next: "下一筆"
   share: "分享"
+  practice_pdf: "練習 PDF"
+  practice_pdf_description: "產生可列印的練習 PDF，含筆順示範與描紅方格。"
   script_simplified: "簡體"
   script_traditional: "繁體"
   features:

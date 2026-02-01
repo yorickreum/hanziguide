@@ -15,6 +15,12 @@ var lastTrackedInput = null;
 var lastTrackedLanguageState = null;
 var lastTrackedTranslation = null;
 
+import {
+  safeSessionGet,
+  safeSessionSet,
+  safeSessionRemove
+} from '/assets/js/utils/storage.js';
+
 function trackMatomoEvent(category, action, name, value) {
   if (typeof window === 'undefined' || !window._paq || typeof window._paq.push !== 'function') {
     return;
@@ -625,9 +631,9 @@ function setCharacterInput(chars) {
   var value = (chars || '').trim();
   $('#character-select').val(value);
   if (value) {
-    sessionStorage.setItem('hanziguide_chars', value);
+    safeSessionSet('hanziguide_chars', value);
   } else {
-    sessionStorage.removeItem('hanziguide_chars');
+    safeSessionRemove('hanziguide_chars');
   }
   updateUrlHash(value, true);
   trackPracticeLanguageState(
@@ -638,6 +644,7 @@ function setCharacterInput(chars) {
   if (value) trackPracticeInput(value);
   if (value) addRecentChars(value);
   updateCharacter();
+  updatePdfLink();
 }
 
 function updateUrlHash(value, shouldPush) {
@@ -646,10 +653,14 @@ function updateUrlHash(value, shouldPush) {
   if (hash === lastUrlHash) return;
   lastUrlHash = hash;
   var base = window.location.pathname + window.location.search;
-  if (shouldPush && history.pushState) {
-    history.pushState(null, '', base + hash);
-  } else {
-    history.replaceState(null, '', base + hash);
+  try {
+    if (shouldPush && history.pushState) {
+      history.pushState(null, '', base + hash);
+    } else {
+      history.replaceState(null, '', base + hash);
+    }
+  } catch (e) {
+    // Ignore history failures in restricted contexts.
   }
 }
 
@@ -1451,7 +1462,7 @@ $(function() {
 		var urlChars = '';
 		
 		console.log('Path chars:', window.HANZI_PATH_CHARS);
-		console.log('SessionStorage:', sessionStorage.getItem('hanziguide_chars'));
+		console.log('SessionStorage:', safeSessionGet('hanziguide_chars'));
 		
 		// First check if chars were extracted from path by inline script
 		if (window.HANZI_PATH_CHARS) {
@@ -1459,8 +1470,8 @@ $(function() {
 			console.log('Using path chars:', urlChars);
 		}
 		// Then check sessionStorage (from 404 redirect OR previous session)
-		else if (sessionStorage.getItem('hanziguide_chars')) {
-			urlChars = sessionStorage.getItem('hanziguide_chars');
+		else if (safeSessionGet('hanziguide_chars')) {
+			urlChars = safeSessionGet('hanziguide_chars');
 			// Don't remove it - keep it for persistence
 			console.log('Using sessionStorage chars:', urlChars);
 		}
@@ -1477,8 +1488,8 @@ $(function() {
 		}
 		
 		// Restore checkbox states from sessionStorage before first render
-		var showMandarin = sessionStorage.getItem('show-mandarin');
-		var showCantonese = sessionStorage.getItem('show-cantonese');
+		var showMandarin = safeSessionGet('show-mandarin');
+		var showCantonese = safeSessionGet('show-cantonese');
 		if (showMandarin !== null) {
 			$('#show-mandarin').prop('checked', showMandarin === 'true');
 		}
@@ -1501,9 +1512,9 @@ $(function() {
 				var chars = $('#character-select').val();
 				// Save to sessionStorage for persistence
 				if (chars) {
-					sessionStorage.setItem('hanziguide_chars', chars);
+					safeSessionSet('hanziguide_chars', chars);
 				} else {
-					sessionStorage.removeItem('hanziguide_chars');
+					safeSessionRemove('hanziguide_chars');
 				}
 				trackPracticeLanguageState(
 					$('#show-mandarin').prop('checked'),
@@ -1717,7 +1728,7 @@ $(function() {
 		$('#show-mandarin, #show-cantonese').on('change', function() {
 			var id = $(this).attr('id');
 			var isChecked = $(this).prop('checked');
-			sessionStorage.setItem(id, isChecked);
+			safeSessionSet(id, isChecked);
 			trackPracticeLanguageState(
 				$('#show-mandarin').prop('checked'),
 				$('#show-cantonese').prop('checked'),
@@ -1845,6 +1856,20 @@ $(function() {
           $btn.html(originalText);
         }, 2000);
       }
+    });
+
+    function updatePdfLink() {
+      var characters = $('#character-select').val().trim();
+      var href = '/pdf';
+      if (characters) {
+        href += '#' + encodeURIComponent(characters);
+      }
+      $('#practice-pdf-link').attr('href', href);
+    }
+
+    updatePdfLink();
+    $('#character-select').on('input', function() {
+      updatePdfLink();
     });
 	}
 });

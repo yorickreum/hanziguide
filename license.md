@@ -124,6 +124,15 @@ Please refer to the HanaMinAFDKO release page for licensing and attribution deta
 
 ---
 
+### Noto Sans SC Font
+
+The printable practice PDFs embed **Noto Sans SC Regular** for CJK text rendering. Noto Sans SC is licensed under the **SIL Open Font License 1.1**.
+
+Font source: [Google Fonts - Noto Sans SC](https://fonts.google.com/noto/specimen/Noto+Sans+SC)  
+License text: [SIL Open Font License 1.1](https://scripts.sil.org/OFL)
+
+---
+
 ### Privacy & Data
 
 Hanzi Guide is designed with privacy in mind. We use a self-hosted instance of **Matomo**, a privacy-respecting analytics platform, to understand how the site is used and improve the experience for learners. 
