@@ -11,9 +11,7 @@ var cedictWorker = null;
 var cedictPending = {};
 var cedictSeq = 0;
 var translationInfoEl = null;
-var lastTrackedInput = null;
-var lastTrackedLanguageState = null;
-var lastTrackedTranslation = null;
+var lastTrackedSnapshotKey = null;
 
 import {
   safeSessionGet,
@@ -35,26 +33,6 @@ function trackMatomoEvent(category, action, name, value) {
   window._paq.push(payload);
 }
 
-function trackPracticeLanguageState(showMandarin, showCantonese, scriptType) {
-  var state = 'mandarin=' + (showMandarin ? '1' : '0') +
-    ';cantonese=' + (showCantonese ? '1' : '0') +
-    ';script=' + (scriptType || 'unknown');
-  if (state === lastTrackedLanguageState) {
-    return;
-  }
-  lastTrackedLanguageState = state;
-  trackMatomoEvent('Practice', 'LanguageState', state);
-}
-
-function trackPracticeInput(chars) {
-  var trimmed = (chars || '').trim();
-  if (!trimmed || trimmed === lastTrackedInput) {
-    return;
-  }
-  lastTrackedInput = trimmed;
-  trackMatomoEvent('Practice', 'Input', trimmed, trimmed.length);
-}
-
 function normalizeMatomoText(text, maxLen) {
   var clean = (text || '').replace(/\s+/g, ' ').trim();
   if (maxLen && clean.length > maxLen) {
@@ -63,18 +41,27 @@ function normalizeMatomoText(text, maxLen) {
   return clean;
 }
 
-function trackPracticeTranslation(chars, translationText) {
+function trackPracticeSnapshot(chars, translationText) {
   var trimmedChars = (chars || '').trim();
-  var trimmedTranslation = normalizeMatomoText(translationText, 200);
-  if (!trimmedChars || !trimmedTranslation) {
+  var trimmedTranslation = normalizeMatomoText(translationText, 160);
+  if (!trimmedChars) {
     return;
   }
-  var key = trimmedChars + '|' + trimmedTranslation;
-  if (key === lastTrackedTranslation) {
+  var showMandarin = $('#show-mandarin').prop('checked');
+  var showCantonese = $('#show-cantonese').prop('checked');
+  var scriptType = getScriptType();
+  var state = 'script=' + (scriptType || 'unknown') +
+    ';mandarin=' + (showMandarin ? '1' : '0') +
+    ';cantonese=' + (showCantonese ? '1' : '0');
+  var payload = 'chars=' + trimmedChars +
+    ';' + state +
+    ';translation=' + (trimmedTranslation || 'none');
+  var key = payload;
+  if (key === lastTrackedSnapshotKey) {
     return;
   }
-  lastTrackedTranslation = key;
-  trackMatomoEvent('Practice', 'Translation', trimmedTranslation, trimmedChars.length);
+  lastTrackedSnapshotKey = key;
+  trackMatomoEvent('Practice', 'InputSnapshot', payload, trimmedChars.length);
 }
 
 // Initialize OpenCC converters
@@ -408,6 +395,7 @@ async function getTranslation(characters) {
 
     if (!mainText) {
       $('#translation-text').text('No dictionary entry found.');
+      trackPracticeSnapshot(characters, 'No dictionary entry found.');
       return;
     }
 
@@ -429,7 +417,7 @@ async function getTranslation(characters) {
     // Fallback tooltip on main text
     $('#translation-text').attr('title', detailText || '');
     $('#translation-display').show();
-    trackPracticeTranslation(characters, mainText);
+    trackPracticeSnapshot(characters, mainText);
   } catch (error) {
     console.error('Translation error:', error);
     $('#translation-display').hide();
@@ -636,12 +624,6 @@ function setCharacterInput(chars) {
     safeSessionRemove('hanziguide_chars');
   }
   updateUrlHash(value, true);
-  trackPracticeLanguageState(
-    $('#show-mandarin').prop('checked'),
-    $('#show-cantonese').prop('checked'),
-    getScriptType()
-  );
-  if (value) trackPracticeInput(value);
   if (value) addRecentChars(value);
   updateCharacter();
   updatePdfLink();
@@ -1516,12 +1498,6 @@ $(function() {
 				} else {
 					safeSessionRemove('hanziguide_chars');
 				}
-				trackPracticeLanguageState(
-					$('#show-mandarin').prop('checked'),
-					$('#show-cantonese').prop('checked'),
-					getScriptType()
-				);
-				trackPracticeInput(chars);
 				updateCharacter();
 				addRecentChars(chars);
 				updateUrlHash((chars || '').trim(), true);
@@ -1530,11 +1506,6 @@ $(function() {
 
 		// Handle script type change (simplified/traditional)
 		$('input[name="script-type"]').on('change', function() {
-			trackPracticeLanguageState(
-				$('#show-mandarin').prop('checked'),
-				$('#show-cantonese').prop('checked'),
-				getScriptType()
-			);
 			updateCharacter();
 		});
 
@@ -1581,12 +1552,6 @@ $(function() {
 			evt.preventDefault();
 			clearTimeout(updateTimeout);
 			var chars = $('#character-select').val();
-			trackPracticeLanguageState(
-				$('#show-mandarin').prop('checked'),
-				$('#show-cantonese').prop('checked'),
-				getScriptType()
-			);
-			trackPracticeInput(chars);
 			updateCharacter();
 		});
 
@@ -1729,11 +1694,6 @@ $(function() {
 			var id = $(this).attr('id');
 			var isChecked = $(this).prop('checked');
 			safeSessionSet(id, isChecked);
-			trackPracticeLanguageState(
-				$('#show-mandarin').prop('checked'),
-				$('#show-cantonese').prop('checked'),
-				getScriptType()
-			);
 			updateCharacter();
 		});
 
