@@ -14,6 +14,9 @@ async function generatePdf(chars) {
       { characters: chars },
       'hanzi-practice.pdf'
     );
+    if (window._paq && typeof window._paq.push === 'function') {
+      window._paq.push(['trackEvent', 'PDF', 'Generate', chars, chars.length]);
+    }
     if (statusEl) statusEl.textContent = 'Download should begin shortly.';
   } catch (err) {
     console.error('PDF error:', err);
