@@ -26,6 +26,10 @@
                 <a href="/">{{ t.nav.practice }}</a>
               </li>
 
+              <li{% if page.url contains '/hsk-1-characters' or page.url contains '/character/' or page.url contains '/radical/' %} class="active"{% endif %}>
+                <a href="/hsk-1-characters/">HSK 1</a>
+              </li>
+
               <li class="dropdown{% if page.url contains '/howto' %} active{% endif %}">
                 <a href="/howto/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {{ t.nav.howto }} <span class="caret"></span>

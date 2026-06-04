@@ -25,6 +25,11 @@ vendor/
 *.gem
 Gemfile.lock
 
+# Generated reference pages
+character/
+radical/
+hsk-1-characters.md
+
 # CC-CEDICT download
 assets/cedict_ts.u8
 assets/cedict_ts.u8.gz

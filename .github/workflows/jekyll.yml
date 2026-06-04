@@ -33,6 +33,11 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: true
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
@@ -54,6 +59,9 @@ jobs:
 
       - name: Fetch fonts
         run: bash scripts/fetch-fonts.sh
+
+      - name: Generate HSK reference pages
+        run: node scripts/generate-hsk1-pages.js
 
       - name: Build with Jekyll
         run: |

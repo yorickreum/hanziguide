@@ -1,0 +1,32 @@
+<div class="character-stroke-widget" data-character="{{ include.character | escape }}">
+  <div class="character-stroke-target" id="stroke-target-{{ include.character | slugify }}" aria-label="Stroke order animation for {{ include.character | escape }}"></div>
+  <a class="character-tool-link" href="/#{{ include.character | uri_escape }}">
+    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+    <span>Open in interactive tool</span>
+  </a>
+</div>
+<script>
+  (function() {
+    var script = document.currentScript;
+    var widget = script && script.previousElementSibling;
+    var target = widget && widget.querySelector('.character-stroke-target');
+    var character = widget && widget.getAttribute('data-character');
+    function drawStrokeWidget() {
+      if (!target || !target.id || !character || typeof HanziWriter === 'undefined') return;
+      var writer = HanziWriter.create(target.id, character, {
+        width: 220,
+        height: 220,
+        padding: 10,
+        showOutline: true,
+        strokeAnimationSpeed: 1,
+        delayBetweenStrokes: 300
+      });
+      writer.loopCharacterAnimation();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', drawStrokeWidget);
+    } else {
+      drawStrokeWidget();
+    }
+  })();
+</script>
