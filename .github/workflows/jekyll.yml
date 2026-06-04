@@ -56,9 +56,16 @@ jobs:
         run: bash scripts/fetch-fonts.sh
 
       - name: Build with Jekyll
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+        run: |
+          if [ -n "$ADSENSE_CLIENT_ID" ]; then
+            printf 'adsense_client: "%s"\n' "$ADSENSE_CLIENT_ID" > _config_adsense.yml
+            bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}" --config _config.yml,_config_adsense.yml
+          else
+            bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+          fi
         env:
           JEKYLL_ENV: production
+          ADSENSE_CLIENT_ID: ${{ secrets.ADSENSE_CLIENT_ID }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
