@@ -181,6 +181,16 @@
   align-items: center;
 }
 
+.xray-stroke-view {
+  margin-top: 8px;
+}
+
+.xray-stroke-svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
 @media (max-width: 768px) {
   .demo-controls .checkbox {
     margin-right: 15px;

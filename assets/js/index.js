@@ -18,6 +18,16 @@ import {
   safeSessionSet,
   safeSessionRemove
 } from '/assets/js/utils/storage.js';
+import { buildStrokeDiagramSvg } from '/assets/js/hanzi_practice_pdf.js';
+
+var XRAY_DIAGRAM_OPTIONS = {
+  diagramPx: 300,
+  strokeColor: '#d6d6d6',
+  arrowColor: '#2b2b2b',
+  numberFill: 'rgba(255,255,255,0.86)',
+  numberStroke: '#9a9a9a',
+  numberText: '#4a4a4a'
+};
 
 function trackMatomoEvent(category, action, name, value) {
   if (typeof window === 'undefined' || !window._paq || typeof window._paq.push !== 'function') {
@@ -62,6 +72,32 @@ function trackPracticeSnapshot(chars, translationText) {
   }
   lastTrackedSnapshotKey = key;
   trackMatomoEvent('Practice', 'InputSnapshot', payload, trimmedChars.length);
+}
+
+function isXrayModeOn() {
+  return $('#xray-mode').prop('checked');
+}
+
+function syncXrayViewVisibility() {
+  var show = isXrayModeOn();
+  $('.xray-stroke-view').toggle(show);
+}
+
+function renderXrayStrokeView(charData, targetEl, size) {
+  if (!targetEl || !charData || !charData.strokes || charData.strokes.length === 0) {
+    return;
+  }
+
+  targetEl.innerHTML = '';
+  var svg = buildStrokeDiagramSvg(charData, {
+    ...XRAY_DIAGRAM_OPTIONS,
+    diagramPx: size
+  });
+  svg.classList.add('xray-stroke-svg');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'Static numbered stroke order diagram');
+  targetEl.appendChild(svg);
+  targetEl.style.display = isXrayModeOn() ? 'block' : 'none';
 }
 
 // Initialize OpenCC converters
@@ -478,6 +514,12 @@ function updateCharacter() {
     animDiv.id = 'anim-char-' + index;
     charContainer.appendChild(animDiv);
 
+    var xrayDiv = document.createElement('div');
+    xrayDiv.id = 'xray-char-' + index;
+    xrayDiv.className = 'xray-stroke-view';
+    xrayDiv.style.display = isXrayModeOn() ? 'block' : 'none';
+    charContainer.appendChild(xrayDiv);
+
     // Create components display
     var componentsDiv = document.createElement('div');
     componentsDiv.id = 'components-' + index;
@@ -558,11 +600,13 @@ function updateCharacter() {
             }
 
             updateStrokeSliderMax();
+            renderXrayStrokeView(charData, xrayDiv, size);
             return charData;
           })
           .catch(function(error) {
             console.warn('Failed to load char data for', loadChar, error);
             animDiv.innerHTML = '<div class="char-unavailable">' + getCharUnavailableText() + '</div>';
+            xrayDiv.innerHTML = '';
             return { strokes: [], medians: [] };
           });
       }
@@ -1472,11 +1516,15 @@ $(function() {
 		// Restore checkbox states from sessionStorage before first render
 		var showMandarin = safeSessionGet('show-mandarin');
 		var showCantonese = safeSessionGet('show-cantonese');
+		var xrayMode = safeSessionGet('xray-mode');
 		if (showMandarin !== null) {
 			$('#show-mandarin').prop('checked', showMandarin === 'true');
 		}
 		if (showCantonese !== null) {
 			$('#show-cantonese').prop('checked', showCantonese === 'true');
+		}
+		if (xrayMode !== null) {
+			$('#xray-mode').prop('checked', xrayMode === 'true');
 		}
 		
 		updateCharacter();
@@ -1709,6 +1757,13 @@ $(function() {
       $speedWrapper.stop(true, true).fadeIn(200);
       stopDrawMode();
     }
+  });
+
+  $('#xray-mode').on('change', function() {
+    var isOn = $(this).is(':checked');
+    safeSessionSet('xray-mode', isOn);
+    syncXrayViewVisibility();
+    trackMatomoEvent('Practice', isOn ? 'XrayOn' : 'XrayOff');
   });
 
     function startDrawMode() {

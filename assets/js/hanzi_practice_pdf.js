@@ -196,7 +196,7 @@ function resolveNumberPositions(points, radius, bounds) {
   return result;
 }
 
-function buildStrokeDiagramSvg(charData, opts) {
+export function buildStrokeDiagramSvg(charData, opts) {
   const svg = ensureSvgEl("svg");
   const viewBoxMinX = 0;
   const viewBoxMinY = -124;
