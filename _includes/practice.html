@@ -35,6 +35,16 @@
   <p class="lead">
     {{ t.subtitle }}
   </p>
+  {% if page.lang == "en" %}
+  <div class="home-geo-quiz-callout">
+    <i class="fas fa-location-dot" aria-hidden="true"></i>
+    <div>
+      <strong>Curious where your Chinese sounds like it is from?</strong>
+      <span>Try the Chinese variety map quiz for Mandarin, Cantonese, Min, Wu, and other regional patterns.</span>
+    </div>
+    <a href="/geo-quiz/">Take the quiz</a>
+  </div>
+  {% endif %}
   
   <hr class="demo-divider" />
 
@@ -235,5 +245,14 @@
 
   <h3>{{ t.duolingo_companion }}</h3>
   <p>{{ t.duolingo_companion_text }}</p>
+
+  {% if page.lang == "en" %}
+  <h3>Chinese Dialect and Variety Quiz</h3>
+  <p>
+    Hanzi Guide also includes a <a href="/geo-quiz/">Chinese variety map quiz</a> that compares your word choices,
+    characters, and pronunciations with broad regional Chinese speech patterns. The quiz is inspired by modern
+    research on the Linguistic Atlas of Chinese Dialects and shows approximate regional matches on a map.
+  </p>
+  {% endif %}
 
 </div><!-- /.container -->

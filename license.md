@@ -92,6 +92,37 @@ Copyright © CanCLID contributors
 
 ---
 
+### Leaflet Map Library
+
+The geo quiz map uses [Leaflet](https://leafletjs.com/) v1.9.4 for interactive map rendering. Leaflet is released under the BSD 2-Clause License.
+
+Copyright © 2010-2023 Volodymyr Agafonkin  
+Copyright © 2010-2011 CloudMade
+
+The vendored Leaflet license text is included at `/assets/cdn/leaflet/LICENSE`.
+
+---
+
+### OpenStreetMap
+
+The geo quiz uses OpenStreetMap as its base map. OpenStreetMap data is © OpenStreetMap contributors and licensed under the [Open Data Commons Open Database License](https://www.openstreetmap.org/copyright).
+
+---
+
+### Geo Quiz Dialect Data and Research Sources
+
+The geo quiz’s atlas-point layer is derived from:
+
+Huang, He; Grieve, Jack; Jiao, Lei; Cai, Zhuo. 2024. “Geographic structure of Chinese dialects: a computational dialectometric approach.” *Linguistics* 62(4): 937-976. [doi:10.1515/ling-2021-0138](https://doi.org/10.1515/ling-2021-0138).
+
+The local JSON file `/assets/data/geo-quiz-lacd-points.json` is a reduced extract generated from `cn_tax.csv` in the supplementary dataset:
+
+Huang, He; Grieve, Jack; Jiao, Frank. 2024. “Supplementary Materials for the article entitled ‘Geographic Structure of Chinese Dialects: A Computational Dialectometric Approach’.” Zenodo. [doi:10.5281/zenodo.10697975](https://doi.org/10.5281/zenodo.10697975). Licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).
+
+Quiz questions, scoring weights, region labels, and icon presentation are Hanzi Guide’s derived implementation. They are not an official Linguistic Atlas of Chinese Dialects product and are not endorsed by the authors, Zenodo, OpenStreetMap, or Leaflet.
+
+---
+
 ### CC-CEDICT Dictionary Data
 
 Chinese-English definitions are sourced from [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cc-cedict) (latest public dump), licensed under [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/). You may reuse and adapt this data with proper attribution and share-alike terms.

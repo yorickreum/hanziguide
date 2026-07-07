@@ -18,6 +18,10 @@
 <script src="/assets/cdn/jquery/jquery.min.js"></script>
 <script src="/assets/cdn/bootstrap/bootstrap.min.js"></script>
 
+{% if page.leaflet %}
+<script src="/assets/cdn/leaflet/leaflet.js"></script>
+{% endif %}
+
 {% if page.js %}
   {% if page.js == "assets/js/index.js" or page.js == "assets/js/pdf.js" %}
     <script src="/assets/cdn/jspdf/jspdf.umd.min.js"></script>
