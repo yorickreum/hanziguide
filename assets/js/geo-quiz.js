@@ -470,6 +470,23 @@
     { key: 'central_china', bounds: [25.0, 108.0, 32.2, 118.2], weight: 0.86 },
     { key: 'mainland_mandarin', bounds: [32.0, 106.0, 42.5, 122.5], weight: 0.72 }
   ];
+  var subregions = [
+    { label: 'Hong Kong / Macau Cantonese', categoryKeys: ['hk_cantonese'], bounds: [21.95, 113.35, 22.55, 114.45] },
+    { label: 'Pearl River Delta Cantonese', categoryKeys: ['guangdong_cantonese', 'hk_cantonese'], bounds: [22.45, 112.55, 23.85, 114.7] },
+    { label: 'Western Guangdong / Guangxi Yue', categoryKeys: ['guangdong_cantonese', 'hk_cantonese'], bounds: [21.3, 108.2, 24.4, 112.8] },
+    { label: 'Taiwan Mandarin / Taiwan contact region', categoryKeys: ['taiwan_mandarin', 'min_hokkien'], bounds: [21.7, 119.8, 25.5, 122.1] },
+    { label: 'Southern Fujian / Hokkien region', categoryKeys: ['min_hokkien'], bounds: [23.3, 117.2, 25.5, 119.3] },
+    { label: 'Eastern Fujian / coastal Min region', categoryKeys: ['min_hokkien'], bounds: [25.5, 118.5, 27.7, 120.8] },
+    { label: 'Shanghai / Taihu Wu region', categoryKeys: ['wu_shanghai'], bounds: [30.3, 119.6, 32.4, 122.2] },
+    { label: 'Southern Zhejiang / Wu transition region', categoryKeys: ['wu_shanghai'], bounds: [27.0, 118.6, 30.3, 121.8] },
+    { label: 'Sichuan / Chongqing Mandarin', categoryKeys: ['sichuan_mandarin'], bounds: [27.4, 101.0, 32.8, 109.8] },
+    { label: 'Northeastern Mandarin', categoryKeys: ['northeast_mandarin'], bounds: [39.0, 118.0, 53.7, 135.2] },
+    { label: 'North China / Standard Mandarin region', categoryKeys: ['mainland_mandarin', 'northeast_mandarin'], bounds: [32.0, 106.0, 42.5, 122.5] },
+    { label: 'Hunan / Xiang transition region', categoryKeys: ['central_china', 'sichuan_mandarin'], bounds: [24.6, 109.5, 30.2, 114.4] },
+    { label: 'Jiangxi / Gan transition region', categoryKeys: ['central_china', 'wu_shanghai'], bounds: [24.4, 113.5, 30.2, 118.8] },
+    { label: 'Hubei / middle Yangtze transition region', categoryKeys: ['central_china', 'sichuan_mandarin', 'mainland_mandarin'], bounds: [29.0, 108.0, 32.8, 116.5] },
+    { label: 'Southern Anhui / Hui transition region', categoryKeys: ['central_china', 'wu_shanghai'], bounds: [29.0, 116.0, 31.5, 119.5] }
+  ];
 
   function answer(text, scores, clue) {
     return {
@@ -535,6 +552,7 @@
     els.resultCopy = document.getElementById('geo-quiz-result-copy');
     els.confidence = document.getElementById('geo-quiz-confidence');
     els.variety = document.getElementById('geo-quiz-variety');
+    els.specificRegion = document.getElementById('geo-quiz-specific-region');
     els.topMatches = document.getElementById('geo-quiz-top-matches');
     els.localMatches = document.getElementById('geo-quiz-local-matches');
     els.mapInsight = document.getElementById('geo-quiz-map-insight');
@@ -793,6 +811,7 @@
     els.resultCopy.textContent = best.category.summary;
     els.confidence.textContent = best.confidence;
     els.variety.textContent = best.category.variety;
+    renderSpecificRegion(result);
     resetFeedbackButtons();
 
     els.topMatches.innerHTML = '';
@@ -806,7 +825,7 @@
     });
 
     if (els.mapInsight) {
-      els.mapInsight.innerHTML = buildMapInsight(result.ranked);
+      els.mapInsight.innerHTML = buildMapInsight(result);
     }
     renderLocalMatches(result);
 
@@ -901,7 +920,12 @@
           renderMap(pendingMapRanked);
         }
         if (els.results && !els.results.hidden) {
-          renderLocalMatches(calculateResults());
+          var result = calculateResults();
+          if (els.mapInsight) {
+            els.mapInsight.innerHTML = buildMapInsight(result);
+          }
+          renderLocalMatches(result);
+          renderSpecificRegion(result);
         }
       })
       .catch(function() {
@@ -1168,6 +1192,76 @@
     });
   }
 
+  function renderSpecificRegion(result) {
+    if (!els.specificRegion) return;
+
+    var specificRegion = computeSpecificRegion(result);
+    result.specificRegion = specificRegion;
+    if (!specificRegion) {
+      els.specificRegion.hidden = true;
+      els.specificRegion.textContent = '';
+      return;
+    }
+
+    els.specificRegion.textContent = 'More specific: ' + specificRegion.label;
+    els.specificRegion.hidden = false;
+  }
+
+  function computeSpecificRegion(result) {
+    if (!lacdData || !Array.isArray(lacdData.points) || !result || !result.rawScores) return null;
+    if (result.ranked && result.ranked[0] && result.ranked[0].key === 'mixed') return null;
+
+    var rawScores = result.rawScores;
+    var maxScoreValue = Object.keys(rawScores).reduce(function(max, key) {
+      return Math.max(max, rawScores[key]);
+    }, 1);
+    var scoredPoints = getScoredLacdPoints(rawScores, maxScoreValue);
+
+    return subregions.map(function(region) {
+      return scoreSubregion(region, scoredPoints, rawScores, maxScoreValue);
+    })
+      .filter(function(region) {
+        return region.score > 0.18 && region.localities.length;
+      })
+      .sort(function(a, b) {
+        return b.score - a.score;
+      })[0] || null;
+  }
+
+  function scoreSubregion(region, scoredPoints, rawScores, maxScoreValue) {
+    var categoryStrength = region.categoryKeys.reduce(function(max, key) {
+      return Math.max(max, (rawScores[key] || 0) / Math.max(1, maxScoreValue));
+    }, 0);
+    var localities = scoredPoints
+      .filter(function(point) {
+        return point.match > 0.08 && pointInBounds(point, region.bounds);
+      })
+      .sort(function(a, b) {
+        return b.match - a.match;
+      })
+      .slice(0, 5);
+    var localityStrength = localities.reduce(function(total, point) {
+      return total + point.match;
+    }, 0) / Math.max(1, localities.length);
+    var localityNames = localities.slice(0, 3).map(function(point) {
+      return point.name;
+    });
+
+    return {
+      label: region.label,
+      score: localityStrength * 0.72 + categoryStrength * 0.28,
+      confidence: subregionConfidence(localityStrength, categoryStrength, localities.length),
+      localities: localityNames
+    };
+  }
+
+  function subregionConfidence(localityStrength, categoryStrength, localityCount) {
+    if (localityCount < 2 || categoryStrength < 0.35) return 'low';
+    if (localityStrength >= 0.72 && categoryStrength >= 0.7) return 'high';
+    if (localityStrength >= 0.48 && categoryStrength >= 0.5) return 'medium';
+    return 'low';
+  }
+
   function membershipBand(value) {
     if (value >= 0.82) return 'core-like';
     if (value >= 0.58) return 'marginal';
@@ -1175,7 +1269,8 @@
     return 'trace';
   }
 
-  function buildMapInsight(ranked) {
+  function buildMapInsight(result) {
+    var ranked = result.ranked || result;
     var visible = ranked.filter(function(item) {
       return item.key !== 'mixed' && item.score > 0;
     });
@@ -1185,9 +1280,15 @@
 
     var top = visible[0];
     var second = visible[1];
+    var specificRegion = computeSpecificRegion(result);
     var copy = '<p>The darkest shading is the strongest relative match. Lighter shading shows secondary or transitional signals.</p>';
     copy += '<p><strong>' + escapeHtml(top.category.label) + '</strong> is currently ' +
       escapeHtml(membershipBand(top.normalized)) + ' for your answer pattern.</p>';
+    if (specificRegion) {
+      copy += '<p>The more specific map signal is <strong>' + escapeHtml(specificRegion.label) +
+        '</strong>, based on nearby atlas localities such as ' +
+        escapeHtml(specificRegion.localities.join(', ')) + '.</p>';
+    }
 
     if (second && top.normalized - second.normalized < 0.22) {
       copy += '<p>Your top two regions are close, so this should be read as an overlap pattern rather than a precise location.</p>';
@@ -1223,10 +1324,15 @@
   function buildShareData(result) {
     var best = result.ranked[0];
     var second = result.ranked[1];
+    var specificRegion = result.specificRegion || computeSpecificRegion(result);
     var title = 'Where is your Chinese from?';
     var url = window.location.origin + '/geo-quiz/';
     var text = 'My Hanzi Guide Chinese variety match is ' + best.category.label +
       ' (' + best.confidence + ', ' + getQuestionCount() + ' questions).';
+
+    if (specificRegion) {
+      text += ' More specific: ' + specificRegion.label + '.';
+    }
 
     if (second && second.score > 0) {
       text += ' Next closest: ' + second.category.label + '.';
@@ -1302,12 +1408,14 @@
 
   function buildFeedbackPayload(feedback, result) {
     var best = result.ranked[0];
+    var specificRegion = result.specificRegion || computeSpecificRegion(result);
     return {
       version: 1,
       feedback: feedback,
       result: {
         best: best ? best.key : null,
         bestLabel: best ? best.category.label : null,
+        specificRegion: specificRegion,
         confidence: best ? best.confidence : null,
         variety: best ? best.category.variety : null,
         topMatches: result.ranked.slice(0, 5).map(function(item) {
