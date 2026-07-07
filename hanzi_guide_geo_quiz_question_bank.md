@@ -676,12 +676,14 @@ Prompt:
 
 Options:
 
-- shēng
-- saang1
-- seⁿ
+- sheng
+- saang
+- seh (with a nasal ending)
 - senn / sen
 - sang
 - Other
+
+Implementation note: avoid tone marks or tone numbers in the user-facing option labels. They make the answer set feel like a romanization-system test and can reveal the intended region too strongly.
 
 ### 27. 人
 
@@ -693,9 +695,9 @@ Prompt:
 
 Options:
 
-- rén
-- jan4
-- lâng / lang
+- ren
+- yan / jan
+- lang
 - nyin / gnin
 - nin / yin
 - Other
@@ -761,13 +763,13 @@ These should appear only after broad matching.
 2. Which looks natural: `我食咗飯`, `我吃了饭`, `我食完飯`?
 3. Which question particle feels natural: `嗎`, `咩`, `呀`, `未`?
 4. Would you write `嘅`, `的`, or avoid this structure?
-5. Which pronunciation is closest for 我: `ngo5`, `wǒ`, `gua`, other?
+5. Which pronunciation is closest for 我: `ngo`, `wo`, `gua`, other?
 
 ### Taiwan / Min-Hokkien Branch
 
 1. Which feels natural for “home”: `家`, `厝`, `屋企`, `房子`?
 2. Which feels natural for “eat”: `吃`, `食`, `呷`?
-3. Which pronunciation is closest for 人: `rén`, `lâng`, `jan4`, other?
+3. Which pronunciation is closest for 人: `ren`, `lang`, `yan / jan`, other?
 4. Which sentence-final style feels natural: `嗎`, `喔/啦`, `無`, other?
 5. Which script do you normally use: traditional, simplified, mixed?
 

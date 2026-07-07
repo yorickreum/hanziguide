@@ -147,11 +147,11 @@
       prompt: 'How would you pronounce 生?',
       note: 'Pick the closest option.',
       answers: [
-        answer('shēng', { mainland_mandarin: 4, taiwan_mandarin: 3, northeast_mandarin: 2, sichuan_mandarin: 1 }, 'You chose Mandarin shēng.'),
-        answer('saang1', { hk_cantonese: 5, guangdong_cantonese: 5 }, 'You chose Cantonese saang1.'),
-        answer('senn / sen', { wu_shanghai: 4, min_hokkien: 1 }, 'You chose a non-Mandarin senn/sen-like reading.'),
-        answer('seⁿ', { min_hokkien: 5 }, 'You chose a nasalized Southern Min-like reading.'),
-        answer('sang', { guangdong_cantonese: 2, hk_cantonese: 2, mixed: 1 }, 'You chose sang, which may reflect Cantonese-like or mixed romanization.')
+        answer('sheng', { mainland_mandarin: 4, taiwan_mandarin: 3, northeast_mandarin: 2, sichuan_mandarin: 1 }, 'You chose a sheng-like reading.'),
+        answer('saang', { hk_cantonese: 5, guangdong_cantonese: 5 }, 'You chose a long aa-like reading.'),
+        answer('senn / sen', { wu_shanghai: 4, min_hokkien: 1 }, 'You chose a sen-like reading.'),
+        answer('seh (with a nasal ending)', { min_hokkien: 5 }, 'You chose a nasal-ending reading.'),
+        answer('sang', { guangdong_cantonese: 2, hk_cantonese: 2, mixed: 1 }, 'You chose a sang-like reading.')
       ]
     },
     {
@@ -408,10 +408,10 @@
       prompt: 'Which pronunciation is closest to how you say 人?',
       note: 'Pick the closest option.',
       answers: [
-        answer('rén', { mainland_mandarin: 4, taiwan_mandarin: 3, northeast_mandarin: 2, sichuan_mandarin: 1 }, 'You chose Mandarin rén.'),
-        answer('jan4', { hk_cantonese: 5, guangdong_cantonese: 5 }, 'You chose Cantonese jan4.'),
-        answer('lâng / lang', { min_hokkien: 5 }, 'You chose a Southern Min/Hokkien-like reading.'),
-        answer('nyin / gnin', { wu_shanghai: 4, central_china: 1 }, 'You chose a Wu-like reading.'),
+        answer('ren', { mainland_mandarin: 4, taiwan_mandarin: 3, northeast_mandarin: 2, sichuan_mandarin: 1 }, 'You chose a ren-like reading.'),
+        answer('yan / jan', { hk_cantonese: 5, guangdong_cantonese: 5 }, 'You chose a yan/jan-like reading.'),
+        answer('lang', { min_hokkien: 5 }, 'You chose a lang-like reading.'),
+        answer('nyin / gnin', { wu_shanghai: 4, central_china: 1 }, 'You chose a nyin/gnin-like reading.'),
         answer('nin / yin', { central_china: 2, sichuan_mandarin: 1, mixed: 1 }, 'You chose a regional or mixed non-standard reading.')
       ]
     }
