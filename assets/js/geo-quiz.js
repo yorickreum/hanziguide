@@ -107,8 +107,8 @@
   var questions = [
     {
       type: 'Word choice',
-      prompt: 'Which word would you naturally use for a child?',
-      note: 'Choose the form that feels most natural to you.',
+      prompt: 'A kid runs past you in the street. What word pops into your head?',
+      note: 'Go with the word you would actually say, not the one that feels most formal.',
       icon: icon('fa-child', 'people'),
       answers: [
         answer('小孩', { mainland_mandarin: 4, taiwan_mandarin: 2 }, 'You chose 小孩 for “child,” a common Mandarin form.'),
@@ -120,8 +120,8 @@
     },
     {
       type: 'Written usage',
-      prompt: 'Which would you actually write in a casual message for “do not have / none”?',
-      note: 'Recognition alone is less important here than active use.',
+      prompt: 'Your friend asks if you have any. What would you text back for “no / none”?',
+      note: 'Pick the form you would actually type in a casual message.',
       answers: [
         answer('没有', { mainland_mandarin: 4, sichuan_mandarin: 2, northeast_mandarin: 2 }, 'You actively use 没有, matching standard simplified Mandarin writing.'),
         answer('沒有', { taiwan_mandarin: 4, mainland_mandarin: 1 }, 'You actively use 沒有, matching traditional-character Mandarin writing.'),
@@ -132,8 +132,8 @@
     },
     {
       type: 'Sentence completion',
-      prompt: 'Complete this naturally: “I do not know.”',
-      note: '',
+      prompt: 'Someone asks you something and you genuinely have no clue. What do you say?',
+      note: 'Choose the answer that sounds like your first reaction.',
       answers: [
         answer('我不知道', { mainland_mandarin: 4, taiwan_mandarin: 2, northeast_mandarin: 1 }, 'You chose 我不知道, a standard Mandarin phrase.'),
         answer('我不晓得', { sichuan_mandarin: 4, central_china: 2, mainland_mandarin: 1 }, 'You chose 我不晓得, a useful Southwestern/Central Mandarin clue.'),
@@ -144,8 +144,8 @@
     },
     {
       type: 'Pronunciation',
-      prompt: 'How would you pronounce 生?',
-      note: 'Pick the closest option.',
+      prompt: 'If you read 生 out loud, which sound is closest?',
+      note: 'No need to know romanization rules; just pick the closest sound.',
       answers: [
         answer('sheng', { mainland_mandarin: 4, taiwan_mandarin: 3, northeast_mandarin: 2, sichuan_mandarin: 1 }, 'You chose a sheng-like reading.'),
         answer('saang', { hk_cantonese: 5, guangdong_cantonese: 5 }, 'You chose a long aa-like reading.'),
@@ -156,8 +156,8 @@
     },
     {
       type: 'Casual written form',
-      prompt: 'In casual texting, which looks most natural to you?',
-      note: '',
+      prompt: 'You are texting “what are you doing?” Which message looks like you?',
+      note: 'Choose the one you would actually send to a friend.',
       answers: [
         answer('你在做什么？', { mainland_mandarin: 5, sichuan_mandarin: 1, northeast_mandarin: 1 }, 'You chose 你在做什么, matching standard Mainland Mandarin.'),
         answer('你在做什麼？', { taiwan_mandarin: 5 }, 'You chose 你在做什麼, matching traditional-character Mandarin usage.'),
@@ -168,8 +168,8 @@
     },
     {
       type: 'Word choice',
-      prompt: 'Which word would you naturally use for eating a meal?',
-      note: 'Pick the closest eating-a-meal expression.',
+      prompt: 'You are telling someone “I am going to eat.” Which word feels natural?',
+      note: 'Think of an everyday meal, not a dictionary definition.',
       icon: icon('fa-utensils', 'food'),
       answers: [
         answer('吃饭', { mainland_mandarin: 5, sichuan_mandarin: 2, northeast_mandarin: 2 }, 'You chose 吃饭, a standard simplified Mandarin form.'),
@@ -181,8 +181,8 @@
     },
     {
       type: 'Word choice',
-      prompt: 'Which word feels most natural for “home / house”?',
-      note: 'Think of an everyday word for home or house.',
+      prompt: 'You are heading home. What word would you naturally use for home or house?',
+      note: 'Choose the everyday word that feels most like yours.',
       icon: icon('fa-house', 'home'),
       answers: [
         answer('家', { mainland_mandarin: 3, taiwan_mandarin: 3, northeast_mandarin: 1 }, 'You chose 家, a broad Mandarin-compatible home word.'),
@@ -194,8 +194,8 @@
     },
     {
       type: 'Word choice',
-      prompt: 'What would you naturally call the sun?',
-      note: 'Choose your everyday word for the sun.',
+      prompt: 'It is bright outside and someone points at the sun. What would you call it?',
+      note: 'Pick your everyday word.',
       icon: icon('fa-sun', 'sun'),
       answers: [
         answer('太阳', { mainland_mandarin: 4, sichuan_mandarin: 2, northeast_mandarin: 2 }, 'You chose 太阳, a simplified Mandarin clue.'),
@@ -207,8 +207,8 @@
     },
     {
       type: 'Weather',
-      prompt: 'Which phrase feels natural for “it is raining”?',
-      note: 'Choose your everyday expression for raining.',
+      prompt: 'You look outside and it just started raining. What do you text?',
+      note: 'Choose the phrase that feels natural in the moment.',
       icon: icon('fa-cloud-rain', 'rain'),
       answers: [
         answer('下雨', { mainland_mandarin: 5, taiwan_mandarin: 3, northeast_mandarin: 2, sichuan_mandarin: 1 }, 'You chose 下雨, a broad Mandarin expression.'),
@@ -220,8 +220,8 @@
     },
     {
       type: 'Weather',
-      prompt: 'Which word would you naturally use for hot weather?',
-      note: 'Choose your natural word for hot weather.',
+      prompt: 'It is uncomfortably hot outside. Which word would you use?',
+      note: 'Pick the heat word that feels natural in speech or texting.',
       icon: icon('fa-temperature-high', 'hot'),
       answers: [
         answer('热', { mainland_mandarin: 4, sichuan_mandarin: 2, northeast_mandarin: 2 }, 'You chose 热, a simplified Mandarin clue.'),
@@ -233,8 +233,8 @@
     },
     {
       type: 'Weather',
-      prompt: 'Which word would you naturally use for cold weather?',
-      note: 'Choose your natural word for cold weather.',
+      prompt: 'You step outside and it is cold. What word comes out first?',
+      note: 'Pick the cold-weather word that sounds like you.',
       icon: icon('fa-temperature-low', 'cold'),
       answers: [
         answer('冷', { mainland_mandarin: 4, taiwan_mandarin: 3, sichuan_mandarin: 2, northeast_mandarin: 1 }, 'You chose 冷, a broad Mandarin-compatible clue.'),
@@ -246,8 +246,8 @@
     },
     {
       type: 'Kinship',
-      prompt: 'What would you naturally call your father?',
-      note: '',
+      prompt: 'You are calling your father from another room. What do you call him?',
+      note: 'Choose the everyday family term, not the formal one unless that is really yours.',
       answers: [
         answer('爸爸', { mainland_mandarin: 3, taiwan_mandarin: 3, northeast_mandarin: 1 }, 'You chose 爸爸, a broad modern Mandarin-compatible form.'),
         answer('爹', { northeast_mandarin: 3, sichuan_mandarin: 2, central_china: 1 }, 'You chose 爹, a northern/central/southwestern kinship clue.'),
@@ -258,8 +258,8 @@
     },
     {
       type: 'Kinship',
-      prompt: 'What would you naturally call your mother?',
-      note: '',
+      prompt: 'You are calling your mother from another room. What do you call her?',
+      note: 'Choose the everyday family term, not the formal one unless that is really yours.',
       answers: [
         answer('妈妈', { mainland_mandarin: 3, taiwan_mandarin: 3, northeast_mandarin: 1 }, 'You chose 妈妈, a broad modern Mandarin-compatible form.'),
         answer('娘', { sichuan_mandarin: 2, central_china: 2, northeast_mandarin: 1 }, 'You chose 娘, a regional kinship clue.'),
@@ -270,8 +270,8 @@
     },
     {
       type: 'Recognition',
-      prompt: 'Which set of characters do you recognize most comfortably?',
-      note: 'Recognition is weaker evidence than active use.',
+      prompt: 'Which little cluster of written Chinese feels most familiar at a glance?',
+      note: 'This is weaker than what you actively use, but still useful.',
       answers: [
         answer('冇、嘅、佢、咗、唔、啲', { hk_cantonese: 4, guangdong_cantonese: 3 }, 'You recognize several written Cantonese characters.'),
         answer('裏、著、麼、個', { taiwan_mandarin: 3 }, 'You are comfortable with traditional Mandarin written forms.'),
@@ -282,8 +282,8 @@
     },
     {
       type: 'Regional phrase',
-      prompt: 'Which form feels most natural for “very good”?',
-      note: '',
+      prompt: 'The food is excellent. What would you say first?',
+      note: 'Pick the praise that would come out naturally.',
       answers: [
         answer('很好', { mainland_mandarin: 4, taiwan_mandarin: 3 }, 'You chose 很好, a broad standard Mandarin form.'),
         answer('好好', { hk_cantonese: 3, guangdong_cantonese: 3, taiwan_mandarin: 1 }, 'You chose 好好, giving a southern or Cantonese-compatible signal.'),
@@ -295,8 +295,8 @@
     },
     {
       type: 'Question word',
-      prompt: 'Which word would you naturally use for “what?”',
-      note: '',
+      prompt: 'You missed what someone said. How do you ask “what?”',
+      note: 'Choose the shortest natural reaction.',
       answers: [
         answer('什么', { mainland_mandarin: 4, sichuan_mandarin: 2, northeast_mandarin: 2 }, 'You chose 什么, matching simplified standard Mandarin.'),
         answer('什麼', { taiwan_mandarin: 4 }, 'You chose 什麼, matching traditional Mandarin writing.'),
@@ -307,8 +307,8 @@
     },
     {
       type: 'Question word',
-      prompt: 'Which word feels natural for “where?”',
-      note: '',
+      prompt: 'You are asking where something is. Which word feels natural?',
+      note: 'Choose what you would actually say or type.',
       icon: icon('fa-location-dot', 'location'),
       answers: [
         answer('哪里', { mainland_mandarin: 4, sichuan_mandarin: 2, taiwan_mandarin: 1 }, 'You chose 哪里, a broad Mandarin-compatible form.'),
@@ -320,8 +320,8 @@
     },
     {
       type: 'Character preference',
-      prompt: 'Which script feels most natural for everyday Chinese writing?',
-      note: '',
+      prompt: 'Your phone keyboard is open. Which Chinese writing setup feels most natural?',
+      note: 'Think about everyday messages, not school exercises.',
       answers: [
         answer('Simplified characters', { mainland_mandarin: 4, sichuan_mandarin: 2, northeast_mandarin: 2, guangdong_cantonese: 1 }, 'You prefer simplified characters.'),
         answer('Traditional characters', { taiwan_mandarin: 4, hk_cantonese: 3, min_hokkien: 2 }, 'You prefer traditional characters.'),
@@ -332,7 +332,7 @@
     },
     {
       type: 'Pronoun',
-      prompt: 'How would you naturally say “I”?',
+      prompt: 'You are pointing at yourself in a casual sentence. How do you say “I”?',
       note: 'Choose the everyday spoken form that feels closest.',
       answers: [
         answer('我', { mainland_mandarin: 4, taiwan_mandarin: 4, northeast_mandarin: 2, sichuan_mandarin: 2 }, 'You chose 我, a broad Mandarin-compatible pronoun.'),
@@ -344,8 +344,8 @@
     },
     {
       type: 'Pronoun',
-      prompt: 'How would you naturally say “you”?',
-      note: '',
+      prompt: 'You are talking directly to a friend. How do you say “you”?',
+      note: 'Choose the everyday form, not the classroom answer.',
       answers: [
         answer('你', { mainland_mandarin: 4, taiwan_mandarin: 4, sichuan_mandarin: 2, northeast_mandarin: 2 }, 'You chose 你, a broad Mandarin-compatible pronoun.'),
         answer('侬', { wu_shanghai: 5, central_china: 1 }, 'You chose 侬, a strong Wu/Shanghainese clue.'),
@@ -356,8 +356,8 @@
     },
     {
       type: 'Pronoun',
-      prompt: 'Which sounds most natural for “we/us”?',
-      note: '',
+      prompt: 'You mean “we” or “us” in a casual sentence. Which sounds like you?',
+      note: 'Pick the form you would actually use.',
       answers: [
         answer('我们', { mainland_mandarin: 4, sichuan_mandarin: 2, northeast_mandarin: 2 }, 'You chose 我们, a simplified Mandarin clue.'),
         answer('我們', { taiwan_mandarin: 4 }, 'You chose 我們, a traditional Mandarin clue.'),
@@ -369,8 +369,8 @@
     },
     {
       type: 'Aspect',
-      prompt: 'Which sentence sounds most natural for “I am eating”?',
-      note: '',
+      prompt: 'Someone asks what you are doing right now: “I am eating.” Which sounds natural?',
+      note: 'Choose the version you would say without overthinking.',
       answers: [
         answer('我在吃饭', { mainland_mandarin: 4, taiwan_mandarin: 2, sichuan_mandarin: 1 }, 'You chose 我在吃饭, a broad Mandarin pattern.'),
         answer('我正在吃饭', { mainland_mandarin: 3, taiwan_mandarin: 2 }, 'You chose 我正在吃饭, a standard Mandarin pattern.'),
@@ -381,8 +381,8 @@
     },
     {
       type: 'Completed action',
-      prompt: 'Which feels natural for “I ate already”?',
-      note: '',
+      prompt: 'Someone offers food, but you already ate. What sounds natural?',
+      note: 'Pick your “already ate” sentence.',
       answers: [
         answer('我吃了', { mainland_mandarin: 4, taiwan_mandarin: 3, northeast_mandarin: 1 }, 'You chose 我吃了, a broad Mandarin pattern.'),
         answer('我吃过了', { mainland_mandarin: 3, sichuan_mandarin: 1 }, 'You chose 我吃过了, a Mandarin completed-action pattern.'),
@@ -393,8 +393,8 @@
     },
     {
       type: 'Question particle',
-      prompt: 'Which casual question sounds most natural?',
-      note: '',
+      prompt: 'You are asking a friend if they are going. Which message sounds like you?',
+      note: 'Choose the casual question you would send.',
       answers: [
         answer('你去吗？', { mainland_mandarin: 4, taiwan_mandarin: 3 }, 'You chose 你去吗, a standard Mandarin question pattern.'),
         answer('你去不去？', { mainland_mandarin: 3, sichuan_mandarin: 2, northeast_mandarin: 1 }, 'You chose an A-not-A Mandarin question pattern.'),
@@ -405,8 +405,8 @@
     },
     {
       type: 'Pronunciation',
-      prompt: 'Which pronunciation is closest to how you say 人?',
-      note: 'Pick the closest option.',
+      prompt: 'If you read 人 out loud, which sound is closest?',
+      note: 'No need to know romanization rules; just pick the closest sound.',
       answers: [
         answer('ren', { mainland_mandarin: 4, taiwan_mandarin: 3, northeast_mandarin: 2, sichuan_mandarin: 1 }, 'You chose a ren-like reading.'),
         answer('yan / jan', { hk_cantonese: 5, guangdong_cantonese: 5 }, 'You chose a yan/jan-like reading.'),
