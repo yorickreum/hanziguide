@@ -35,17 +35,7 @@
   <p class="lead">
     {{ t.subtitle }}
   </p>
-  {% if page.lang == "en" %}
-  <div class="home-geo-quiz-callout">
-    <i class="fas fa-location-dot" aria-hidden="true"></i>
-    <div>
-      <strong>Curious where your Chinese sounds like it is from?</strong>
-      <span>Try the Chinese variety map quiz for Mandarin, Cantonese, Min, Wu, and other regional patterns.</span>
-    </div>
-    <a href="/geo-quiz/">Take the quiz</a>
-  </div>
-  {% endif %}
-  
+
   <hr class="demo-divider" />
 
   <!-- <h4>{{ t.stroke_order_animation }}</h4>-->
@@ -127,6 +117,27 @@
       <p class="text-muted" style="margin: 0;">{{ t.practice_pdf_description }}</p>
     </form>
   </div>
+  {% if page.lang == "en" %}
+  <div class="home-daily-idiom-callout" id="home-daily-idiom">
+    <i class="fas fa-calendar-day" aria-hidden="true"></i>
+    <div>
+      <strong>Idiom of the Day</strong>
+      <span id="home-daily-idiom-text">Loading today's idiom...</span>
+    </div>
+    <div class="home-callout-actions">
+      <a class="home-callout-primary" id="home-daily-idiom-practice" href="/idioms/">Practice it</a>
+      <a class="home-callout-secondary" href="/idioms/">More idioms</a>
+    </div>
+  </div>
+  <div class="home-geo-quiz-callout">
+    <i class="fas fa-location-dot" aria-hidden="true"></i>
+    <div>
+      <strong>Curious where your Chinese sounds like it is from?</strong>
+      <span>Try the Chinese variety map quiz for Mandarin, Cantonese, Min, Wu, and other regional patterns.</span>
+    </div>
+    <a href="/geo-quiz/">Take the quiz</a>
+  </div>
+  {% endif %}
 </div>
 
 <!-- Beginner Characters Modal -->

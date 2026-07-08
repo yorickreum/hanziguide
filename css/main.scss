@@ -251,6 +251,126 @@ body {
   max-width: 760px;
 }
 
+.idioms-daily {
+  background: #fff;
+  border-bottom: 1px solid #e1e6e6;
+  padding: 22px 0;
+}
+
+.idioms-daily-card {
+  align-items: stretch;
+  background: #f9fbfb;
+  border: 1px solid #dbe4e4;
+  border-radius: 8px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+  padding: 18px;
+}
+
+.idioms-daily-copy h2 {
+  font-size: 26px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+.idioms-daily-status {
+  color: #5d6868;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.idioms-daily-content {
+  min-width: 0;
+}
+
+.idioms-daily-meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.idioms-daily-hanzi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.idioms-daily-hanzi-row {
+  align-items: baseline;
+  color: $text-color;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 82px minmax(0, 1fr);
+  text-decoration: none;
+}
+
+.idioms-daily-hanzi {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.15;
+  word-break: keep-all;
+}
+
+.idioms-daily-hanzi-row:hover,
+.idioms-daily-hanzi-row:focus {
+  color: $brand-color;
+  text-decoration: none;
+}
+
+.idioms-daily-definitions {
+  margin-bottom: 12px;
+}
+
+.idioms-daily-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.idioms-daily-actions .idiom-practice-link {
+  background: #2f6b61;
+  border: 1px solid #2f6b61;
+  border-radius: 6px;
+  color: #fff;
+  line-height: 1.25;
+  margin-top: 0;
+  min-height: 36px;
+  padding: 8px 12px;
+}
+
+.idioms-daily-actions .idiom-practice-link:hover,
+.idioms-daily-actions .idiom-practice-link:focus {
+  background: #255a51;
+  border-color: #255a51;
+  color: #fff;
+  outline: none;
+}
+
+.idioms-daily-more {
+  background: #fff;
+  border: 1px solid #b9cfca;
+  border-radius: 6px;
+  color: #2f6b61;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  min-height: 36px;
+  padding: 8px 12px;
+}
+
+.idioms-daily-more:hover,
+.idioms-daily-more:focus {
+  background: #edf5f3;
+  border-color: #8bb6ae;
+  color: #24584f;
+  outline: none;
+}
+
 .idioms-workspace {
   padding: 24px 0 48px;
 }
@@ -579,6 +699,26 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .idioms-daily-card {
+    grid-template-columns: 1fr;
+  }
+
+  .idioms-daily-hanzi {
+    font-size: 30px;
+  }
+
+  .idioms-daily-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .idioms-daily-actions .idiom-practice-link,
+  .idioms-daily-more {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
   .idioms-grid {
     grid-template-columns: 1fr;
   }
@@ -601,7 +741,8 @@ body {
   font-weight: 600;
 }
 
-.home-geo-quiz-callout {
+.home-geo-quiz-callout,
+.home-daily-idiom-callout {
   align-items: center;
   background: #f4f7f8;
   border: 1px solid #d9e1e5;
@@ -616,33 +757,51 @@ body {
   text-align: left;
 }
 
-.home-geo-quiz-callout i {
+.home-geo-quiz-callout i,
+.home-daily-idiom-callout i {
   color: #b6485f;
   font-size: 24px;
 }
 
-.home-geo-quiz-callout div {
+.home-daily-idiom-callout i {
+  color: #2f7f73;
+}
+
+.home-geo-quiz-callout div,
+.home-daily-idiom-callout > div:not(.home-callout-actions) {
   flex: 1 1 auto;
 }
 
+.home-callout-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
 .home-geo-quiz-callout strong,
-.home-geo-quiz-callout span {
+.home-geo-quiz-callout span,
+.home-daily-idiom-callout strong,
+.home-daily-idiom-callout span {
   display: block;
 }
 
-.home-geo-quiz-callout strong {
+.home-geo-quiz-callout strong,
+.home-daily-idiom-callout strong {
   color: #202124;
   font-size: 15px;
 }
 
-.home-geo-quiz-callout span {
+.home-geo-quiz-callout span,
+.home-daily-idiom-callout span {
   color: #59666d;
   font-size: 13px;
   margin-top: 2px;
 }
 
-.home-geo-quiz-callout a {
+.home-geo-quiz-callout a,
+.home-daily-idiom-callout a {
   background: #2f7f73;
+  border: 1px solid #2f7f73;
   border-radius: 6px;
   color: #fff;
   flex: 0 0 auto;
@@ -652,10 +811,27 @@ body {
   text-decoration: none;
 }
 
+.home-daily-idiom-callout .home-callout-secondary {
+  background: #fff;
+  border-color: #b9cfca;
+  color: #2f6b61;
+}
+
 .home-geo-quiz-callout a:hover,
-.home-geo-quiz-callout a:focus {
+.home-geo-quiz-callout a:focus,
+.home-daily-idiom-callout .home-callout-primary:hover,
+.home-daily-idiom-callout .home-callout-primary:focus {
   background: #256a60;
+  border-color: #256a60;
   color: #fff;
+  text-decoration: none;
+}
+
+.home-daily-idiom-callout .home-callout-secondary:hover,
+.home-daily-idiom-callout .home-callout-secondary:focus {
+  background: #edf5f3;
+  border-color: #8bb6ae;
+  color: #24584f;
   text-decoration: none;
 }
 
@@ -1497,14 +1673,20 @@ body {
     width: 100%;
   }
 
-  .home-geo-quiz-callout {
+  .home-geo-quiz-callout,
+  .home-daily-idiom-callout {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .home-geo-quiz-callout a {
+  .home-geo-quiz-callout a,
+  .home-daily-idiom-callout a {
     display: block;
     text-align: center;
+    width: 100%;
+  }
+
+  .home-callout-actions {
     width: 100%;
   }
 }

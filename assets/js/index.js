@@ -51,6 +51,128 @@ function normalizeMatomoText(text, maxLen) {
   return clean;
 }
 
+function parseDailyIdiomCsv(text) {
+  var rows = [];
+  var row = [];
+  var value = '';
+  var quoted = false;
+
+  for (var i = 0; i < text.length; i += 1) {
+    var char = text[i];
+    var next = text[i + 1];
+
+    if (quoted) {
+      if (char === '"' && next === '"') {
+        value += '"';
+        i += 1;
+      } else if (char === '"') {
+        quoted = false;
+      } else {
+        value += char;
+      }
+    } else if (char === '"') {
+      quoted = true;
+    } else if (char === ',') {
+      row.push(value);
+      value = '';
+    } else if (char === '\n') {
+      row.push(value);
+      rows.push(row);
+      row = [];
+      value = '';
+    } else if (char !== '\r') {
+      value += char;
+    }
+  }
+
+  if (value || row.length) {
+    row.push(value);
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function normalizeDailyIdiomHeader(header) {
+  return header.replace(/^\uFEFF/, '').trim();
+}
+
+function dailyIdiomRows(csv) {
+  var rows = parseDailyIdiomCsv(csv).filter(function(row) {
+    return row.some(function(value) {
+      return value.trim();
+    });
+  });
+  var headers = rows.shift().map(normalizeDailyIdiomHeader);
+  var seen = {};
+
+  return rows.map(function(row) {
+    return headers.reduce(function(obj, header, index) {
+      obj[header] = (row[index] || '').trim();
+      return obj;
+    }, {});
+  }).filter(function(row) {
+    var key = [row.hanzi, row.literal_translation, row.meaning].join('|');
+    if (seen[key]) {
+      return false;
+    }
+    seen[key] = true;
+    return !isToneSensitiveDailyIdiom(row.category);
+  });
+}
+
+function isToneSensitiveDailyIdiom(category) {
+  return [
+    'Mandarin internet slang',
+    'Cantonese slang / Hong Kong',
+    'Sarcastic / spicy',
+    'Villain / power / dark aesthetic'
+  ].indexOf(category) !== -1;
+}
+
+function dailyIdiomIndex(length) {
+  var now = new Date();
+  var day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+  return day % length;
+}
+
+function primaryDailyHanzi(value) {
+  return (value || '').split('/')[0].trim();
+}
+
+function initHomeDailyIdiom() {
+  var teaser = document.getElementById('home-daily-idiom');
+  var textEl = document.getElementById('home-daily-idiom-text');
+  var practiceLink = document.getElementById('home-daily-idiom-practice');
+  if (!teaser || !textEl) {
+    return;
+  }
+
+  fetch('/chinese_idioms_mandarin_cantonese.csv')
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Could not load idioms CSV');
+      }
+      return response.text();
+    })
+    .then(function(csv) {
+      var rows = dailyIdiomRows(csv);
+      if (!rows.length) {
+        throw new Error('No idioms available');
+      }
+      var item = rows[dailyIdiomIndex(rows.length)];
+      var hanzi = primaryDailyHanzi(item.hanzi);
+      textEl.textContent = hanzi + ' - ' + item.meaning;
+      if (practiceLink) {
+        practiceLink.setAttribute('href', '/#' + encodeURIComponent(hanzi));
+      }
+    })
+    .catch(function(error) {
+      console.error(error);
+      textEl.textContent = 'Open today\'s idiom with meaning and stroke practice.';
+    });
+}
+
 function trackPracticeSnapshot(chars, translationText) {
   var trimmedChars = (chars || '').trim();
   var trimmedTranslation = normalizeMatomoText(translationText, 160);
@@ -1483,6 +1605,8 @@ function shouldShowOutline(demoType) {
 }
 
 $(function() {
+  initHomeDailyIdiom();
+
 	if ($('#practice').length) {
 		// Extract characters from multiple sources
 		var urlChars = '';

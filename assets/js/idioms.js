@@ -9,6 +9,9 @@
 
   var listEl = document.getElementById('idioms-list');
   var statusEl = document.getElementById('idioms-status');
+  var dailyCardEl = document.getElementById('idioms-daily-card');
+  var dailyStatusEl = document.getElementById('idioms-daily-status');
+  var dailyContentEl = document.getElementById('idioms-daily-content');
   var searchEl = document.getElementById('idioms-search');
   var languageEl = document.getElementById('idioms-language');
   var categoryEl = document.getElementById('idioms-category');
@@ -217,6 +220,81 @@
     ].indexOf(category) !== -1;
   }
 
+  function isSafeDailyIdiom(item) {
+    return !item.entries.some(function(entry) {
+      return isToneSensitive(entry.category);
+    });
+  }
+
+  function daysSinceEpoch(date) {
+    return Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
+  }
+
+  function dailyIdiom() {
+    var pool = idioms.filter(isSafeDailyIdiom);
+    if (!pool.length) {
+      pool = idioms;
+    }
+    if (!pool.length) {
+      return null;
+    }
+    return pool[daysSinceEpoch(new Date()) % pool.length];
+  }
+
+  function renderDailyIdiom() {
+    if (!dailyCardEl || !dailyStatusEl || !dailyContentEl) {
+      return;
+    }
+
+    var item = dailyIdiom();
+    if (!item) {
+      dailyStatusEl.textContent = 'No daily idiom is available yet.';
+      dailyContentEl.innerHTML = '';
+      return;
+    }
+
+    var entry = item.entries[0] || {};
+    var languageSummary = item.entries.reduce(function(labels, current) {
+      if (current.language && labels.indexOf(current.language) === -1) {
+        labels.push(current.language);
+      }
+      return labels;
+    }, []).join(' / ');
+    var hanziRows = hanziVariants(item.hanzi).map(function(variant) {
+      return [
+        '<a class="idioms-daily-hanzi-row" href="' + practiceHrefForHanzi(variant.hanzi) + '">',
+          '<span class="idiom-script-label">' + escapeHtml(variant.label) + '</span>',
+          '<span class="idioms-daily-hanzi">' + escapeHtml(variant.hanzi) + '</span>',
+        '</a>'
+      ].join('');
+    }).join('');
+
+    dailyStatusEl.textContent = 'A new idiom is selected each day.';
+    dailyContentEl.innerHTML = [
+      '<div class="idioms-daily-meta">',
+        '<span class="idioms-language-label">' + escapeHtml(languageSummary || 'Chinese') + '</span>',
+        entry.category ? '<span class="idioms-category">' + escapeHtml(entry.category) + '</span>' : '',
+      '</div>',
+      '<div class="idioms-daily-hanzi-list">' + hanziRows + '</div>',
+      '<div class="idiom-definition-list idioms-daily-definitions">',
+        '<div class="idiom-definition-row">',
+          '<span class="idiom-definition-label">Literal</span>',
+          '<span class="idiom-definition-text">' + escapeHtml(item.literal) + '</span>',
+        '</div>',
+        '<div class="idiom-definition-row">',
+          '<span class="idiom-definition-label">Meaning</span>',
+          '<span class="idiom-definition-text">' + escapeHtml(item.meaning) + '</span>',
+        '</div>',
+      '</div>',
+      '<div class="idioms-daily-actions">',
+        '<a class="idiom-practice-link" href="' + practiceHref(item.hanzi) + '">',
+          '<i class="fas fa-pen-nib" aria-hidden="true"></i> Practice characters',
+        '</a>',
+        entry.category ? '<button type="button" class="idioms-daily-more" data-daily-category="' + escapeHtml(entry.category) + '">More like this</button>' : '',
+      '</div>'
+    ].join('');
+  }
+
   function renderCategoryOptions() {
     var categories = idioms
       .reduce(function(all, item) {
@@ -381,6 +459,35 @@
       }));
     });
 
+    if (dailyContentEl) {
+      dailyContentEl.addEventListener('click', function(event) {
+        var target = event.target;
+        if (target && !target.closest) {
+          target = target.parentElement;
+        }
+        var categoryButton = target ? target.closest('[data-daily-category]') : null;
+        var practiceLink = target ? target.closest('.idioms-daily-hanzi-row, .idiom-practice-link') : null;
+
+        if (categoryButton) {
+          var category = categoryButton.getAttribute('data-daily-category') || '';
+          state.category = category;
+          categoryEl.value = category;
+          render();
+          trackMatomoEvent('Idioms', 'DailyMoreLikeThis', analyticsContext({
+            selected: category
+          }), filteredIdioms().length);
+          document.querySelector('.idioms-workspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+
+        if (practiceLink) {
+          trackMatomoEvent('Idioms', 'DailyPracticeClick', analyticsContext({
+            text: normalizeAnalyticsText(practiceLink.textContent, 80)
+          }));
+        }
+      });
+    }
+
     categoryPromoEls.forEach(function(button) {
       button.addEventListener('click', function() {
         var category = button.getAttribute('data-idioms-category') || '';
@@ -451,6 +558,7 @@
       idioms = dedupeRows(csvToObjects(csv));
       renderCategoryOptions();
       bindControls();
+      renderDailyIdiom();
       render();
     })
     .catch(function(error) {
