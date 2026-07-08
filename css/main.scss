@@ -762,6 +762,61 @@ body {
   margin-bottom: 0;
 }
 
+.geo-quiz-local-report {
+  background: #f8fafb;
+  border: 1px solid #dfe4e7;
+  border-radius: 8px;
+  color: #3c464b;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 13px 14px;
+}
+
+.geo-quiz-local-report p {
+  margin: 0 0 10px;
+}
+
+.geo-quiz-local-report p:last-child {
+  margin-bottom: 0;
+}
+
+.geo-quiz-blend {
+  display: grid;
+  gap: 9px;
+  margin: 12px 0;
+  max-width: 560px;
+}
+
+.geo-quiz-blend-row {
+  display: grid;
+  gap: 4px 10px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.geo-quiz-blend-row span {
+  color: #263238;
+  font-weight: 700;
+  min-width: 0;
+}
+
+.geo-quiz-blend-row strong {
+  color: #b6482a;
+}
+
+.geo-quiz-blend-row i {
+  background: #2f7f73;
+  border-radius: 999px;
+  display: block;
+  grid-column: 1 / -1;
+  height: 7px;
+  max-width: 100%;
+}
+
+.geo-quiz-local-report-note {
+  color: #66727a;
+  font-size: 12px;
+}
+
 .geo-quiz-clue-list li {
   color: #3c464b;
   line-height: 1.45;
@@ -802,6 +857,53 @@ body {
   background: #e7f3f0;
   border-color: #2f7f73;
   box-shadow: inset 3px 0 0 #2f7f73;
+}
+
+.geo-quiz-feedback-location {
+  display: grid;
+  gap: 7px;
+  margin: 2px 0 10px;
+}
+
+.geo-quiz-feedback-location[hidden] {
+  display: none;
+}
+
+.geo-quiz-feedback-location label {
+  color: #3c464b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.geo-quiz-feedback-location div {
+  display: flex;
+  gap: 8px;
+}
+
+.geo-quiz-feedback-location input {
+  background: #fff;
+  border: 1px solid #cbd5d9;
+  border-radius: 6px;
+  color: #263238;
+  flex: 1 1 auto;
+  min-height: 36px;
+  min-width: 0;
+  padding: 7px 10px;
+}
+
+.geo-quiz-feedback-location input:focus {
+  border-color: #2f7f73;
+  outline: none;
+}
+
+.geo-quiz-feedback-location button {
+  background: #2f7f73;
+  border: 1px solid #2f7f73;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 700;
+  min-height: 36px;
+  padding: 7px 12px;
 }
 
 .geo-quiz-feedback p {
@@ -940,6 +1042,13 @@ body {
   width: 9px;
 }
 
+.geo-quiz-legend-ring {
+  background: transparent;
+  border: 3px solid #10211f;
+  height: 12px;
+  width: 12px;
+}
+
 @media (max-width: 991px) {
   .geo-quiz-map {
     height: 440px;
@@ -1007,6 +1116,10 @@ body {
 
   .geo-quiz-actions {
     flex-direction: column-reverse;
+  }
+
+  .geo-quiz-feedback-location div {
+    flex-direction: column;
   }
 
   .geo-quiz-button {

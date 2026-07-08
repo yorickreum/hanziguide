@@ -172,6 +172,7 @@ Hanzi Guide is designed with privacy in mind. We use a self-hosted instance of *
 - **Privacy-friendly:** IP addresses are anonymized, and we respect "Do Not Track" settings.
 - **No Cookies:** Matomo is configured to run without using any tracking cookies.
 - **Local Storage:** The site uses browser `sessionStorage` locally to remember your character selections between page loads. This data never leaves your device and is automatically cleared when you close your browser.
+- **Geo quiz feedback:** If you submit geo quiz feedback, the feedback event can include your answers, generated result, feedback choice, and any actual-location correction you enter.
 
 For more details, please see our [Impressum](/impressum.html).
 

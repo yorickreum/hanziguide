@@ -80,7 +80,8 @@ leaflet: true
             <div id="geo-quiz-map" class="geo-quiz-map" role="img" aria-label="OpenStreetMap likelihood map"></div>
             <p class="geo-quiz-map-note">
               Shading is built from Linguistic Atlas of Chinese Dialects localities from Huang et al. 2024; dots show the
-              underlying atlas places, and stronger matches appear darker. Base map © OpenStreetMap contributors.
+              underlying atlas places, highlighted rings mark the closest local signals, and stronger matches appear darker.
+              Base map © OpenStreetMap contributors.
             </p>
           </div>
         </div>
@@ -89,6 +90,11 @@ leaflet: true
           <section class="geo-quiz-detail-block geo-quiz-detail-block-wide">
             <h3>Map Reading</h3>
             <div id="geo-quiz-map-insight" class="geo-quiz-map-insight"></div>
+          </section>
+
+          <section class="geo-quiz-detail-block geo-quiz-detail-block-wide">
+            <h3>Closest Local Signal</h3>
+            <div id="geo-quiz-local-report" class="geo-quiz-local-report"></div>
           </section>
 
           <section class="geo-quiz-detail-block">
@@ -114,6 +120,13 @@ leaflet: true
                 <button type="button" data-feedback="close">Close</button>
                 <button type="button" data-feedback="no">No</button>
               </div>
+              <form class="geo-quiz-feedback-location" id="geo-quiz-feedback-location-form" hidden>
+                <label for="geo-quiz-actual-location">Where should it have placed you?</label>
+                <div>
+                  <input id="geo-quiz-actual-location" name="actual-location" type="text" maxlength="120" autocomplete="off" placeholder="City, region, or variety">
+                  <button type="submit">Send</button>
+                </div>
+              </form>
               <p id="geo-quiz-feedback-status">Feedback sends your quiz answers and result to us so we can improve the model.</p>
             </div>
           </section>
@@ -121,7 +134,8 @@ leaflet: true
 
         <div class="geo-quiz-actions geo-quiz-results-actions">
           <button class="geo-quiz-button geo-quiz-button-secondary" id="geo-quiz-review" type="button">Review Answers</button>
-          <button class="geo-quiz-button geo-quiz-button-secondary" id="geo-quiz-share" type="button">Share Result</button>
+          <button class="geo-quiz-button" id="geo-quiz-share-image" type="button">Share Result Card</button>
+          <button class="geo-quiz-button geo-quiz-button-secondary" id="geo-quiz-share" type="button">Copy Share Text</button>
           <button class="geo-quiz-button geo-quiz-reset" type="button">Start Over</button>
         </div>
         <p class="geo-quiz-share-status" id="geo-quiz-share-status" aria-live="polite"></p>

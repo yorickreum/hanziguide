@@ -429,6 +429,7 @@
   var overlays = [];
   var heatLayer = null;
   var lacdLayer = null;
+  var focusLayer = null;
   var lacdData = null;
   var pendingMapRanked = null;
   var legendControl = null;
@@ -555,14 +556,18 @@
     els.specificRegion = document.getElementById('geo-quiz-specific-region');
     els.topMatches = document.getElementById('geo-quiz-top-matches');
     els.localMatches = document.getElementById('geo-quiz-local-matches');
+    els.localReport = document.getElementById('geo-quiz-local-report');
     els.mapInsight = document.getElementById('geo-quiz-map-insight');
     els.clues = document.getElementById('geo-quiz-clues');
     els.resetButtons = document.querySelectorAll('.geo-quiz-reset');
     els.review = document.getElementById('geo-quiz-review');
     els.share = document.getElementById('geo-quiz-share');
+    els.shareImage = document.getElementById('geo-quiz-share-image');
     els.shareStatus = document.getElementById('geo-quiz-share-status');
     els.feedbackButtons = document.querySelectorAll('.geo-quiz-feedback-buttons button[data-feedback]');
     els.feedbackStatus = document.getElementById('geo-quiz-feedback-status');
+    els.feedbackLocationForm = document.getElementById('geo-quiz-feedback-location-form');
+    els.actualLocation = document.getElementById('geo-quiz-actual-location');
     els.modeButtons = document.querySelectorAll('.geo-quiz-mode-options button[data-question-count]');
 
     if (!els.app) return;
@@ -576,6 +581,9 @@
     });
     els.review.addEventListener('click', reviewAnswers);
     els.share.addEventListener('click', shareResult);
+    if (els.shareImage) {
+      els.shareImage.addEventListener('click', shareResultImage);
+    }
     els.modeButtons.forEach(function(button) {
       button.addEventListener('click', function() {
         setQuestionCount(Number(button.getAttribute('data-question-count')));
@@ -583,9 +591,12 @@
     });
     els.feedbackButtons.forEach(function(button) {
       button.addEventListener('click', function() {
-        submitFeedback(button.getAttribute('data-feedback'), button);
+        handleFeedbackClick(button.getAttribute('data-feedback'), button);
       });
     });
+    if (els.feedbackLocationForm) {
+      els.feedbackLocationForm.addEventListener('submit', submitLocationFeedback);
+    }
 
     restoreState();
     if (state.completed && hasCompleteAnswers()) {
@@ -827,6 +838,7 @@
     if (els.mapInsight) {
       els.mapInsight.innerHTML = buildMapInsight(result);
     }
+    renderLocalReport(result);
     renderLocalMatches(result);
 
     els.clues.innerHTML = '';
@@ -870,6 +882,7 @@
           '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-red"></i>Color = atlas region group</span>' +
           '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-purple"></i>Different colors mean different groups</span>' +
           '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-dark"></i>Darker/larger = stronger match</span>' +
+          '<span><i class="geo-quiz-legend-ring"></i>Rings = closest local signal</span>' +
           '<span><i class="geo-quiz-legend-dot"></i>Dots = atlas localities</span>';
         return div;
       };
@@ -877,11 +890,14 @@
     }
 
     clearMap();
-    renderLacdLayer(ranked);
+    var focusMarkers = renderLacdLayer(ranked) || [];
 
-    if (overlays.length) {
+    if (focusMarkers.length) {
+      var focusGroup = L.featureGroup(focusMarkers);
+      map.fitBounds(focusGroup.getBounds().pad(0.12), { maxZoom: 10 });
+    } else if (overlays.length) {
       var group = L.featureGroup(overlays);
-      map.fitBounds(group.getBounds().pad(0.18), { maxZoom: 6 });
+      map.fitBounds(group.getBounds().pad(0.12), { maxZoom: 7 });
     } else {
       map.setView([30.5, 112.5], 4);
     }
@@ -905,6 +921,10 @@
       map.removeLayer(heatLayer);
       heatLayer = null;
     }
+    if (focusLayer) {
+      map.removeLayer(focusLayer);
+      focusLayer = null;
+    }
   }
 
   function loadLacdData() {
@@ -924,6 +944,7 @@
           if (els.mapInsight) {
             els.mapInsight.innerHTML = buildMapInsight(result);
           }
+          renderLocalReport(result);
           renderLocalMatches(result);
           renderSpecificRegion(result);
         }
@@ -934,27 +955,30 @@
   }
 
   function renderLacdLayer(ranked) {
-    if (!map || !lacdData || !Array.isArray(lacdData.points)) return;
+    if (!map || !lacdData || !Array.isArray(lacdData.points)) return [];
 
-    var rawScores = calculateResults().rawScores;
+    var result = calculateResults();
+    var rawScores = result.rawScores;
     var maxScoreValue = Object.keys(rawScores).reduce(function(max, key) {
       return Math.max(max, rawScores[key]);
     }, 1);
     var scoredPoints = getScoredLacdPoints(rawScores, maxScoreValue);
+    var focusedPoints = getMapFocusPoints(result, scoredPoints);
 
     heatLayer = createAtlasHeatLayer(scoredPoints.filter(function(point) {
-      return point.match > 0.08;
+      return point.match > 0.18;
     }));
     heatLayer.addTo(map);
 
     var markers = scoredPoints.map(function(point) {
+      var scaledMatch = scaleMapMatch(point.match);
       var marker = L.circleMarker([point.lat, point.lon], {
-        radius: 3.2 + point.match * 3.8,
+        radius: 2.4 + scaledMatch * 5.4,
         color: '#263238',
-        weight: point.match > 0.55 ? 1 : 0,
+        weight: point.match > 0.62 ? 1 : 0,
         fillColor: point.rgb || '#8aa9c4',
-        fillOpacity: 0.16 + point.match * 0.68,
-        opacity: 0.35 + point.match * 0.5
+        fillOpacity: 0.04 + scaledMatch * 0.86,
+        opacity: 0.12 + scaledMatch * 0.78
       }).bindPopup(
         '<strong>' + escapeHtml(point.name) + '</strong><br>' +
         escapeHtml(lacdClusterLabels[point.sharp10] || point.sharp10) + '<br>' +
@@ -966,8 +990,55 @@
     lacdLayer = L.layerGroup(markers);
     lacdLayer.addTo(map);
     overlays = markers.filter(function(marker, index) {
-      return scoredPoints[index].match > 0.28;
+      return scoredPoints[index].match > 0.42;
     });
+
+    focusLayer = L.layerGroup(focusedPoints.map(function(point, index) {
+      return L.circleMarker([point.lat, point.lon], {
+        radius: 10 - index,
+        color: '#10211f',
+        fillColor: point.rgb || '#2f7f73',
+        fillOpacity: 0.28,
+        opacity: 0.92,
+        weight: 3
+      }).bindPopup(
+        '<strong>' + escapeHtml(point.name) + '</strong><br>' +
+        'Closest local signal<br>' +
+        'Relative locality score: ' + Math.round(point.match * 100) + '%'
+      );
+    }));
+    focusLayer.addTo(map);
+
+    return focusLayer.getLayers();
+  }
+
+  function getMapFocusPoints(result, scoredPoints) {
+    if (!result || !result.ranked || !result.ranked.length) return [];
+    if (result.ranked[0].key === 'mixed') return [];
+
+    var specificRegion = result.specificRegion || computeSpecificRegion(result);
+    var candidates = scoredPoints.filter(function(point) {
+      return point.match > 0.32;
+    });
+
+    if (specificRegion && specificRegion.bounds) {
+      candidates = candidates.filter(function(point) {
+        return pointInBounds(point, specificRegion.bounds);
+      });
+    }
+
+    candidates = candidates.sort(function(a, b) {
+      return b.match - a.match;
+    });
+
+    if (!candidates.length) return [];
+    if (candidates[0].match < 0.42) return [];
+
+    return candidates.slice(0, 3);
+  }
+
+  function scaleMapMatch(match) {
+    return Math.pow(Math.max(0, Math.min(1, match)), 2.1);
   }
 
   function getScoredLacdPoints(rawScores, maxScoreValue) {
@@ -1014,7 +1085,7 @@
       _draw: function(topLeft) {
         var ctx = this._ctx;
         var zoom = this._map.getZoom();
-        var radius = Math.max(32, Math.min(92, 28 + zoom * 8));
+        var radius = Math.max(24, Math.min(64, 18 + zoom * 5.4));
 
         ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
         ctx.globalCompositeOperation = 'source-over';
@@ -1024,11 +1095,11 @@
           var layerPoint = this._map.latLngToLayerPoint([point.lat, point.lon]);
           var x = layerPoint.x - topLeft.x;
           var y = layerPoint.y - topLeft.y;
-          var alpha = Math.max(0.03, Math.min(0.23, point.match * 0.22));
+          var alpha = Math.max(0.015, Math.min(0.32, scaleMapMatch(point.match) * 0.32));
           var gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
 
           gradient.addColorStop(0, hexToRgba(point.rgb || '#8aa9c4', alpha));
-          gradient.addColorStop(0.5, hexToRgba(point.rgb || '#8aa9c4', alpha * 0.42));
+          gradient.addColorStop(0.45, hexToRgba(point.rgb || '#8aa9c4', alpha * 0.32));
           gradient.addColorStop(1, hexToRgba(point.rgb || '#8aa9c4', 0));
           ctx.fillStyle = gradient;
           ctx.beginPath();
@@ -1207,6 +1278,55 @@
     els.specificRegion.hidden = false;
   }
 
+  function renderLocalReport(result) {
+    if (!els.localReport) return;
+
+    var best = result.ranked[0];
+    if (!best) {
+      els.localReport.innerHTML = '<p>No local report is available yet.</p>';
+      return;
+    }
+
+    var specificRegion = result.specificRegion || computeSpecificRegion(result);
+    var blend = result.ranked
+      .filter(function(item) {
+        return item.key !== 'mixed' && item.score > 0;
+      })
+      .slice(0, 3);
+    var localities = computeLacdMatches(result, 5);
+    var copy = '<p>Your strongest broad signal is <strong>' + escapeHtml(best.category.label) + '</strong>.';
+
+    if (specificRegion) {
+      copy += ' The local map signal points more specifically toward <strong>' +
+        escapeHtml(specificRegion.label) + '</strong>';
+      if (specificRegion.localities.length) {
+        copy += ', near atlas localities such as ' + escapeHtml(specificRegion.localities.join(', '));
+      }
+      copy += '.</p>';
+    } else {
+      copy += ' The answers do not yet support a reliable narrower regional label.</p>';
+    }
+
+    if (blend.length) {
+      copy += '<div class="geo-quiz-blend" aria-label="Regional blend">';
+      blend.forEach(function(item) {
+        var percent = Math.round(item.normalized * 100);
+        copy += '<div class="geo-quiz-blend-row"><span>' + escapeHtml(item.category.label) +
+          '</span><strong>' + percent + '%</strong><i style="width:' + percent + '%"></i></div>';
+      });
+      copy += '</div>';
+    }
+
+    if (localities.length) {
+      copy += '<p class="geo-quiz-local-report-note">Closest locality signals: ' +
+        escapeHtml(localities.slice(0, 3).map(function(item) {
+          return item.name + ' ' + Math.round(item.match * 100) + '%';
+        }).join(', ')) + '.</p>';
+    }
+
+    els.localReport.innerHTML = copy;
+  }
+
   function computeSpecificRegion(result) {
     if (!lacdData || !Array.isArray(lacdData.points) || !result || !result.rawScores) return null;
     if (result.ranked && result.ranked[0] && result.ranked[0].key === 'mixed') return null;
@@ -1249,6 +1369,7 @@
 
     return {
       label: region.label,
+      bounds: region.bounds,
       score: localityStrength * 0.72 + categoryStrength * 0.28,
       confidence: subregionConfidence(localityStrength, categoryStrength, localities.length),
       localities: localityNames
@@ -1281,11 +1402,11 @@
     var top = visible[0];
     var second = visible[1];
     var specificRegion = computeSpecificRegion(result);
-    var copy = '<p>The darkest shading is the strongest relative match. Lighter shading shows secondary or transitional signals.</p>';
+    var copy = '<p>The map zooms to the strongest local cluster when the atlas locality scores are strong enough. Weak background signals are muted so the closest local signal stands out.</p>';
     copy += '<p><strong>' + escapeHtml(top.category.label) + '</strong> is currently ' +
       escapeHtml(membershipBand(top.normalized)) + ' for your answer pattern.</p>';
     if (specificRegion) {
-      copy += '<p>The more specific map signal is <strong>' + escapeHtml(specificRegion.label) +
+      copy += '<p>The closest local signal is <strong>' + escapeHtml(specificRegion.label) +
         '</strong>, based on nearby atlas localities such as ' +
         escapeHtml(specificRegion.localities.join(', ')) + '.</p>';
     }
@@ -1321,13 +1442,201 @@
     copyShareText(shareData.text + '\n' + shareData.url);
   }
 
+  function shareResultImage() {
+    var result = calculateResults();
+    if (!result.ranked.length) return;
+
+    setShareStatus('Creating share image...');
+    createShareCardBlob(result, function(blob) {
+      if (!blob) {
+        setShareStatus('Could not create share image.');
+        return;
+      }
+
+      var shareData = buildShareData(result);
+      var file = typeof File !== 'undefined' ?
+        new File([blob], 'hanzi-guide-geo-quiz.png', { type: 'image/png' }) :
+        null;
+      var shareText = shareData.text + ' ' + shareData.url;
+
+      if (file && navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        navigator.share({
+          title: shareData.title,
+          text: shareText,
+          files: [file]
+        })
+          .then(function() {
+            setShareStatus('Share card sent.');
+          })
+          .catch(function(err) {
+            if (err && err.name === 'AbortError') {
+              setShareStatus('');
+              return;
+            }
+            downloadShareCard(blob);
+          });
+        return;
+      }
+
+      downloadShareCard(blob);
+      copyShareText(shareText);
+    });
+  }
+
+  function createShareCardBlob(result, done) {
+    var canvas = document.createElement('canvas');
+    var width = 1080;
+    var height = 1350;
+    var ctx = canvas.getContext('2d');
+    var best = result.ranked[0];
+    var specificRegion = result.specificRegion || computeSpecificRegion(result);
+    var blend = result.ranked
+      .filter(function(item) {
+        return item.key !== 'mixed' && item.score > 0;
+      })
+      .slice(0, 3);
+    var localities = computeLacdMatches(result, 3);
+
+    canvas.width = width;
+    canvas.height = height;
+
+    drawShareCardBackground(ctx, width, height, blend);
+    ctx.fillStyle = '#17312d';
+    ctx.font = '700 44px Arial, sans-serif';
+    ctx.fillText('Your Chinese variety mix', 76, 110);
+
+    ctx.fillStyle = '#10211f';
+    ctx.font = '700 76px Arial, sans-serif';
+    wrapCanvasText(ctx, best.category.label, 76, 240, 870, 86, 3);
+
+    ctx.fillStyle = '#3f4d49';
+    ctx.font = '400 34px Arial, sans-serif';
+    wrapCanvasText(ctx, specificRegion ? 'Closest local signal: ' + specificRegion.label : best.category.summary, 76, 500, 860, 46, 3);
+
+    drawShareBlend(ctx, blend, 76, 690);
+
+    if (localities.length) {
+      ctx.fillStyle = '#4d5b57';
+      ctx.font = '700 31px Arial, sans-serif';
+      ctx.fillText('Closest atlas localities', 76, 1010);
+      ctx.font = '400 31px Arial, sans-serif';
+      localities.forEach(function(item, index) {
+        ctx.fillText(item.name + ' · ' + Math.round(item.match * 100) + '%', 76, 1062 + index * 46);
+      });
+    }
+
+    ctx.fillStyle = '#2f7f73';
+    ctx.font = '700 32px Arial, sans-serif';
+    ctx.fillText('Try yours: hanziguide.com/geo-quiz', 76, 1260);
+
+    if (canvas.toBlob) {
+      canvas.toBlob(done, 'image/png');
+    } else {
+      done(dataUrlToBlob(canvas.toDataURL('image/png')));
+    }
+  }
+
+  function drawShareCardBackground(ctx, width, height, blend) {
+    ctx.fillStyle = '#f6faf8';
+    ctx.fillRect(0, 0, width, height);
+
+    blend.forEach(function(item, index) {
+      var color = item.category.mapColor || '#8aa9c4';
+      var x = 760 + index * 82;
+      var y = 180 + index * 145;
+      var gradient = ctx.createRadialGradient(x, y, 0, x, y, 360);
+      gradient.addColorStop(0, hexToRgba(color, 0.34));
+      gradient.addColorStop(0.62, hexToRgba(color, 0.12));
+      gradient.addColorStop(1, hexToRgba(color, 0));
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(x, y, 360, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.strokeStyle = '#d9e5e1';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(34, 34, width - 68, height - 68);
+  }
+
+  function drawShareBlend(ctx, blend, x, y) {
+    blend.forEach(function(item, index) {
+      var percent = Math.round(item.normalized * 100);
+      var rowY = y + index * 78;
+      ctx.fillStyle = '#253431';
+      ctx.font = '700 38px Arial, sans-serif';
+      ctx.fillText(percent + '%', x, rowY);
+      ctx.font = '400 34px Arial, sans-serif';
+      ctx.fillText(item.category.label, x + 128, rowY);
+      ctx.fillStyle = item.category.mapColor || '#8aa9c4';
+      ctx.fillRect(x + 128, rowY + 18, Math.max(28, percent * 7.1), 13);
+    });
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+    var words = String(text || '').split(/\s+/);
+    var line = '';
+    var lines = 0;
+
+    words.forEach(function(word) {
+      if (lines >= maxLines) return;
+      var test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        ctx.fillText(line, x, y);
+        y += lineHeight;
+        lines += 1;
+        line = word;
+      } else {
+        line = test;
+      }
+    });
+
+    if (line && lines < maxLines) {
+      ctx.fillText(line, x, y);
+    }
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    var parts = dataUrl.split(',');
+    var mime = parts[0].match(/:(.*?);/)[1];
+    var binary = atob(parts[1]);
+    var array = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i += 1) {
+      array[i] = binary.charCodeAt(i);
+    }
+    return new Blob([array], { type: mime });
+  }
+
+  function downloadShareCard(blob) {
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'hanzi-guide-geo-quiz.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.setTimeout(function() {
+      URL.revokeObjectURL(url);
+    }, 1000);
+    setShareStatus('Share image downloaded.');
+  }
+
   function buildShareData(result) {
     var best = result.ranked[0];
     var second = result.ranked[1];
     var specificRegion = result.specificRegion || computeSpecificRegion(result);
+    var blendText = result.ranked
+      .filter(function(item) {
+        return item.key !== 'mixed' && item.score > 0;
+      })
+      .slice(0, 3)
+      .map(function(item) {
+        return Math.round(item.normalized * 100) + '% ' + item.category.label;
+      })
+      .join(', ');
     var title = 'Where is your Chinese from?';
     var url = window.location.origin + '/geo-quiz/';
-    var text = 'My Hanzi Guide Chinese variety match is ' + best.category.label +
+    var text = 'I\'m ' + (blendText || best.category.label) + ' on the Hanzi Guide Chinese variety quiz' +
       ' (' + best.confidence + ', ' + getQuestionCount() + ' questions).';
 
     if (specificRegion) {
@@ -1385,11 +1694,56 @@
     }
   }
 
-  function submitFeedback(feedback, button) {
+  function handleFeedbackClick(feedback, button) {
+    if (feedback === 'no') {
+      showLocationFeedbackForm(button);
+      return;
+    }
+
+    submitFeedback(feedback, button);
+  }
+
+  function showLocationFeedbackForm(button) {
+    resetFeedbackButtons();
+    if (button) {
+      button.classList.add('is-selected');
+      button.setAttribute('aria-pressed', 'true');
+    }
+    if (els.feedbackLocationForm) {
+      els.feedbackLocationForm.hidden = false;
+    }
+    if (els.feedbackStatus) {
+      els.feedbackStatus.textContent = 'Tell us the actual location so we can improve the model.';
+    }
+    if (els.actualLocation) {
+      els.actualLocation.value = '';
+      els.actualLocation.focus();
+    }
+  }
+
+  function submitLocationFeedback(event) {
+    event.preventDefault();
+    var location = normalizeFeedbackLocation(els.actualLocation ? els.actualLocation.value : '');
+    var noButton = getFeedbackButton('no');
+
+    if (!location) {
+      if (els.feedbackStatus) {
+        els.feedbackStatus.textContent = 'Please enter the actual location before sending feedback.';
+      }
+      if (els.actualLocation) {
+        els.actualLocation.focus();
+      }
+      return;
+    }
+
+    submitFeedback('no', noButton, location);
+  }
+
+  function submitFeedback(feedback, button, actualLocation) {
     var result = calculateResults();
     if (!result.ranked.length) return;
 
-    var payload = buildFeedbackPayload(feedback, result);
+    var payload = buildFeedbackPayload(feedback, result, actualLocation);
     var eventValue = feedback === 'yes' ? 2 : feedback === 'close' ? 1 : 0;
     var sent = trackMatomoEvent('Geo Quiz', 'Feedback', JSON.stringify(payload), eventValue);
 
@@ -1398,6 +1752,7 @@
       button.classList.add('is-selected');
       button.setAttribute('aria-pressed', 'true');
     }
+    hideLocationFeedbackForm();
 
     if (els.feedbackStatus) {
       els.feedbackStatus.textContent = sent ?
@@ -1406,10 +1761,10 @@
     }
   }
 
-  function buildFeedbackPayload(feedback, result) {
+  function buildFeedbackPayload(feedback, result, actualLocation) {
     var best = result.ranked[0];
     var specificRegion = result.specificRegion || computeSpecificRegion(result);
-    return {
+    var payload = {
       version: 1,
       feedback: feedback,
       result: {
@@ -1453,6 +1808,10 @@
       }).filter(Boolean),
       questionCount: getQuestionCount()
     };
+    if (feedback === 'no') {
+      payload.actualLocation = actualLocation || null;
+    }
+    return payload;
   }
 
   function resetFeedbackButtons() {
@@ -1464,6 +1823,33 @@
     if (els.feedbackStatus) {
       els.feedbackStatus.textContent = 'Feedback sends your quiz answers and result to us so we can improve the model.';
     }
+    hideLocationFeedbackForm();
+  }
+
+  function hideLocationFeedbackForm() {
+    if (els.feedbackLocationForm) {
+      els.feedbackLocationForm.hidden = true;
+    }
+    if (els.actualLocation) {
+      els.actualLocation.value = '';
+    }
+  }
+
+  function getFeedbackButton(feedback) {
+    if (!els.feedbackButtons) return null;
+    for (var i = 0; i < els.feedbackButtons.length; i += 1) {
+      if (els.feedbackButtons[i].getAttribute('data-feedback') === feedback) {
+        return els.feedbackButtons[i];
+      }
+    }
+    return null;
+  }
+
+  function normalizeFeedbackLocation(value) {
+    return String(value || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 120);
   }
 
   function trackMatomoEvent(category, action, name, value) {
