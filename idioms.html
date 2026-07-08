@@ -1,0 +1,117 @@
+---
+layout: default
+title: Chinese Idioms
+description: Search Chinese idioms and sayings by category, with Hanzi, literal translations, English meanings, and Mandarin or Cantonese labels.
+permalink: /idioms/
+lang: en
+js: /assets/js/idioms.js
+---
+
+<main class="idioms-page">
+  <section class="idioms-header">
+    <div class="container">
+      <p class="idioms-kicker">Idioms</p>
+      <h1>Chinese Idioms & Sayings</h1>
+      <p class="idioms-lede">
+        Browse chengyu, sayings, slang, and short Hanzi phrases with literal translations and practical English meanings.
+      </p>
+    </div>
+  </section>
+
+  <section class="idioms-workspace">
+    <div class="container">
+      <div class="idioms-toolbar" aria-label="Idiom filters">
+        <label class="idioms-search">
+          <span>Search</span>
+          <input id="idioms-search" type="search" autocomplete="off" placeholder="Search Hanzi, meaning, or category">
+        </label>
+
+        <label>
+          <span>Language</span>
+          <select id="idioms-language">
+            <option value="">All</option>
+            <option value="Mandarin">Mandarin</option>
+            <option value="Cantonese">Cantonese</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Category</span>
+          <select id="idioms-category">
+            <option value="">All categories</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="idioms-status" id="idioms-status" aria-live="polite">Loading idioms...</div>
+      <div class="idioms-grid" id="idioms-list"></div>
+    </div>
+  </section>
+
+  <section class="idioms-seo">
+    <div class="container">
+      <div class="idioms-seo-layout">
+        <article class="idioms-explainer">
+          <h2>Chinese Idioms by Mood, Situation, and Style</h2>
+          <p>
+            Chinese idioms are compact phrases that carry a story, image, or social meaning in just a few Hanzi.
+            Some are classical chengyu used in writing and speeches, while others are everyday sayings, blessing
+            phrases, Hong Kong Cantonese expressions, or modern Mandarin internet slang.
+          </p>
+          <p>
+            This idioms list is organized by how learners actually look for phrases: funny visual idioms, business
+            strategy idioms, startup and ambition phrases, money and luck sayings, wisdom idioms, poetic nature
+            expressions, love and friendship phrases, study idioms, resilience sayings, sarcastic expressions,
+            Cantonese slang, and short aesthetic Hanzi for design or tattoo research.
+          </p>
+          <p>
+            Each card shows the traditional and simplified forms when both are useful, a literal translation, and a
+            practical English meaning. Click any Hanzi form to open it in Hanzi Guide and practice the characters
+            stroke by stroke.
+          </p>
+        </article>
+
+        <aside class="idioms-missing" aria-labelledby="idioms-missing-title">
+          <h2 id="idioms-missing-title">Missing a Favorite Idiom?</h2>
+          <p>Send one phrase you expected to find. This is recorded as an analytics event so we can improve the list.</p>
+          <form id="idioms-missing-form">
+            <label>
+              <span>Idiom or saying</span>
+              <input id="idioms-missing-text" type="text" maxlength="80" autocomplete="off" placeholder="e.g. 一石二鳥">
+            </label>
+            <label>
+              <span>Optional note</span>
+              <input id="idioms-missing-note" type="text" maxlength="140" autocomplete="off" placeholder="Meaning, context, or language">
+            </label>
+            <button type="submit">Send suggestion</button>
+          </form>
+          <p class="idioms-missing-status" id="idioms-missing-status" aria-live="polite"></p>
+        </aside>
+      </div>
+
+      <div class="idioms-category-promos" aria-labelledby="idioms-category-promos-title">
+        <h2 id="idioms-category-promos-title">Explore Popular Chinese Idiom Categories</h2>
+        <div class="idioms-category-promo-grid">
+          <button type="button" data-idioms-category="Classic funny / visual">Funny visual idioms</button>
+          <button type="button" data-idioms-category="Business / strategy">Business strategy idioms</button>
+          <button type="button" data-idioms-category="Startup / ambition">Startup ambition phrases</button>
+          <button type="button" data-idioms-category="Money / wealth / luck">Money, wealth, and luck sayings</button>
+          <button type="button" data-idioms-category="Wisdom / philosophy">Wisdom and philosophy idioms</button>
+          <button type="button" data-idioms-category="Aesthetic / tattoo-friendly">Aesthetic Hanzi phrases</button>
+          <button type="button" data-idioms-category="Love / friendship">Love and friendship idioms</button>
+          <button type="button" data-idioms-category="Historic / literary">Historic literary chengyu</button>
+          <button type="button" data-idioms-category="School / study">School and study idioms</button>
+          <button type="button" data-idioms-category="Failure / resilience">Failure and resilience sayings</button>
+          <button type="button" data-idioms-category="Nature / poetic">Nature and poetic phrases</button>
+          <button type="button" data-idioms-category="Food / daily life">Food and daily life sayings</button>
+          <button type="button" data-idioms-category="Cute / wholesome">Cute and wholesome phrases</button>
+          <button type="button" data-idioms-category="Cantonese slang / Hong Kong">Hong Kong Cantonese slang</button>
+          <button type="button" data-idioms-category="Mandarin internet slang">Mandarin internet slang</button>
+          <button type="button" data-idioms-category="Sarcastic / spicy">Sarcastic Chinese expressions</button>
+          <button type="button" data-idioms-category="Villain / power / dark aesthetic">Power and rivalry idioms</button>
+          <button type="button" data-idioms-category="Minimal / nice Hanzi">Minimal single Hanzi</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
