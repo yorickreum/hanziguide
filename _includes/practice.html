@@ -117,27 +117,31 @@
       <p class="text-muted" style="margin: 0;">{{ t.practice_pdf_description }}</p>
     </form>
   </div>
-  {% if page.lang == "en" %}
   <div class="home-daily-idiom-callout" id="home-daily-idiom">
     <i class="fas fa-calendar-day" aria-hidden="true"></i>
     <div>
-      <strong>Idiom of the Day</strong>
-      <span id="home-daily-idiom-text">Loading today's idiom...</span>
+      <strong>{{ t.home_teasers.idiom_title }}</strong>
+      <span id="home-daily-idiom-text" data-fallback="{{ t.home_teasers.idiom_fallback }}">{{ t.home_teasers.idiom_loading }}</span>
     </div>
     <div class="home-callout-actions">
-      <a class="home-callout-primary" id="home-daily-idiom-practice" href="/idioms/">Practice it</a>
-      <a class="home-callout-secondary" href="/idioms/">More idioms</a>
+      <a class="home-callout-primary" id="home-daily-idiom-practice" href="/idioms/">{{ t.home_teasers.idiom_practice }}</a>
+      <a class="home-callout-secondary" href="/idioms/">{{ t.home_teasers.idiom_more }}</a>
     </div>
   </div>
   <div class="home-geo-quiz-callout">
     <i class="fas fa-location-dot" aria-hidden="true"></i>
     <div>
-      <strong>Curious where your Chinese sounds like it is from?</strong>
-      <span>Try the Chinese variety map quiz for Mandarin, Cantonese, Min, Wu, and other regional patterns.</span>
+      <strong>{{ t.home_teasers.geo_title }}</strong>
+      <span>{{ t.home_teasers.geo_text }}</span>
     </div>
-    <a href="/geo-quiz/">Take the quiz</a>
+    {% if page.lang == "zh" %}
+    <a href="/cn/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
+    {% elsif page.lang == "zh-Hant" %}
+    <a href="/tw/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
+    {% else %}
+    <a href="/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
+    {% endif %}
   </div>
-  {% endif %}
 </div>
 
 <!-- Beginner Characters Modal -->

@@ -169,7 +169,7 @@ function initHomeDailyIdiom() {
     })
     .catch(function(error) {
       console.error(error);
-      textEl.textContent = 'Open today\'s idiom with meaning and stroke practice.';
+      textEl.textContent = textEl.getAttribute('data-fallback') || 'Open today\'s idiom with meaning and stroke practice.';
     });
 }
 

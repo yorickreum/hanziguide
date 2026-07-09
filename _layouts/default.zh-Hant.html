@@ -24,6 +24,10 @@
             <ul class="nav navbar-nav navbar-right">
               <li{% if page.url == '/tw/' or page.url == '/tw/index.html' %} class="active"{% endif %}><a href="/tw/">{{ t.nav.practice }}</a></li>
 
+              <li{% if page.url contains '/tw/geo-quiz' %} class="active"{% endif %}>
+                <a href="/tw/geo-quiz/">{{ t.nav.geo_quiz }}</a>
+              </li>
+
               <li class="dropdown{% if page.url contains '/howto' %} active{% endif %}">
                 <a href="/tw/howto/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {{ t.nav.howto }} <span class="caret"></span>

@@ -1,6 +1,187 @@
 (function() {
   'use strict';
 
+  var pageLang = document.documentElement.getAttribute('lang') || 'en';
+  var uiLocales = {
+    en: {
+      progress: 'Question {current} of {total}',
+      next: 'Next',
+      showMap: 'Show Map',
+      lowConfidence: 'Low confidence',
+      mediumConfidence: 'Medium confidence',
+      highConfidence: 'High confidence',
+      coreLike: 'core-like',
+      marginal: 'marginal',
+      weak: 'weak',
+      trace: 'trace',
+      relativeMatch: '{percent}% relative match · {band}',
+      mapFallback: 'OpenStreetMap could not load. The ranked list still shows your regional matches.',
+      legendTitle: 'How to read the map',
+      legendColor: 'Color = atlas region group',
+      legendGroups: 'Different colors mean different groups',
+      legendStrength: 'Darker/larger = stronger match',
+      legendRings: 'Rings = closest local signal',
+      legendDots: 'Dots = atlas localities',
+      loadingLocalities: 'Loading Linguistic Atlas of Chinese Dialects localities...',
+      noLocalities: 'No atlas locality match is available for this answer pattern.',
+      localityScore: '{percent}% locality score',
+      moreSpecific: 'More specific: {label}',
+      noLocalReport: 'No local report is available yet.',
+      strongestSignal: 'Your strongest broad signal is <strong>{label}</strong>.',
+      specificSignal: ' The local map signal points more specifically toward <strong>{label}</strong>',
+      nearLocalities: ', near atlas localities such as {localities}',
+      noNarrowLabel: ' The answers do not yet support a reliable narrower regional label.',
+      closestLocalitySignals: 'Closest locality signals: {localities}.',
+      noMapSignal: 'No strong geographic signal yet.',
+      mapInsightIntro: 'The map zooms to the strongest local cluster when the atlas locality scores are strong enough. Weak background signals are muted so the closest local signal stands out.',
+      topRegionCurrent: '<strong>{label}</strong> is currently {band} for your answer pattern.',
+      closestLocalSignal: 'The closest local signal is <strong>{label}</strong>, based on nearby atlas localities such as {localities}.',
+      overlapPattern: 'Your top two regions are close, so this should be read as an overlap pattern rather than a precise location.',
+      dialectGeographyNote: 'This follows the idea that Chinese dialect geography has stronger centers, softer margins, and transition zones.',
+      resultShared: 'Result shared.',
+      creatingShareImage: 'Creating share image...',
+      shareImageFailed: 'Could not create share image.',
+      shareCardSent: 'Share card sent.',
+      shareImageDownloaded: 'Share image downloaded.',
+      shareTextCopied: 'Share text copied to clipboard.',
+      copyFailed: 'Copy failed. Select and copy the page URL instead.',
+      shareCardTitle: 'Your Chinese variety mix',
+      closestLocalSignalCanvas: 'Closest local signal: {label}',
+      closestAtlasLocalities: 'Closest atlas localities',
+      tryYours: 'Try yours: hanziguide.com{path}',
+      shareTitle: 'Where is your Chinese from?',
+      shareText: 'I\'m {blend} on the Hanzi Guide Chinese variety quiz ({confidence}, {count} questions).',
+      shareMoreSpecific: ' More specific: {label}.',
+      shareNextClosest: ' Next closest: {label}.',
+      askActualLocation: 'Tell us the actual location so we can improve the model.',
+      enterActualLocation: 'Please enter the actual location before sending feedback.',
+      feedbackSent: 'Feedback sent. Thank you.',
+      feedbackUnavailable: 'Feedback recorded on this page, but Matomo was not available.',
+      feedbackDefault: 'Feedback sends your quiz answers and result to us so we can improve the model.'
+    },
+    'zh-Hans': {
+      progress: '第 {current} / {total} 题',
+      next: '下一题',
+      showMap: '显示地图',
+      lowConfidence: '低可信度',
+      mediumConfidence: '中等可信度',
+      highConfidence: '高可信度',
+      coreLike: '核心区相似',
+      marginal: '边缘区',
+      weak: '较弱',
+      trace: '微弱',
+      relativeMatch: '{percent}% 相对匹配 · {band}',
+      mapFallback: 'OpenStreetMap 无法加载。区域排名仍会显示你的匹配结果。',
+      legendTitle: '如何读图',
+      legendColor: '颜色 = 地图集区域组',
+      legendGroups: '不同颜色表示不同区域组',
+      legendStrength: '更深/更大 = 匹配更强',
+      legendRings: '圆环 = 最接近的本地信号',
+      legendDots: '圆点 = 地图集地点',
+      loadingLocalities: '正在加载《汉语方言地图集》地点...',
+      noLocalities: '这个答案模式暂无可用的地图集地点匹配。',
+      localityScore: '{percent}% 地点分数',
+      moreSpecific: '更具体：{label}',
+      noLocalReport: '目前还没有本地报告。',
+      strongestSignal: '你最强的宽泛信号是 <strong>{label}</strong>。',
+      specificSignal: ' 本地地图信号更具体地指向 <strong>{label}</strong>',
+      nearLocalities: '，接近 {localities} 等地图集地点',
+      noNarrowLabel: ' 这些答案还不足以支持可靠的更细区域标签。',
+      closestLocalitySignals: '最接近的地点信号：{localities}。',
+      noMapSignal: '目前没有强地理信号。',
+      mapInsightIntro: '当地图集地点分数足够强时，地图会缩放到最强的本地聚类。较弱的背景信号会淡化，让最接近的本地信号更突出。',
+      topRegionCurrent: '<strong>{label}</strong> 目前对你的答案模式是 {band}。',
+      closestLocalSignal: '最接近的本地信号是 <strong>{label}</strong>，依据附近的地图集地点，例如 {localities}。',
+      overlapPattern: '你的前两个区域很接近，因此应理解为重叠模式，而不是精确地点。',
+      dialectGeographyNote: '这遵循中文方言地理有较强中心、较软边缘和过渡区的观点。',
+      resultShared: '结果已分享。',
+      creatingShareImage: '正在生成分享图...',
+      shareImageFailed: '无法生成分享图。',
+      shareCardSent: '结果图已分享。',
+      shareImageDownloaded: '分享图已下载。',
+      shareTextCopied: '分享文字已复制到剪贴板。',
+      copyFailed: '复制失败。请手动复制页面网址。',
+      shareCardTitle: '你的中文地域混合',
+      closestLocalSignalCanvas: '最接近的本地信号：{label}',
+      closestAtlasLocalities: '最接近的地图集地点',
+      tryYours: '试试你的结果：hanziguide.com{path}',
+      shareTitle: '你的中文来自哪里？',
+      shareText: '我在 Hanzi Guide 中文地域测验上的结果是 {blend}（{confidence}，{count} 题）。',
+      shareMoreSpecific: ' 更具体：{label}。',
+      shareNextClosest: ' 下一个接近区域：{label}。',
+      askActualLocation: '告诉我们实际地点，帮助改进模型。',
+      enterActualLocation: '请先输入实际地点再发送反馈。',
+      feedbackSent: '反馈已发送，谢谢。',
+      feedbackUnavailable: '反馈已记录在本页，但 Matomo 当前不可用。',
+      feedbackDefault: '反馈会发送你的测验答案和结果，帮助我们改进模型。'
+    },
+    'zh-Hant': {
+      progress: '第 {current} / {total} 題',
+      next: '下一題',
+      showMap: '顯示地圖',
+      lowConfidence: '低可信度',
+      mediumConfidence: '中等可信度',
+      highConfidence: '高可信度',
+      coreLike: '核心區相似',
+      marginal: '邊緣區',
+      weak: '較弱',
+      trace: '微弱',
+      relativeMatch: '{percent}% 相對匹配 · {band}',
+      mapFallback: 'OpenStreetMap 無法載入。區域排名仍會顯示你的匹配結果。',
+      legendTitle: '如何讀圖',
+      legendColor: '顏色 = 地圖集區域組',
+      legendGroups: '不同顏色表示不同區域組',
+      legendStrength: '更深/更大 = 匹配更強',
+      legendRings: '圓環 = 最接近的本地信號',
+      legendDots: '圓點 = 地圖集地點',
+      loadingLocalities: '正在載入《漢語方言地圖集》地點...',
+      noLocalities: '這個答案模式暫無可用的地圖集地點匹配。',
+      localityScore: '{percent}% 地點分數',
+      moreSpecific: '更具體：{label}',
+      noLocalReport: '目前還沒有本地報告。',
+      strongestSignal: '你最強的寬泛信號是 <strong>{label}</strong>。',
+      specificSignal: ' 本地地圖信號更具體地指向 <strong>{label}</strong>',
+      nearLocalities: '，接近 {localities} 等地圖集地點',
+      noNarrowLabel: ' 這些答案還不足以支持可靠的更細區域標籤。',
+      closestLocalitySignals: '最接近的地點信號：{localities}。',
+      noMapSignal: '目前沒有強地理信號。',
+      mapInsightIntro: '當地圖集地點分數足夠強時，地圖會縮放到最強的本地聚類。較弱的背景信號會淡化，讓最接近的本地信號更突出。',
+      topRegionCurrent: '<strong>{label}</strong> 目前對你的答案模式是 {band}。',
+      closestLocalSignal: '最接近的本地信號是 <strong>{label}</strong>，依據附近的地圖集地點，例如 {localities}。',
+      overlapPattern: '你的前兩個區域很接近，因此應理解為重疊模式，而不是精確地點。',
+      dialectGeographyNote: '這遵循中文方言地理有較強中心、較軟邊緣和過渡區的觀點。',
+      resultShared: '結果已分享。',
+      creatingShareImage: '正在產生分享圖...',
+      shareImageFailed: '無法產生分享圖。',
+      shareCardSent: '結果圖已分享。',
+      shareImageDownloaded: '分享圖已下載。',
+      shareTextCopied: '分享文字已複製到剪貼簿。',
+      copyFailed: '複製失敗。請手動複製頁面網址。',
+      shareCardTitle: '你的中文地域混合',
+      closestLocalSignalCanvas: '最接近的本地信號：{label}',
+      closestAtlasLocalities: '最接近的地圖集地點',
+      tryYours: '試試你的結果：hanziguide.com{path}',
+      shareTitle: '你的中文來自哪裡？',
+      shareText: '我在 Hanzi Guide 中文地域測驗上的結果是 {blend}（{confidence}，{count} 題）。',
+      shareMoreSpecific: ' 更具體：{label}。',
+      shareNextClosest: ' 下一個接近區域：{label}。',
+      askActualLocation: '告訴我們實際地點，幫助改進模型。',
+      enterActualLocation: '請先輸入實際地點再送出回饋。',
+      feedbackSent: '回饋已送出，謝謝。',
+      feedbackUnavailable: '回饋已記錄在本頁，但 Matomo 目前不可用。',
+      feedbackDefault: '回饋會送出你的測驗答案和結果，幫助我們改進模型。'
+    }
+  };
+  var ui = uiLocales[pageLang] || uiLocales.en;
+
+  function uiText(key, values) {
+    var text = ui[key] || uiLocales.en[key] || key;
+    Object.keys(values || {}).forEach(function(name) {
+      text = text.replace(new RegExp('\\{' + name + '\\}', 'g'), values[name]);
+    });
+    return text;
+  }
+
   var categories = {
     hk_cantonese: {
       label: 'Hong Kong Cantonese',
@@ -103,6 +284,48 @@
       summary: 'Your answers combine signals from multiple regions or learning contexts.'
     }
   };
+
+  var categoryLocales = {
+    'zh-Hans': {
+      hk_cantonese: ['香港粤语', '粤语', '南方分支：粤语', '香港 / 澳门', '你的答案最接近香港式粤语和日常书面粤语。'],
+      guangdong_cantonese: ['广东粤语', '粤语', '南方分支：粤语', '广东', '你的答案指向广东相关的粤语或粤方言模式。'],
+      mainland_mandarin: ['北方 / 标准大陆普通话', '普通话', '北方官话', '华北 / 标准普通话', '你的答案大多符合大陆标准普通话的词汇、用字和表达。'],
+      taiwan_mandarin: ['台湾国语', '国语', '受闽语/客语接触影响的台湾国语', '台湾', '你的答案最接近台湾国语习惯，尤其是书写形式和日常用词。'],
+      sichuan_mandarin: ['西南官话', '西南官话', '南方官话', '四川 / 重庆', '你的答案显示出一些与四川和重庆相关的西南官话线索。'],
+      northeast_mandarin: ['东北官话', '东北官话', '北方官话创新区', '中国东北', '你的答案包含一些常见于东北官话的线索。'],
+      wu_shanghai: ['吴语 / 上海话影响的中文', '吴语', '长江下游 / 吴语区', '上海 / 吴语区', '你的答案显示出吴语或上海话影响的模式。'],
+      min_hokkien: ['闽语 / 福建话影响的中文', '闽南语 / 福建话', '南方分支：闽语', '福建 / 闽南语区', '你的答案包含闽南语或福建话一类的线索。'],
+      central_china: ['中部过渡区中文', '湘语 / 赣语 / 徽语影响的过渡区', '中部过渡区域', '湖南 / 湖北 / 江西 / 皖南', '你的答案结合了中部过渡区的信号，这里多种中文变体相互重叠。'],
+      mixed: ['混合 / 学习者画像', '混合中文背景', '混合或不确定', '混合', '你的答案结合了多个地区或学习背景的信号。']
+    },
+    'zh-Hant': {
+      hk_cantonese: ['香港粵語', '粵語', '南方分支：粵語', '香港 / 澳門', '你的答案最接近香港式粵語和日常書面粵語。'],
+      guangdong_cantonese: ['廣東粵語', '粵語', '南方分支：粵語', '廣東', '你的答案指向廣東相關的粵語或粵方言模式。'],
+      mainland_mandarin: ['北方 / 標準大陸普通話', '普通話', '北方官話', '華北 / 標準普通話', '你的答案大多符合大陸標準普通話的詞彙、用字和表達。'],
+      taiwan_mandarin: ['台灣國語', '國語', '受閩語/客語接觸影響的台灣國語', '台灣', '你的答案最接近台灣國語習慣，尤其是書寫形式和日常用詞。'],
+      sichuan_mandarin: ['西南官話', '西南官話', '南方官話', '四川 / 重慶', '你的答案顯示出一些與四川和重慶相關的西南官話線索。'],
+      northeast_mandarin: ['東北官話', '東北官話', '北方官話創新區', '中國東北', '你的答案包含一些常見於東北官話的線索。'],
+      wu_shanghai: ['吳語 / 上海話影響的中文', '吳語', '長江下游 / 吳語區', '上海 / 吳語區', '你的答案顯示出吳語或上海話影響的模式。'],
+      min_hokkien: ['閩語 / 福建話影響的中文', '閩南語 / 福建話', '南方分支：閩語', '福建 / 閩南語區', '你的答案包含閩南語或福建話一類的線索。'],
+      central_china: ['中部過渡區中文', '湘語 / 贛語 / 徽語影響的過渡區', '中部過渡區域', '湖南 / 湖北 / 江西 / 皖南', '你的答案結合了中部過渡區的信號，這裡多種中文變體相互重疊。'],
+      mixed: ['混合 / 學習者輪廓', '混合中文背景', '混合或不確定', '混合', '你的答案結合了多個地區或學習背景的信號。']
+    }
+  };
+
+  function applyCategoryLocales() {
+    var localized = categoryLocales[pageLang];
+    if (!localized) return;
+    Object.keys(localized).forEach(function(key) {
+      if (!categories[key]) return;
+      categories[key].label = localized[key][0];
+      categories[key].variety = localized[key][1];
+      categories[key].macroRegion = localized[key][2];
+      categories[key].region = localized[key][3];
+      categories[key].summary = localized[key][4];
+    });
+  }
+
+  applyCategoryLocales();
 
   var questions = [
     {
@@ -417,6 +640,111 @@
     }
   ];
 
+  var localizedQuestions = {
+    'zh-Hans': [
+      ['词汇选择', '街上有个小孩从你身边跑过。你脑中自然会冒出哪个词？', '选你真的会说的词，不要选最正式的说法。'],
+      ['书写用法', '朋友问你有没有。你会怎么回“没有”？', '选你在日常聊天里真的会打出来的形式。'],
+      ['句子补全', '有人问你一件事，而你真的不知道。你会怎么说？', '选最像你第一反应的答案。'],
+      ['读音', '如果你读“生”，哪个声音最接近？', '不用懂罗马字规则，选最接近的声音即可。'],
+      ['日常书写', '你要发“你在做什么？”。哪条信息最像你会发的？', '选你真的会发给朋友的那一种。'],
+      ['词汇选择', '你想说“我要去吃饭”。哪个词最自然？', '想日常吃饭场景，不要想字典定义。'],
+      ['词汇选择', '你要回家。你自然会用哪个词表示家或房子？', '选最像你日常用法的词。'],
+      ['词汇选择', '外面很亮，有人指着太阳。你会叫它什么？', '选你的日常说法。'],
+      ['天气', '你看外面，刚开始下雨。你会怎么发消息？', '选当下最自然的说法。'],
+      ['天气', '外面热得难受。你会用哪个词？', '选你说话或发消息时自然会用的热字。'],
+      ['天气', '你走到外面，觉得很冷。第一个会冒出的词是什么？', '选最像你的冷天气说法。'],
+      ['亲属称呼', '你在另一个房间叫爸爸。你会怎么叫？', '选日常家庭称呼，除非你真的会用正式说法。'],
+      ['亲属称呼', '你在另一个房间叫妈妈。你会怎么叫？', '选日常家庭称呼，除非你真的会用正式说法。'],
+      ['识别', '哪一组中文字一眼看起来最熟悉？', '这比主动使用弱一些，但仍然有参考价值。'],
+      ['区域说法', '食物很好吃。你第一句会怎么夸？', '选最自然会脱口而出的夸法。'],
+      ['疑问词', '你没听清别人说什么。你会怎么问“什么”？', '选最短、最自然的反应。'],
+      ['疑问词', '你要问东西在哪里。哪个词最自然？', '选你真的会说或打出来的形式。'],
+      ['用字偏好', '你打开手机键盘。哪种中文输入和用字习惯最自然？', '想日常聊天，不要想课堂练习。'],
+      ['代词', '你在一句日常话里指自己。你会怎么说“我”？', '选最接近日常口语的形式。'],
+      ['代词', '你直接跟朋友说话。你会怎么说“你”？', '选日常形式，不要选课堂答案。'],
+      ['代词', '你想说“我们”。哪个听起来像你？', '选你真的会用的形式。'],
+      ['体貌', '别人问你现在在做什么：“我正在吃饭。”哪个自然？', '选不用多想就会说的版本。'],
+      ['完成动作', '有人请你吃东西，但你已经吃过了。哪个自然？', '选你的“已经吃了”句子。'],
+      ['疑问语气', '你问朋友去不去。哪条信息听起来像你？', '选你会发出的日常问句。'],
+      ['读音', '如果你读“人”，哪个声音最接近？', '不用懂罗马字规则，选最接近的声音即可。']
+    ],
+    'zh-Hant': [
+      ['詞彙選擇', '街上有個小孩從你身邊跑過。你腦中自然會冒出哪個詞？', '選你真的會說的詞，不要選最正式的說法。'],
+      ['書寫用法', '朋友問你有沒有。你會怎麼回「沒有」？', '選你在日常聊天裡真的會打出來的形式。'],
+      ['句子補全', '有人問你一件事，而你真的不知道。你會怎麼說？', '選最像你第一反應的答案。'],
+      ['讀音', '如果你讀「生」，哪個聲音最接近？', '不用懂羅馬字規則，選最接近的聲音即可。'],
+      ['日常書寫', '你要發「你在做什麼？」。哪條訊息最像你會發的？', '選你真的會發給朋友的那一種。'],
+      ['詞彙選擇', '你想說「我要去吃飯」。哪個詞最自然？', '想日常吃飯場景，不要想字典定義。'],
+      ['詞彙選擇', '你要回家。你自然會用哪個詞表示家或房子？', '選最像你日常用法的詞。'],
+      ['詞彙選擇', '外面很亮，有人指著太陽。你會叫它什麼？', '選你的日常說法。'],
+      ['天氣', '你看外面，剛開始下雨。你會怎麼發訊息？', '選當下最自然的說法。'],
+      ['天氣', '外面熱得難受。你會用哪個詞？', '選你說話或發訊息時自然會用的熱字。'],
+      ['天氣', '你走到外面，覺得很冷。第一個會冒出的詞是什麼？', '選最像你的冷天氣說法。'],
+      ['親屬稱呼', '你在另一個房間叫爸爸。你會怎麼叫？', '選日常家庭稱呼，除非你真的會用正式說法。'],
+      ['親屬稱呼', '你在另一個房間叫媽媽。你會怎麼叫？', '選日常家庭稱呼，除非你真的會用正式說法。'],
+      ['識別', '哪一組中文字一眼看起來最熟悉？', '這比主動使用弱一些，但仍然有參考價值。'],
+      ['區域說法', '食物很好吃。你第一句會怎麼誇？', '選最自然會脫口而出的誇法。'],
+      ['疑問詞', '你沒聽清別人說什麼。你會怎麼問「什麼」？', '選最短、最自然的反應。'],
+      ['疑問詞', '你要問東西在哪裡。哪個詞最自然？', '選你真的會說或打出來的形式。'],
+      ['用字偏好', '你打開手機鍵盤。哪種中文輸入和用字習慣最自然？', '想日常聊天，不要想課堂練習。'],
+      ['代詞', '你在一句日常話裡指自己。你會怎麼說「我」？', '選最接近日常口語的形式。'],
+      ['代詞', '你直接跟朋友說話。你會怎麼說「你」？', '選日常形式，不要選課堂答案。'],
+      ['代詞', '你想說「我們」。哪個聽起來像你？', '選你真的會用的形式。'],
+      ['體貌', '別人問你現在在做什麼：「我正在吃飯。」哪個自然？', '選不用多想就會說的版本。'],
+      ['完成動作', '有人請你吃東西，但你已經吃過了。哪個自然？', '選你的「已經吃了」句子。'],
+      ['疑問語氣', '你問朋友去不去。哪條訊息聽起來像你？', '選你會發出的日常問句。'],
+      ['讀音', '如果你讀「人」，哪個聲音最接近？', '不用懂羅馬字規則，選最接近的聲音即可。']
+    ]
+  };
+
+  var localizedAnswerText = {
+    'zh-Hans': {
+      '1.4': '我不会用中文写这个',
+      '4.4': '这些都不像',
+      '13.4': '这些都不熟悉',
+      '17.0': '简体字',
+      '17.1': '繁体字',
+      '17.2': '繁体字加粤语专用字',
+      '17.3': '简体和繁体都会',
+      '17.4': '我不确定'
+    },
+    'zh-Hant': {
+      '1.4': '我不會用中文寫這個',
+      '4.4': '這些都不像',
+      '13.4': '這些都不熟悉',
+      '17.0': '簡體字',
+      '17.1': '繁體字',
+      '17.2': '繁體字加粵語專用字',
+      '17.3': '簡體和繁體都會',
+      '17.4': '我不確定'
+    }
+  };
+
+  function applyLocalizedQuestions() {
+    var localized = localizedQuestions[pageLang];
+    if (localized) {
+      localized.forEach(function(copy, index) {
+        if (!questions[index]) return;
+        questions[index].type = copy[0];
+        questions[index].prompt = copy[1];
+        questions[index].note = copy[2];
+      });
+    }
+
+    var answerText = localizedAnswerText[pageLang];
+    if (!answerText) return;
+    Object.keys(answerText).forEach(function(key) {
+      var parts = key.split('.');
+      var question = questions[Number(parts[0])];
+      var answerItem = question && question.answers[Number(parts[1])];
+      if (answerItem) {
+        answerItem.text = answerText[key];
+      }
+    });
+  }
+
+  applyLocalizedQuestions();
+
   var state = {
     index: 0,
     answers: [],
@@ -488,6 +816,55 @@
     { label: 'Hubei / middle Yangtze transition region', categoryKeys: ['central_china', 'sichuan_mandarin', 'mainland_mandarin'], bounds: [29.0, 108.0, 32.8, 116.5] },
     { label: 'Southern Anhui / Hui transition region', categoryKeys: ['central_china', 'wu_shanghai'], bounds: [29.0, 116.0, 31.5, 119.5] }
   ];
+
+  var subregionLocales = {
+    'zh-Hans': [
+      '香港 / 澳门粤语',
+      '珠江三角洲粤语',
+      '粤西 / 广西粤语',
+      '台湾国语 / 台湾接触区',
+      '闽南 / 福建话区域',
+      '闽东 / 沿海闽语区域',
+      '上海 / 太湖吴语区域',
+      '浙南 / 吴语过渡区',
+      '四川 / 重庆官话',
+      '东北官话',
+      '华北 / 标准普通话区域',
+      '湖南 / 湘语过渡区',
+      '江西 / 赣语过渡区',
+      '湖北 / 长江中游过渡区',
+      '皖南 / 徽语过渡区'
+    ],
+    'zh-Hant': [
+      '香港 / 澳門粵語',
+      '珠江三角洲粵語',
+      '粵西 / 廣西粵語',
+      '台灣國語 / 台灣接觸區',
+      '閩南 / 福建話區域',
+      '閩東 / 沿海閩語區域',
+      '上海 / 太湖吳語區域',
+      '浙南 / 吳語過渡區',
+      '四川 / 重慶官話',
+      '東北官話',
+      '華北 / 標準普通話區域',
+      '湖南 / 湘語過渡區',
+      '江西 / 贛語過渡區',
+      '湖北 / 長江中游過渡區',
+      '皖南 / 徽語過渡區'
+    ]
+  };
+
+  function applySubregionLocales() {
+    var localized = subregionLocales[pageLang];
+    if (!localized) return;
+    localized.forEach(function(label, index) {
+      if (subregions[index]) {
+        subregions[index].label = label;
+      }
+    });
+  }
+
+  applySubregionLocales();
 
   function answer(text, scores, clue) {
     return {
@@ -618,7 +995,10 @@
     }
 
     renderModeButtons();
-    els.progressText.textContent = 'Question ' + (state.index + 1) + ' of ' + activeQuestions.length;
+    els.progressText.textContent = uiText('progress', {
+      current: state.index + 1,
+      total: activeQuestions.length
+    });
     els.progressBar.style.width = progress + '%';
     els.promptType.textContent = question.type;
     els.title.textContent = question.prompt;
@@ -646,7 +1026,7 @@
 
     els.back.disabled = state.index === 0;
     els.next.disabled = typeof selected !== 'number';
-    els.next.textContent = state.index === activeQuestions.length - 1 ? 'Show Map' : 'Next';
+    els.next.textContent = state.index === activeQuestions.length - 1 ? uiText('showMap') : uiText('next');
     els.app.hidden = false;
     els.results.hidden = true;
   }
@@ -732,7 +1112,7 @@
       });
 
       clues.push({
-        text: option.clue,
+        text: localizedClue(option),
         strength: maxScore(option.scores)
       });
     });
@@ -801,11 +1181,21 @@
     }, 0);
   }
 
+  function localizedClue(option) {
+    if (pageLang === 'zh-Hans') {
+      return '你选择了：' + option.text;
+    }
+    if (pageLang === 'zh-Hant') {
+      return '你選擇了：' + option.text;
+    }
+    return option.clue;
+  }
+
   function confidenceLabel(normalized, score, ranked) {
-    if (score < 8) return 'Low confidence';
-    if (normalized >= 0.86 && ranked.length > 1 && score - ranked[1].score >= 5) return 'High confidence';
-    if (normalized >= 0.64) return 'Medium confidence';
-    return 'Low confidence';
+    if (score < 8) return uiText('lowConfidence');
+    if (normalized >= 0.86 && ranked.length > 1 && score - ranked[1].score >= 5) return uiText('highConfidence');
+    if (normalized >= 0.64) return uiText('mediumConfidence');
+    return uiText('lowConfidence');
   }
 
   function renderResults() {
@@ -830,7 +1220,10 @@
       var li = document.createElement('li');
       var percent = Math.round(item.normalized * 100);
       li.innerHTML = '<span>' + escapeHtml(item.category.label) + '</span><strong>' +
-        percent + '% relative match · ' + escapeHtml(membershipBand(item.normalized)) +
+        escapeHtml(uiText('relativeMatch', {
+          percent: percent,
+          band: membershipBand(item.normalized)
+        })) +
         '</strong><em>' + escapeHtml(item.category.macroRegion) + '</em>';
       els.topMatches.appendChild(li);
     });
@@ -860,7 +1253,7 @@
     pendingMapRanked = ranked;
 
     if (typeof L === 'undefined') {
-      mapEl.innerHTML = '<div class="geo-quiz-map-fallback">OpenStreetMap could not load. The ranked list still shows your regional matches.</div>';
+      mapEl.innerHTML = '<div class="geo-quiz-map-fallback">' + escapeHtml(uiText('mapFallback')) + '</div>';
       return;
     }
 
@@ -878,12 +1271,12 @@
       legendControl = L.control({ position: 'bottomleft' });
       legendControl.onAdd = function() {
         var div = L.DomUtil.create('div', 'geo-quiz-map-legend');
-        div.innerHTML = '<strong>How to read the map</strong>' +
-          '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-red"></i>Color = atlas region group</span>' +
-          '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-purple"></i>Different colors mean different groups</span>' +
-          '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-dark"></i>Darker/larger = stronger match</span>' +
-          '<span><i class="geo-quiz-legend-ring"></i>Rings = closest local signal</span>' +
-          '<span><i class="geo-quiz-legend-dot"></i>Dots = atlas localities</span>';
+        div.innerHTML = '<strong>' + escapeHtml(uiText('legendTitle')) + '</strong>' +
+          '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-red"></i>' + escapeHtml(uiText('legendColor')) + '</span>' +
+          '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-purple"></i>' + escapeHtml(uiText('legendGroups')) + '</span>' +
+          '<span><i class="geo-quiz-legend-swatch geo-quiz-legend-swatch-dark"></i>' + escapeHtml(uiText('legendStrength')) + '</span>' +
+          '<span><i class="geo-quiz-legend-ring"></i>' + escapeHtml(uiText('legendRings')) + '</span>' +
+          '<span><i class="geo-quiz-legend-dot"></i>' + escapeHtml(uiText('legendDots')) + '</span>';
         return div;
       };
       legendControl.addTo(map);
@@ -1240,7 +1633,7 @@
     if (!lacdData) {
       var loading = document.createElement('li');
       loading.className = 'geo-quiz-local-muted';
-      loading.textContent = 'Loading Linguistic Atlas of Chinese Dialects localities...';
+      loading.textContent = uiText('loadingLocalities');
       els.localMatches.appendChild(loading);
       return;
     }
@@ -1249,7 +1642,7 @@
     if (!matches.length) {
       var empty = document.createElement('li');
       empty.className = 'geo-quiz-local-muted';
-      empty.textContent = 'No atlas locality match is available for this answer pattern.';
+      empty.textContent = uiText('noLocalities');
       els.localMatches.appendChild(empty);
       return;
     }
@@ -1257,7 +1650,7 @@
     matches.forEach(function(match) {
       var li = document.createElement('li');
       li.innerHTML = '<span>' + escapeHtml(match.name) + '</span><strong>' +
-        Math.round(match.match * 100) + '% locality score</strong><em>' +
+        escapeHtml(uiText('localityScore', { percent: Math.round(match.match * 100) })) + '</strong><em>' +
         escapeHtml(match.clusterLabel) + ' · ' + escapeHtml(match.fuzzyBand) + '</em>';
       els.localMatches.appendChild(li);
     });
@@ -1274,7 +1667,7 @@
       return;
     }
 
-    els.specificRegion.textContent = 'More specific: ' + specificRegion.label;
+    els.specificRegion.textContent = uiText('moreSpecific', { label: specificRegion.label });
     els.specificRegion.hidden = false;
   }
 
@@ -1283,7 +1676,7 @@
 
     var best = result.ranked[0];
     if (!best) {
-      els.localReport.innerHTML = '<p>No local report is available yet.</p>';
+      els.localReport.innerHTML = '<p>' + escapeHtml(uiText('noLocalReport')) + '</p>';
       return;
     }
 
@@ -1294,17 +1687,16 @@
       })
       .slice(0, 3);
     var localities = computeLacdMatches(result, 5);
-    var copy = '<p>Your strongest broad signal is <strong>' + escapeHtml(best.category.label) + '</strong>.';
+    var copy = '<p>' + uiText('strongestSignal', { label: escapeHtml(best.category.label) });
 
     if (specificRegion) {
-      copy += ' The local map signal points more specifically toward <strong>' +
-        escapeHtml(specificRegion.label) + '</strong>';
+      copy += uiText('specificSignal', { label: escapeHtml(specificRegion.label) });
       if (specificRegion.localities.length) {
-        copy += ', near atlas localities such as ' + escapeHtml(specificRegion.localities.join(', '));
+        copy += uiText('nearLocalities', { localities: escapeHtml(specificRegion.localities.join(', ')) });
       }
       copy += '.</p>';
     } else {
-      copy += ' The answers do not yet support a reliable narrower regional label.</p>';
+      copy += uiText('noNarrowLabel') + '</p>';
     }
 
     if (blend.length) {
@@ -1318,10 +1710,11 @@
     }
 
     if (localities.length) {
-      copy += '<p class="geo-quiz-local-report-note">Closest locality signals: ' +
-        escapeHtml(localities.slice(0, 3).map(function(item) {
+      copy += '<p class="geo-quiz-local-report-note">' + escapeHtml(uiText('closestLocalitySignals', {
+        localities: localities.slice(0, 3).map(function(item) {
           return item.name + ' ' + Math.round(item.match * 100) + '%';
-        }).join(', ')) + '.</p>';
+        }).join(', ')
+      })) + '</p>';
     }
 
     els.localReport.innerHTML = copy;
@@ -1384,10 +1777,10 @@
   }
 
   function membershipBand(value) {
-    if (value >= 0.82) return 'core-like';
-    if (value >= 0.58) return 'marginal';
-    if (value >= 0.34) return 'weak';
-    return 'trace';
+    if (value >= 0.82) return uiText('coreLike');
+    if (value >= 0.58) return uiText('marginal');
+    if (value >= 0.34) return uiText('weak');
+    return uiText('trace');
   }
 
   function buildMapInsight(result) {
@@ -1396,26 +1789,29 @@
       return item.key !== 'mixed' && item.score > 0;
     });
     if (!visible.length) {
-      return '<p>No strong geographic signal yet.</p>';
+      return '<p>' + escapeHtml(uiText('noMapSignal')) + '</p>';
     }
 
     var top = visible[0];
     var second = visible[1];
     var specificRegion = computeSpecificRegion(result);
-    var copy = '<p>The map zooms to the strongest local cluster when the atlas locality scores are strong enough. Weak background signals are muted so the closest local signal stands out.</p>';
-    copy += '<p><strong>' + escapeHtml(top.category.label) + '</strong> is currently ' +
-      escapeHtml(membershipBand(top.normalized)) + ' for your answer pattern.</p>';
+    var copy = '<p>' + escapeHtml(uiText('mapInsightIntro')) + '</p>';
+    copy += '<p>' + uiText('topRegionCurrent', {
+      label: escapeHtml(top.category.label),
+      band: escapeHtml(membershipBand(top.normalized))
+    }) + '</p>';
     if (specificRegion) {
-      copy += '<p>The closest local signal is <strong>' + escapeHtml(specificRegion.label) +
-        '</strong>, based on nearby atlas localities such as ' +
-        escapeHtml(specificRegion.localities.join(', ')) + '.</p>';
+      copy += '<p>' + uiText('closestLocalSignal', {
+        label: escapeHtml(specificRegion.label),
+        localities: escapeHtml(specificRegion.localities.join(', '))
+      }) + '</p>';
     }
 
     if (second && top.normalized - second.normalized < 0.22) {
-      copy += '<p>Your top two regions are close, so this should be read as an overlap pattern rather than a precise location.</p>';
+      copy += '<p>' + escapeHtml(uiText('overlapPattern')) + '</p>';
     }
 
-    copy += '<p>This follows the idea that Chinese dialect geography has stronger centers, softer margins, and transition zones.</p>';
+    copy += '<p>' + escapeHtml(uiText('dialectGeographyNote')) + '</p>';
     return copy;
   }
 
@@ -1430,7 +1826,7 @@
     if (navigator.share) {
       navigator.share(shareData)
         .then(function() {
-          setShareStatus('Result shared.');
+          setShareStatus(uiText('resultShared'));
         })
         .catch(function(err) {
           if (err && err.name === 'AbortError') return;
@@ -1446,10 +1842,10 @@
     var result = calculateResults();
     if (!result.ranked.length) return;
 
-    setShareStatus('Creating share image...');
+    setShareStatus(uiText('creatingShareImage'));
     createShareCardBlob(result, function(blob) {
       if (!blob) {
-        setShareStatus('Could not create share image.');
+        setShareStatus(uiText('shareImageFailed'));
         return;
       }
 
@@ -1466,7 +1862,7 @@
           files: [file]
         })
           .then(function() {
-            setShareStatus('Share card sent.');
+            setShareStatus(uiText('shareCardSent'));
           })
           .catch(function(err) {
             if (err && err.name === 'AbortError') {
@@ -1503,7 +1899,7 @@
     drawShareCardBackground(ctx, width, height, blend);
     ctx.fillStyle = '#17312d';
     ctx.font = '700 44px Arial, sans-serif';
-    ctx.fillText('Your Chinese variety mix', 76, 110);
+    ctx.fillText(uiText('shareCardTitle'), 76, 110);
 
     ctx.fillStyle = '#10211f';
     ctx.font = '700 76px Arial, sans-serif';
@@ -1511,14 +1907,14 @@
 
     ctx.fillStyle = '#3f4d49';
     ctx.font = '400 34px Arial, sans-serif';
-    wrapCanvasText(ctx, specificRegion ? 'Closest local signal: ' + specificRegion.label : best.category.summary, 76, 500, 860, 46, 3);
+    wrapCanvasText(ctx, specificRegion ? uiText('closestLocalSignalCanvas', { label: specificRegion.label }) : best.category.summary, 76, 500, 860, 46, 3);
 
     drawShareBlend(ctx, blend, 76, 690);
 
     if (localities.length) {
       ctx.fillStyle = '#4d5b57';
       ctx.font = '700 31px Arial, sans-serif';
-      ctx.fillText('Closest atlas localities', 76, 1010);
+      ctx.fillText(uiText('closestAtlasLocalities'), 76, 1010);
       ctx.font = '400 31px Arial, sans-serif';
       localities.forEach(function(item, index) {
         ctx.fillText(item.name + ' · ' + Math.round(item.match * 100) + '%', 76, 1062 + index * 46);
@@ -1527,7 +1923,7 @@
 
     ctx.fillStyle = '#2f7f73';
     ctx.font = '700 32px Arial, sans-serif';
-    ctx.fillText('Try yours: hanziguide.com/geo-quiz', 76, 1260);
+    ctx.fillText(uiText('tryYours', { path: localizedQuizPath() }), 76, 1260);
 
     if (canvas.toBlob) {
       canvas.toBlob(done, 'image/png');
@@ -1618,7 +2014,13 @@
     window.setTimeout(function() {
       URL.revokeObjectURL(url);
     }, 1000);
-    setShareStatus('Share image downloaded.');
+    setShareStatus(uiText('shareImageDownloaded'));
+  }
+
+  function localizedQuizPath() {
+    if (pageLang === 'zh-Hans') return '/cn/geo-quiz/';
+    if (pageLang === 'zh-Hant') return '/tw/geo-quiz/';
+    return '/geo-quiz/';
   }
 
   function buildShareData(result) {
@@ -1634,17 +2036,20 @@
         return Math.round(item.normalized * 100) + '% ' + item.category.label;
       })
       .join(', ');
-    var title = 'Where is your Chinese from?';
-    var url = window.location.origin + '/geo-quiz/';
-    var text = 'I\'m ' + (blendText || best.category.label) + ' on the Hanzi Guide Chinese variety quiz' +
-      ' (' + best.confidence + ', ' + getQuestionCount() + ' questions).';
+    var title = uiText('shareTitle');
+    var url = window.location.origin + localizedQuizPath();
+    var text = uiText('shareText', {
+      blend: blendText || best.category.label,
+      confidence: best.confidence,
+      count: getQuestionCount()
+    });
 
     if (specificRegion) {
-      text += ' More specific: ' + specificRegion.label + '.';
+      text += uiText('shareMoreSpecific', { label: specificRegion.label });
     }
 
     if (second && second.score > 0) {
-      text += ' Next closest: ' + second.category.label + '.';
+      text += uiText('shareNextClosest', { label: second.category.label });
     }
 
     return {
@@ -1658,7 +2063,7 @@
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text)
         .then(function() {
-          setShareStatus('Share text copied to clipboard.');
+          setShareStatus(uiText('shareTextCopied'));
         })
         .catch(function() {
           fallbackCopyShareText(text);
@@ -1680,9 +2085,9 @@
 
     try {
       var copied = document.execCommand('copy');
-      setShareStatus(copied ? 'Share text copied to clipboard.' : 'Copy failed. Select and copy the page URL instead.');
+      setShareStatus(copied ? uiText('shareTextCopied') : uiText('copyFailed'));
     } catch (err) {
-      setShareStatus('Copy failed. Select and copy the page URL instead.');
+      setShareStatus(uiText('copyFailed'));
     }
 
     document.body.removeChild(textarea);
@@ -1713,7 +2118,7 @@
       els.feedbackLocationForm.hidden = false;
     }
     if (els.feedbackStatus) {
-      els.feedbackStatus.textContent = 'Tell us the actual location so we can improve the model.';
+      els.feedbackStatus.textContent = uiText('askActualLocation');
     }
     if (els.actualLocation) {
       els.actualLocation.value = '';
@@ -1728,7 +2133,7 @@
 
     if (!location) {
       if (els.feedbackStatus) {
-        els.feedbackStatus.textContent = 'Please enter the actual location before sending feedback.';
+        els.feedbackStatus.textContent = uiText('enterActualLocation');
       }
       if (els.actualLocation) {
         els.actualLocation.focus();
@@ -1756,8 +2161,8 @@
 
     if (els.feedbackStatus) {
       els.feedbackStatus.textContent = sent ?
-        'Feedback sent. Thank you.' :
-        'Feedback recorded on this page, but Matomo was not available.';
+        uiText('feedbackSent') :
+        uiText('feedbackUnavailable');
     }
   }
 
@@ -1821,7 +2226,7 @@
       button.setAttribute('aria-pressed', 'false');
     });
     if (els.feedbackStatus) {
-      els.feedbackStatus.textContent = 'Feedback sends your quiz answers and result to us so we can improve the model.';
+      els.feedbackStatus.textContent = uiText('feedbackDefault');
     }
     hideLocationFeedbackForm();
   }

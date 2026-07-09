@@ -6,12 +6,24 @@
     <meta name="description" content="{% if page.description %}{{ page.description | escape }}{% else %}{{ site.description | escape }}{% endif %}">
 
     <!-- Language alternatives -->
-    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
     {% if page.url == "/" or page.url == "/index.html" or page.url == "/cn/index.html" or page.url == "/tw/index.html" %}
+    <link rel="alternate" hreflang="en" href="{{ site.url }}/" />
     <link rel="alternate" hreflang="zh-Hans" href="{{ site.url }}/cn/" />
     <link rel="alternate" hreflang="zh-Hant" href="{{ site.url }}/tw/" />
+    {% elsif page.url contains "/geo-quiz" %}
+    <link rel="alternate" hreflang="en" href="{{ site.url }}/geo-quiz/" />
+    <link rel="alternate" hreflang="zh-Hans" href="{{ site.url }}/cn/geo-quiz/" />
+    <link rel="alternate" hreflang="zh-Hant" href="{{ site.url }}/tw/geo-quiz/" />
+    {% else %}
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
     {% endif %}
+    {% if page.url contains "/geo-quiz" %}
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}/geo-quiz/" />
+    {% elsif page.url == "/cn/index.html" or page.url == "/tw/index.html" %}
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}/" />
+    {% else %}
     <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url | replace:'index.html','' }}" />
+    {% endif %}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
