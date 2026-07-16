@@ -15,6 +15,7 @@ en:
   translation_label: "Meaning:"
   updates_automatically: "Updates automatically as you type"
   watch_description: "Watch how to write each character stroke by stroke"
+  pronunciation_description: "Listen to each Chinese character or complete word in Mandarin or Cantonese."
   show_outline: "Show Outline"
   draw_next_stroke: "I want to write!"
   xray_stroke_order: "X-ray stroke order"
@@ -23,6 +24,9 @@ en:
   cantonese_label: "粵語 Cantonese"
   show_mandarin: "Show Mandarin Pinyin"
   show_cantonese: "Show Cantonese Jyutping"
+  listen_mandarin: "Listen in Mandarin"
+  listen_cantonese: "Listen in Cantonese"
+  cantonese_voice_unavailable: "A Cantonese voice is not installed on this device"
   reset: "Reset"
   prev: "Prev"
   play: "Play"
@@ -54,7 +58,8 @@ en:
     Simply enter any Hanzi in the input field above, and watch the animated
     stroke-by-stroke demonstration. You can switch between simplified Chinese (简体字) and
     traditional Chinese (繁體字) using the toggle buttons. Use the playback controls to pause,
-    rewind, or step through each stroke at your own pace. For interactive practice, enable the
+    rewind, or step through each stroke at your own pace. View Pinyin or Jyutping and listen to
+    Mandarin or Cantonese pronunciation audio. For interactive practice, enable the
     "I want to write!" mode to practice writing Hanzi yourself with real-time feedback. Perfect for students,
     teachers, and anyone learning to read and write Hanzi.
   duolingo_companion: "Perfect Companion for Language Learning Apps"
@@ -157,6 +162,7 @@ zh:
   translation_label: "意思："
   updates_automatically: "输入时自动更新"
   watch_description: "观看每个汉字的笔画顺序演示"
+  pronunciation_description: "聆听每个汉字或完整词语的普通话或粤语发音。"
   show_outline: "显示轮廓"
   draw_next_stroke: "我要写汉字！"
   xray_stroke_order: "X 光笔顺"
@@ -165,6 +171,9 @@ zh:
   cantonese_label: "粤语 Cantonese"
   show_mandarin: "显示普通话拼音"
   show_cantonese: "显示粤语拼音"
+  listen_mandarin: "播放普通话读音"
+  listen_cantonese: "播放粤语读音"
+  cantonese_voice_unavailable: "此设备未安装粤语语音"
   reset: "重置"
   prev: "上一笔"
   play: "播放"
@@ -192,7 +201,8 @@ zh:
   how_it_works_title: "如何使用 Hanzi Guide"
   how_it_works_text: >
     只需在上方输入框中输入任何汉字或词语，即可观看逐笔动画演示。您可以使用切换按钮在简体和繁体之间切换。
-    使用播放控制来暂停、倒退或按自己的节奏逐步查看每一笔。对于互动练习，启用"我想写！"模式，
+    使用播放控制来暂停、倒退或按自己的节奏逐步查看每一笔。您还可以查看拼音或粤拼，并聆听普通话或粤语发音。
+    对于互动练习，启用"我想写！"模式，
     可以亲自练习书写汉字并获得实时反馈。非常适合学生、教师和任何学习读写汉字的人。
   duolingo_companion: "语言学习应用的完美配套工具"
   duolingo_companion_text: >
@@ -293,6 +303,7 @@ zh-Hant:
   translation_label: "意思："
   updates_automatically: "輸入時自動更新"
   watch_description: "觀看每個漢字的筆畫順序演示"
+  pronunciation_description: "聆聽每個漢字或完整詞語的國語或粵語發音。"
   show_outline: "顯示輪廓"
   draw_next_stroke: "我想寫！"
   xray_stroke_order: "X 光筆順"
@@ -301,6 +312,9 @@ zh-Hant:
   cantonese_label: "粵語 Cantonese"
   show_mandarin: "顯示國語拼音"
   show_cantonese: "顯示粵語粵拼"
+  listen_mandarin: "播放國語讀音"
+  listen_cantonese: "播放粵語讀音"
+  cantonese_voice_unavailable: "此裝置未安裝粵語語音"
   reset: "重置"
   prev: "上一筆"
   play: "播放"
@@ -328,7 +342,8 @@ zh-Hant:
   how_it_works_title: "如何使用 Hanzi Guide"
   how_it_works_text: >
     只需在上方輸入框中輸入任何漢字或詞語，即可觀看逐筆動畫演示。您可以使用切換按鈕在簡體和繁體之間切換。
-    使用播放控制來暫停、倒退或按自己的節奏逐步查看每一筆。對於互動練習，啟用"我想寫！"模式，
+    使用播放控制來暫停、倒退或按自己的節奏逐步查看每一筆。您還可以查看拼音或粵拼，並聆聽國語或粵語發音。
+    對於互動練習，啟用"我想寫！"模式，
     可以親自練習書寫漢字並獲得實時反饋。非常適合學生、教師和任何學習讀寫漢字的人。
   duolingo_companion: "語言學習應用的完美配套工具"
   duolingo_companion_text: >

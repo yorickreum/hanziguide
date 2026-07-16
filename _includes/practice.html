@@ -30,7 +30,7 @@
     }
   })();
 </script>
-<div class="demo container" id="practice" data-components-label="{{ t.components_label }}" data-char-unavailable="{{ t.char_unavailable }}" data-radical-label="{{ t.radical_label }}">
+<div class="demo container" id="practice" data-components-label="{{ t.components_label }}" data-char-unavailable="{{ t.char_unavailable }}" data-radical-label="{{ t.radical_label }}" data-listen-mandarin="{{ t.listen_mandarin }}" data-listen-cantonese="{{ t.listen_cantonese }}" data-cantonese-unavailable="{{ t.cantonese_voice_unavailable }}">
   <h1>{{ t.title }}</h1>
   <p class="lead">
     {{ t.subtitle }}
@@ -53,6 +53,8 @@
   </form>
 
   <p>{{ t.watch_description }}</p>
+  <p class="text-muted pronunciation-description">{{ t.pronunciation_description }}</p>
+  <div class="pronunciation-actions" id="pronunciation-actions" hidden></div>
   <div class="demo-target" id="animation-target"></div>
   <div id="translation-display" class="translation-display-position" style="margin: 15px auto; display: none; width: fit-content; max-width: 90%; text-align: left;" role="status" aria-live="polite" aria-atomic="true">
     <strong>{{ t.translation_label }}</strong> <span id="translation-text"></span>

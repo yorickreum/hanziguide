@@ -3,7 +3,7 @@ title: Hanzi Guide
 email: tech@yorickreum.de
 description: >
   Hanzi Guide is a free educational tool with animated Chinese stroke order, radical decomposition,
-  and Mandarin and Cantonese support for simplified & traditional characters.
+  Pinyin and Jyutping, and Mandarin and Cantonese pronunciation audio for simplified and traditional characters.
 baseurl: "/" # the subpath of your site, e.g. /blog/
 url: "https://www.hanzi.guide" # the base hostname & protocol for your site
 github_username:  yorickreum

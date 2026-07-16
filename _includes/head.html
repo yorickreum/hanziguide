@@ -71,7 +71,7 @@
       "@type": "WebApplication",
       "name": "Hanzi Guide",
       "url": "{{ site.url }}",
-      "description": "{{ site.description }}",
+      "description": {{ site.description | jsonify }},
       "applicationCategory": "EducationalApplication",
       "offers": {
         "@type": "Offer",
@@ -79,7 +79,7 @@
         "priceCurrency": "USD"
       },
       "inLanguage": ["en", "zh-Hans", "zh-Hant"],
-      "keywords": "Chinese characters, Hanzi, stroke order, Mandarin, Cantonese, learn Chinese, write Chinese, traditional Chinese, simplified Chinese",
+      "keywords": "Chinese characters, Hanzi, stroke order, Chinese pronunciation audio, Pinyin, Jyutping, Mandarin, Cantonese, learn Chinese, write Chinese, traditional Chinese, simplified Chinese",
       "operatingSystem": "Any",
       "browserRequirements": "Requires JavaScript. Requires HTML5."
     }
