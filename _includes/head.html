@@ -59,7 +59,12 @@
     {% endif %}
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
-    {% if site.adsense_client %}
+    {% comment %}
+    AdSense must not run on error, redirect, legal, or task-only screens. Pages
+    can opt out with `adsense: false` in their front matter; this is deliberately
+    an opt-out rather than relying on the production config to remember it.
+    {% endcomment %}
+    {% if site.adsense_client and page.adsense != false %}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.adsense_client }}"
      crossorigin="anonymous"></script>
     {% endif %}
