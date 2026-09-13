@@ -818,7 +818,7 @@ function updateCharacter() {
               var height = size;
 
               var grid = document.createElementNS(ns, 'g');
-              grid.setAttribute('stroke', '#f48c8c');
+              grid.setAttribute('stroke', '#D4C5A8');
               grid.setAttribute('stroke-width', '1');
               grid.setAttribute('stroke-dasharray', '4,4');
 

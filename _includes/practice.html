@@ -31,118 +31,122 @@
   })();
 </script>
 <div class="demo container" id="practice" data-components-label="{{ t.components_label }}" data-char-unavailable="{{ t.char_unavailable }}" data-radical-label="{{ t.radical_label }}" data-listen-mandarin="{{ t.listen_mandarin }}" data-listen-cantonese="{{ t.listen_cantonese }}" data-cantonese-unavailable="{{ t.cantonese_voice_unavailable }}">
-  <h1>{{ t.title }}</h1>
-  <p class="lead">
-    {{ t.subtitle }}
-  </p>
-
-  <hr class="demo-divider" />
+  <header class="practice-hero">
+    <span class="practice-hero-spine" aria-hidden="true"></span>
+    <div class="practice-hero-copy">
+      <p class="practice-hero-eyebrow"><span lang="zh-Hant">寫好漢字</span> · Learn by doing</p>
+      <h1>More than stroke order.</h1>
+      <p class="practice-hero-description">Practice over 9,000 simplified and traditional Hanzi, hear Mandarin and Cantonese pronunciation, explore Chinese idioms, and discover regional language patterns—all in one free learning tool.</p>
+    </div>
+    <aside class="practice-hero-promos" aria-label="More ways to explore Hanzi Guide">
+      <div class="home-daily-idiom-callout" id="home-daily-idiom">
+        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+        <div>
+          <strong>{{ t.home_teasers.idiom_title }}</strong>
+          <span id="home-daily-idiom-text" data-fallback="{{ t.home_teasers.idiom_fallback }}">{{ t.home_teasers.idiom_loading }}</span>
+        </div>
+        <div class="home-callout-actions">
+          <a class="home-callout-primary" id="home-daily-idiom-practice" href="/idioms/">{{ t.home_teasers.idiom_practice }}</a>
+          <a class="home-callout-secondary" href="/idioms/">{{ t.home_teasers.idiom_more }}</a>
+        </div>
+      </div>
+      <div class="home-geo-quiz-callout">
+        <i class="fas fa-location-dot" aria-hidden="true"></i>
+        <div>
+          <strong>{{ t.home_teasers.geo_title }}</strong>
+          <span>{{ t.home_teasers.geo_text }}</span>
+        </div>
+        {% if page.lang == "zh" %}
+        <a href="/cn/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
+        {% elsif page.lang == "zh-Hant" %}
+        <a href="/tw/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
+        {% else %}
+        <a href="/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
+        {% endif %}
+      </div>
+    </aside>
+  </header>
 
   <!-- <h4>{{ t.stroke_order_animation }}</h4>-->
   
-  <form class="form-inline char-select-form js-char-form">
-    <div class="form-group">
-      <label for="character-select">
-        {{ t.character_label }}
-      </label>
-      <input type="text" class="form-control character-select" id="character-select" placeholder="{{ t.character_placeholder }}" maxlength="6" value="你好" />
-      <button type="button" class="btn btn-default beginner-chars-btn" id="open-beginner-chars-btn">
-        <i class="fas fa-list"></i> {{ t.beginner_chars_title }}
-      </button>
-    </div>
-  </form>
+  <div class="practice-workspace">
+    <section class="practice-stage" aria-label="{{ t.stroke_order_animation }}">
+      <form class="char-select-form js-char-form">
+        <label for="character-select">{{ t.character_label }}</label>
+        <div class="character-entry-row">
+          <input type="text" class="form-control character-select" id="character-select" placeholder="{{ t.character_placeholder }}" maxlength="6" value="你好" />
+          <button type="button" class="btn btn-default beginner-chars-btn" id="open-beginner-chars-btn">
+            <i class="fas fa-list"></i> {{ t.beginner_chars_title }}
+          </button>
+        </div>
+      </form>
 
-  <p>{{ t.watch_description }}</p>
-  <p class="text-muted pronunciation-description">{{ t.pronunciation_description }}</p>
-  <div class="pronunciation-actions" id="pronunciation-actions" hidden></div>
-  <div class="demo-target" id="animation-target"></div>
-  <div id="translation-display" class="translation-display-position" style="margin: 15px auto; display: none; width: fit-content; max-width: 90%; text-align: left;" role="status" aria-live="polite" aria-atomic="true">
-    <strong>{{ t.translation_label }}</strong> <span id="translation-text"></span>
-  </div>
-  <div class="demo-controls">
-    <form class="form-inline">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" checked="checked" id="animation-show-outline" /> {{ t.show_outline }}
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" id="draw-mode" /> {{ t.draw_next_stroke }}
-        </label>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" id="xray-mode" /> {{ t.xray_stroke_order }}
-        </label>
-      </div>
-      <br>
-      <div class="btn-group" role="group">
+      <p class="practice-instruction">{{ t.watch_description }}</p>
+      <div class="demo-target" id="animation-target"></div>
+
+      <div class="practice-playback" role="group" aria-label="Stroke animation controls">
         <button class="btn btn-default" id="animate-reset"><i class="fas fa-undo"></i> {{ t.reset }}</button>
         <button class="btn btn-default" id="animate-prev"><i class="fas fa-chevron-left"></i> {{ t.prev }}</button>
         <button class="btn btn-primary" id="animate-play"><i class="fas fa-play"></i> {{ t.play }}</button>
         <button class="btn btn-default" id="animate-next">{{ t.next }} <i class="fas fa-chevron-right"></i></button>
       </div>
-      <br><br>
-      <!-- Settings -->
-      <div class="language-script-settings">
-        <div class="settings-group">
-          <label>
-            <input type="checkbox" checked="checked" id="show-mandarin" /> {{ t.mandarin_label }}
-          </label>
-          <label>
-            <input type="checkbox" id="show-cantonese" /> {{ t.cantonese_label }}
-          </label>
+
+      <div class="practice-playback-settings">
+        <div class="practice-setting-group">
+          <span class="practice-setting-label">{{ t.practice_aids }}</span>
+          <div class="practice-secondary-tools" aria-label="Practice display modes">
+            <label><input type="checkbox" checked="checked" id="animation-show-outline" /> <span>{{ t.show_outline }}</span></label>
+            <label><input type="checkbox" id="draw-mode" /> <span>{{ t.draw_next_stroke }}</span></label>
+            <label><input type="checkbox" id="xray-mode" /> <span>{{ t.xray_stroke_order }}</span></label>
+          </div>
         </div>
-        <div class="settings-divider"></div>
-        <div class="settings-group">
-          <label>
-            <input type="radio" name="script-type" value="simplified" checked /> {{ t.script_simplified }}
-          </label>
-          <label>
-            <input type="radio" name="script-type" value="traditional" /> {{ t.script_traditional }}
-          </label>
-        </div>
-        <div class="settings-divider"></div>
-        <div class="settings-group speed-slider-group">
-          <label for="speed-slider">
-            {{ t.stroke_speed }}
-          </label>
-          <input type="range" id="speed-slider" min="0.25" max="2" step="0.25" value="1">
-          <small id="speed-slider-label">1×</small>
+
+        <div class="practice-setting-group speed-slider-group">
+          <label for="speed-slider" class="practice-setting-label">{{ t.stroke_speed }}</label>
+          <div class="practice-speed-control">
+            <input type="range" id="speed-slider" min="0.25" max="2" step="0.25" value="1">
+            <small id="speed-slider-label">1×</small>
+          </div>
         </div>
       </div>
-      <br>
-      <button class="btn btn-info" id="share-btn"><i class="fas fa-share-alt"></i> {{ t.share }}</button>
-      <a class="btn btn-default" id="practice-pdf-link" href="/pdf"><i class="fas fa-file-pdf"></i> {{ t.practice_pdf }}</a>
-      <br><br>
-      <p class="text-muted" style="margin: 0;">{{ t.practice_pdf_description }}</p>
-    </form>
-  </div>
-  <div class="home-daily-idiom-callout" id="home-daily-idiom">
-    <i class="fas fa-calendar-day" aria-hidden="true"></i>
-    <div>
-      <strong>{{ t.home_teasers.idiom_title }}</strong>
-      <span id="home-daily-idiom-text" data-fallback="{{ t.home_teasers.idiom_fallback }}">{{ t.home_teasers.idiom_loading }}</span>
-    </div>
-    <div class="home-callout-actions">
-      <a class="home-callout-primary" id="home-daily-idiom-practice" href="/idioms/">{{ t.home_teasers.idiom_practice }}</a>
-      <a class="home-callout-secondary" href="/idioms/">{{ t.home_teasers.idiom_more }}</a>
-    </div>
-  </div>
-  <div class="home-geo-quiz-callout">
-    <i class="fas fa-location-dot" aria-hidden="true"></i>
-    <div>
-      <strong>{{ t.home_teasers.geo_title }}</strong>
-      <span>{{ t.home_teasers.geo_text }}</span>
-    </div>
-    {% if page.lang == "zh" %}
-    <a href="/cn/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
-    {% elsif page.lang == "zh-Hant" %}
-    <a href="/tw/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
-    {% else %}
-    <a href="/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
-    {% endif %}
+
+      <div class="practice-utility-actions">
+        <button class="btn btn-info" id="share-btn"><i class="fas fa-share-alt"></i> {{ t.share }}</button>
+        <a class="btn btn-default" id="practice-pdf-link" href="/pdf"><i class="fas fa-file-pdf"></i> {{ t.practice_pdf }}</a>
+      </div>
+      <p class="text-muted practice-pdf-description">{{ t.practice_pdf_description }}</p>
+    </section>
+
+    <aside class="practice-sidebar">
+      <section class="practice-info-card practice-character-settings">
+        <h2>{{ t.character_settings }}</h2>
+
+        <div class="practice-setting-group">
+          <span class="practice-setting-label">{{ t.character_form }}</span>
+          <div class="script-segment" role="group" aria-label="{{ t.character_form }}">
+            <label><input type="radio" name="script-type" value="simplified" checked /> <span>{{ t.script_simplified }}</span></label>
+            <label><input type="radio" name="script-type" value="traditional" /> <span>{{ t.script_traditional }}</span></label>
+          </div>
+        </div>
+
+      </section>
+
+      <div id="translation-display" class="practice-info-card translation-display-position" style="display: none;" role="status" aria-live="polite" aria-atomic="true">
+        <strong>{{ t.translation_label }}</strong>
+        <span id="translation-text"></span>
+      </div>
+
+      <section class="practice-info-card practice-pronunciation">
+        <h2>{{ t.language_label }}</h2>
+        <p class="text-muted pronunciation-description">{{ t.pronunciation_description }}</p>
+        <div class="language-toggle-options" aria-label="Language and romanization options">
+          <label><input type="checkbox" checked="checked" id="show-mandarin" /> <span>{{ t.mandarin_label }}</span></label>
+          <label><input type="checkbox" id="show-cantonese" /> <span>{{ t.cantonese_label }}</span></label>
+        </div>
+        <div class="pronunciation-actions" id="pronunciation-actions" hidden></div>
+      </section>
+
+    </aside>
   </div>
 </div>
 

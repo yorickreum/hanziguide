@@ -18,6 +18,11 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
+            <div class="mobile-language-switch" aria-label="Choose language">
+              <a class="is-current" href="/" aria-current="page">EN</a>
+              <a href="/cn/">简</a>
+              <a href="/tw/">繁</a>
+            </div>
             <a class="navbar-brand" href="/">Hanzi Guide</a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
@@ -48,9 +53,11 @@
                 </ul>
               </li>
 
-              <li><a href="https://github.com/yorickreum/hanziguide">{{ t.nav.github }}</a></li>
-              <li><a href="/cn/">简</a></li>
-              <li><a href="/tw/">繁</a></li>
+              <li class="language-switch-item">
+                <a class="language-option is-current" href="/" aria-current="page">EN</a>
+                <a class="language-option" href="/cn/">简</a>
+                <a class="language-option" href="/tw/">繁</a>
+              </li>
             </ul>
           </div>
         </div>

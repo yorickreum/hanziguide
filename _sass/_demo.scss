@@ -32,6 +32,68 @@
   text-align: center;
 }
 
+.practice-hero {
+  align-items: center;
+  display: flex;
+  gap: 15px;
+  margin: 0px 0 52px;
+  padding: 1px 15px;
+  text-align: left;
+}
+
+.practice-hero-spine {
+  align-self: stretch;
+  background: $brand-color;
+  border-radius: 4px;
+  flex: 0 0 8px;
+  min-height: 80px;
+}
+
+.practice-hero h1 {
+  color: $text-color;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 10px;
+}
+
+.practice-hero .practice-hero-description {
+  color: $muted-text-color;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 610px;
+}
+
+.practice-hero .practice-hero-eyebrow {
+  color: $brand-color;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  margin: 0 0 9px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .practice-hero {
+    gap: 14px;
+    margin-bottom: 36px;
+    padding: 12px 15px;
+  }
+
+  .practice-hero-spine {
+    min-height: 66px;
+  }
+
+  .practice-hero h1 {
+    font-size: 32px;
+  }
+
+  .practice-hero .practice-hero-description {
+    font-size: 16px;
+  }
+}
+
 .demo-divider {
   margin: 40px 0;
 }
@@ -328,6 +390,382 @@
   .translation-display-position {
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+// Practice workspace
+.char-select-form {
+  margin: 0 0 30px;
+  max-width: 620px;
+  text-align: left;
+}
+
+.char-select-form > label {
+  color: $muted-text-color;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 9px;
+  text-transform: uppercase;
+}
+
+.character-entry-row {
+  display: flex;
+  gap: 10px;
+}
+
+.character-entry-row .character-select {
+  flex: 1 1 auto;
+  font-size: 26px;
+  height: 62px;
+  min-width: 0;
+  padding: 10px 18px;
+  width: 100% !important;
+}
+
+.character-entry-row .beginner-chars-btn {
+  flex: 0 0 auto;
+  font-size: 16px;
+  margin: 0;
+  padding: 10px 18px;
+}
+
+.practice-workspace {
+  align-items: start;
+  display: grid;
+  gap: 34px;
+  grid-template-columns: minmax(360px, 1.15fr) minmax(290px, 0.85fr);
+  margin-bottom: 36px;
+  text-align: left;
+}
+
+.practice-stage,
+.practice-sidebar {
+  min-width: 0;
+}
+
+.practice-instruction {
+  color: $muted-text-color;
+  font-size: 14px;
+  margin: 0 0 10px;
+}
+
+.practice-stage .demo-target {
+  background: $card-color;
+  border: 2px solid $border-color;
+  display: block;
+  margin: 0;
+  min-height: 260px;
+  padding: 14px;
+  width: 100%;
+}
+
+.practice-playback {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+.practice-playback .btn {
+  min-height: 46px;
+}
+
+.practice-playback-settings {
+  background: $card-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  margin-top: 12px;
+  padding: 16px;
+}
+
+.practice-secondary-tools {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.practice-secondary-tools label {
+  align-items: center;
+  background: $card-color;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  color: $muted-text-color;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  min-height: 38px;
+  padding: 8px 12px;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.practice-secondary-tools label::before {
+  align-items: center;
+  border: 1px solid $border-color;
+  border-radius: 2px;
+  content: "";
+  display: inline-flex;
+  flex: 0 0 15px;
+  font-size: 11px;
+  font-weight: 700;
+  height: 15px;
+  justify-content: center;
+  line-height: 1;
+  margin-right: 7px;
+  width: 15px;
+}
+
+.practice-secondary-tools input {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.practice-secondary-tools label:hover {
+  border-color: $brand-color;
+  color: $text-color;
+}
+
+.practice-secondary-tools label:has(input:focus-visible) {
+  box-shadow: 0 0 0 3px rgba(139, 26, 26, 0.2);
+  outline: none;
+}
+
+.practice-secondary-tools label:has(input:checked) {
+  background: $brand-color;
+  border-color: $brand-color;
+  color: $background-color;
+}
+
+.practice-secondary-tools label:has(input:checked)::before {
+  background: $background-color;
+  border-color: $background-color;
+  color: $brand-color;
+  content: "\2713";
+}
+
+.practice-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 29px;
+}
+
+.practice-info-card,
+.practice-sidebar .language-script-settings {
+  background: $card-color !important;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  margin: 0;
+  padding: 18px;
+  width: 100%;
+}
+
+.translation-display-position {
+  max-width: none;
+  text-align: left;
+}
+
+.translation-display-position strong,
+.translation-display-position span {
+  display: block;
+}
+
+.translation-display-position strong {
+  color: $muted-text-color;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.translation-display-position span {
+  color: $text-color;
+  font-size: 20px;
+  line-height: 1.45;
+}
+
+.practice-info-card h2 {
+  color: $text-color;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.practice-setting-group + .practice-setting-group {
+  border-top: 1px solid $border-color;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.practice-setting-label {
+  color: $muted-text-color;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.script-segment {
+  background: $surface-color;
+  border: 1px solid $border-color;
+  border-radius: 7px;
+  display: grid;
+  gap: 3px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 3px;
+}
+
+.script-segment label {
+  border-radius: 5px;
+  color: $muted-text-color;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  padding: 9px 10px;
+  text-align: center;
+}
+
+.script-segment input,
+.language-toggle-options input {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.script-segment label:has(input:checked) {
+  background: $brand-color;
+  color: $background-color;
+}
+
+.script-segment label:has(input:focus-visible),
+.language-toggle-options label:has(input:focus-visible) {
+  box-shadow: 0 0 0 3px rgba(139, 26, 26, 0.2);
+  outline: none;
+}
+
+.language-toggle-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.language-toggle-options label {
+  background: $card-color;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  color: $muted-text-color;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  padding: 8px 11px;
+}
+
+.language-toggle-options label:hover {
+  border-color: $brand-color;
+  color: $text-color;
+}
+
+.language-toggle-options label:has(input:checked) {
+  background: $brand-color;
+  border-color: $brand-color;
+  color: $background-color;
+}
+
+.language-toggle-options label:has(input:checked)::before {
+  content: "\2713";
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+.practice-pronunciation .pronunciation-actions {
+  justify-content: flex-start;
+  margin: 12px 0 0;
+}
+
+.practice-sidebar .language-script-settings {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.practice-sidebar .language-script-settings .settings-group {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.practice-sidebar .language-script-settings .settings-divider {
+  background: $border-color;
+  height: 1px;
+  width: 100%;
+}
+
+.practice-speed-control {
+  align-items: center;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(100px, 1fr) auto;
+}
+
+.practice-speed-control input[type="range"] {
+  width: 100%;
+}
+
+.practice-speed-control small {
+  color: $muted-text-color;
+  min-width: 28px;
+  text-align: right;
+}
+
+.practice-utility-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.practice-pdf-description {
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
+@media (max-width: 900px) {
+  .practice-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .char-select-form {
+    max-width: none;
+  }
+
+  .practice-sidebar {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .character-entry-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .character-entry-row .beginner-chars-btn {
+    margin: 0;
+  }
+
+  .practice-playback {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

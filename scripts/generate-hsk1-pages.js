@@ -432,53 +432,81 @@ function renderCharacterPage(char, context) {
 
 function renderHskPage(context) {
   const { cedict, canto, radicals, words, allChars } = context;
-  const rows = allChars.map((char) => {
+  const rows = allChars.map((char, index) => {
     const entry = cedict.charMap.get(char);
     const override = HSK1_CHAR_OVERRIDES[char] || {};
     const jyutping = override.jyutping || (canto.charMap.get(char) && canto.charMap.get(char).jyutping);
+    const simplified = entry && entry.simp && Array.from(entry.simp).length === 1 ? entry.simp : char;
+    const traditional = entry && entry.trad && Array.from(entry.trad).length === 1 ? entry.trad : char;
     return {
       char,
-      pinyin: entry && entry.pinyin ? entry.pinyin : '',
+      simplified,
+      traditional,
+      order: index,
+      pinyin: override.pinyin || (entry && entry.pinyin ? entry.pinyin : ''),
       jyutping: jyutping || '',
-      meaning: entry && entry.definition ? entry.definition : '',
-      strokes: strokeCountFor(char, context) || '',
-      radical: radicals[char] || ''
+      meaning: override.definition || (entry && entry.definition ? entry.definition : ''),
+      simplifiedStrokes: override.strokeCount || strokeCountFor(simplified, context) || '',
+      traditionalStrokes: strokeCountFor(traditional, context) || override.strokeCount || '',
+      simplifiedRadical: radicals[simplified] || radicals[char] || '',
+      traditionalRadical: radicals[traditional] || radicals[char] || ''
     };
-  }).sort((a, b) => a.pinyin.localeCompare(b.pinyin) || a.char.localeCompare(b.char));
+  });
   const content = [];
   content.push('---');
   content.push('layout: default');
   content.push('title: "HSK 1 Chinese Characters: Stroke Order, Pinyin, Meaning"');
   content.push('description: "Learn HSK 1 Chinese characters with stroke order, pinyin, Cantonese pronunciation, meaning, stroke count, and dictionary radical."');
   content.push('permalink: "/hsk-1-characters/"');
+  content.push('js: /assets/js/hsk1.js');
   content.push('---');
   content.push('');
-  content.push('<main class="container reference-list-page">');
+  content.push('<main class="container reference-list-page hsk-explorer">');
   content.push('<nav class="reference-breadcrumb"><a href="/">Hanzi Guide</a> / HSK 1 Chinese Characters</nav>');
   content.push('<h1>HSK 1 Chinese Characters</h1>');
-  content.push(`<p class="lead">Learn ${rows.length} beginner Chinese characters from HSK 1 vocabulary with stroke order, pinyin, meaning, dictionary radical, and stroke count.</p>`);
-  content.push('<section class="reference-section">');
-  content.push('<h2>HSK 1 character table</h2>');
-  content.push('<div class="table-responsive"><table class="table table-striped reference-table"><thead><tr><th>Character</th><th>Pinyin</th><th>Cantonese</th><th>Meaning</th><th>Strokes</th><th>Dictionary radical</th></tr></thead><tbody>');
+  content.push(`<p class="lead">Explore the ${rows.length} Chinese characters found in HSK 1 vocabulary, with Mandarin Pinyin and Cantonese Jyutping, meanings, radicals, stroke counts, pronunciation, and interactive stroke-order practice.</p>`);
+  content.push('<details class="hsk-about"><summary>What is HSK 1?</summary><p>HSK is a standardized Mandarin Chinese proficiency test. HSK 1 introduces foundational vocabulary for beginners. Hanzi Guide uses those vocabulary words as a character set while giving Mandarin Pinyin and Cantonese Jyutping equal space for learners of either spoken variety.</p></details>');
+  content.push('<section class="reference-section hsk-browser" aria-labelledby="hsk-browser-title">');
+  content.push('<h2 id="hsk-browser-title">Explore the characters</h2>');
+  content.push('<fieldset class="hsk-script-choice"><legend>Character form</legend><div class="script-segment"><label><input type="radio" name="hsk-script" value="simplified" checked><span>Simplified 简体</span></label><label><input type="radio" name="hsk-script" value="traditional"><span>Traditional 繁體</span></label></div></fieldset>');
+  content.push('<label class="hsk-search"><span class="sr-only">Search HSK 1 characters</span><i class="fas fa-search" aria-hidden="true"></i><input id="hsk-search" type="search" autocomplete="off" placeholder="Search by character, meaning, Pinyin or Jyutping..."></label>');
+  content.push('<div class="hsk-controls">');
+  content.push('<label><span>Radical</span><select id="hsk-radical"><option value="">All radicals</option></select></label>');
+  content.push('<label><span>Stroke range</span><select id="hsk-stroke-range"><option value="">All stroke counts</option><option value="1-4">1–4</option><option value="5-8">5–8</option><option value="9-12">9–12</option><option value="13+">13+</option></select></label>');
+  content.push('<label><span>Exact strokes</span><input id="hsk-exact-strokes" type="number" min="1" max="40" inputmode="numeric" placeholder="Any"></label>');
+  content.push('<label><span>Sort</span><select id="hsk-sort"><option value="default">HSK/default order</option><option value="strokes-asc">Stroke count: low → high</option><option value="strokes-desc">Stroke count: high → low</option><option value="pinyin">Pinyin A–Z</option><option value="jyutping">Jyutping A–Z</option></select></label>');
+  content.push('</div>');
+  content.push('<div class="hsk-filter-summary"><strong id="hsk-result-count"></strong><div id="hsk-active-filters" class="hsk-active-filters"></div><button type="button" id="hsk-clear-filters" class="hsk-clear-filters" hidden>Clear all</button></div>');
+  content.push('<div class="hsk-card-grid" id="hsk-card-grid">');
   for (const row of rows) {
-    content.push(`<tr><td><a class="character-link" href="/character/${row.char}/">${escapeHtml(row.char)}</a></td><td>${escapeHtml(row.pinyin)}</td><td>${escapeHtml(row.jyutping)}</td><td>${escapeHtml(row.meaning)}</td><td>${escapeHtml(row.strokes)}</td><td>${radicalLink(row.radical, context)}</td></tr>`);
+    const simplified = escapeHtml(row.simplified);
+    const traditional = escapeHtml(row.traditional);
+    const simplifiedRadical = escapeHtml(row.simplifiedRadical);
+    const traditionalRadical = escapeHtml(row.traditionalRadical);
+    content.push(`<article class="hsk-card" tabindex="0" data-order="${row.order}" data-simplified="${simplified}" data-traditional="${traditional}" data-pinyin="${escapeHtml(row.pinyin)}" data-jyutping="${escapeHtml(row.jyutping)}" data-meaning="${escapeHtml(row.meaning)}" data-strokes-simplified="${escapeHtml(row.simplifiedStrokes)}" data-strokes-traditional="${escapeHtml(row.traditionalStrokes)}" data-radical-simplified="${simplifiedRadical}" data-radical-traditional="${traditionalRadical}" data-href="/#${encodeURIComponent(row.simplified)}">`);
+    content.push(`<a class="hsk-card-character" href="/#${encodeURIComponent(row.simplified)}" aria-label="Practice ${simplified}">${simplified}</a>`);
+    content.push('<dl class="hsk-readings">');
+    content.push(`<div><dt>普通話</dt><dd>${escapeHtml(row.pinyin) || '—'} <button type="button" class="hsk-speak" data-language="zh-CN" data-text="${simplified}" aria-label="Hear ${simplified} in Mandarin"><i class="fas fa-volume-up" aria-hidden="true"></i></button></dd></div>`);
+    content.push(`<div><dt>粵語</dt><dd>${escapeHtml(row.jyutping) || '—'} <button type="button" class="hsk-speak" data-language="zh-HK" data-text="${simplified}" aria-label="Hear ${simplified} in Cantonese"><i class="fas fa-volume-up" aria-hidden="true"></i></button></dd></div>`);
+    content.push('</dl>');
+    content.push(`<p class="hsk-card-meaning">${escapeHtml(row.meaning) || 'Meaning unavailable'}</p>`);
+    content.push(`<p class="hsk-card-meta"><span class="hsk-stroke-count">${escapeHtml(row.simplifiedStrokes) || '—'}</span> strokes <span aria-hidden="true">·</span> Radical <button type="button" class="hsk-radical-filter" data-radical="${simplifiedRadical}">${simplifiedRadical || '—'}</button></p>`);
+    content.push(`<a class="hsk-practice-link" href="/#${encodeURIComponent(row.simplified)}">Practice <span class="hsk-practice-character">${simplified}</span> <span aria-hidden="true">→</span></a>`);
+    content.push('</article>');
   }
-  content.push('</tbody></table></div>');
+  content.push('</div>');
+  content.push('<p class="hsk-empty" id="hsk-empty" hidden>No characters match those filters.</p>');
+  content.push('<div class="hsk-load-more"><p id="hsk-showing-count"></p><button type="button" id="hsk-show-more">Show 24 more</button></div>');
   content.push('</section>');
-  content.push('<section class="reference-section">');
-  content.push('<h2>HSK 1 vocabulary source words</h2>');
-  content.push('<p>These character pages are generated from common HSK 1 vocabulary words:</p>');
-  content.push('<p class="word-cloud">');
+  content.push('<details class="reference-section hsk-vocabulary">');
+  content.push('<summary><strong>Where do these characters come from?</strong><span>These characters are extracted from the HSK 1 vocabulary list.</span></summary>');
+  content.push('<div class="word-cloud">');
   content.push(words.map((word) => `<span>${escapeHtml(word)}</span>`).join('\n'));
-  content.push('</p>');
-  content.push('</section>');
-  content.push('<section class="reference-section">');
-  content.push('<h2>Related pages</h2>');
-  content.push('<ul>');
-  content.push('<li><a href="/howto/stroke-order/">Chinese stroke order guide</a></li>');
-  content.push('<li><a href="/howto/radicals/">Chinese radicals guide</a></li>');
-  content.push('<li><a href="/">Interactive Chinese character practice</a></li>');
-  content.push('</ul>');
+  content.push('</div>');
+  content.push('</details>');
+  content.push('<section class="reference-section hsk-continue">');
+  content.push('<h2>Continue Learning</h2>');
+  content.push('<div><a href="/">Practice Stroke Order <span aria-hidden="true">→</span></a><a href="/howto/radicals/">Explore Radicals <span aria-hidden="true">→</span></a><button type="button" id="hsk-random-character">Random Character Practice <span aria-hidden="true">→</span></button></div>');
   content.push('</section>');
   content.push('</main>');
   content.push('');

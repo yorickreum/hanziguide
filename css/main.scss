@@ -35,9 +35,18 @@ $base-line-height: 1.5;
 
 $spacing-unit:     30px;
 
-$text-color:       #111;
-$background-color: #fdfdfd;
-$brand-color:      #2a7ae2;
+$text-color:       #1C1208;
+$background-color: #F2E8D0;
+$navigation-color: #8B1A1A;
+$card-color:       #FAF3E3;
+$surface-color:    #EBE0C6;
+$muted-text-color: #6B5B45;
+$border-color:     #C4A882;
+$grid-line-color:  #D4C5A8;
+$footer-color:     #1C1208;
+$footer-accent:    #B8A07A;
+$brand-color:      #8B1A1A;
+$ui-radius:        4px;
 
 $grey-color:       #828282;
 $grey-color-light: lighten($grey-color, 40%);
@@ -139,6 +148,7 @@ $on-laptop:        800px;
 
 body {
   font-family: $base-font-family;
+  background-color: $background-color;
 }
 
 .components-line {
@@ -1735,13 +1745,536 @@ body {
 
 // Navigation styling
 @media (min-width: 768px) {
-  .navbar-nav > li:not(:last-child) {
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-  }
   .navbar-nav > li.active > a,
   .navbar-nav > li.active > a:hover,
   .navbar-nav > li.active > a:focus {
     background-color: transparent;
+  }
+}
+
+// Consistent corner treatment based on the Share button
+.btn,
+.form-control,
+.demo-target,
+.practice-info-card,
+.practice-sidebar .language-script-settings,
+.script-segment,
+.script-segment label,
+.practice-secondary-tools label,
+.language-toggle-options label,
+.idioms-daily-card,
+.idiom-card,
+.idioms-seo-copy,
+.idioms-missing,
+.idioms-category-promo-grid button,
+.home-geo-quiz-callout,
+.home-daily-idiom-callout,
+.geo-quiz-privacy,
+.geo-quiz-panel,
+.geo-quiz-results,
+.geo-quiz-mode-options,
+.geo-quiz-mode-options button,
+.geo-quiz-option,
+.geo-quiz-result-summary,
+.geo-quiz-result-meta span,
+.geo-quiz-map,
+.geo-quiz-map-insight,
+.geo-quiz-local-report,
+.geo-quiz-feedback,
+.geo-quiz-feedback-buttons button,
+.geo-quiz-feedback-location input,
+.geo-quiz-feedback-location button,
+.geo-quiz-map-legend,
+.modal-content,
+.well,
+.panel,
+.navbar-wrapper .language-switch-item,
+.navbar-wrapper .navbar-nav > .language-switch-item > a.language-option,
+.mobile-language-switch,
+.mobile-language-switch a {
+  border-radius: $ui-radius;
+}
+
+// HSK 1 character explorer
+.hsk-explorer {
+  color: $text-color;
+  max-width: 1240px;
+}
+
+.hsk-explorer > h1 {
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.hsk-explorer > .lead {
+  color: $muted-text-color;
+  max-width: 900px;
+}
+
+.hsk-about,
+.hsk-vocabulary {
+  background: $surface-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  margin-top: 24px;
+  padding: 14px 16px;
+}
+
+.hsk-about summary,
+.hsk-vocabulary summary {
+  color: $text-color;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.hsk-about p {
+  color: $muted-text-color;
+  line-height: 1.6;
+  margin: 12px 0 2px;
+  max-width: 900px;
+}
+
+.hsk-browser > h2,
+.hsk-continue > h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.hsk-search {
+  display: block;
+  margin: 18px 0 14px;
+  position: relative;
+}
+
+.hsk-script-choice {
+  border: 0;
+  margin: 16px 0 14px;
+  max-width: 460px;
+  padding: 0;
+}
+
+.hsk-script-choice legend {
+  border: 0;
+  color: $muted-text-color;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.hsk-script-choice .script-segment {
+  width: 100%;
+}
+
+.hsk-search i {
+  color: $muted-text-color;
+  font-size: 16px;
+  left: 16px;
+  pointer-events: none;
+  position: absolute;
+  top: 17px;
+}
+
+.hsk-search input {
+  background: $card-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  color: $text-color;
+  font-size: 17px;
+  height: 50px;
+  padding: 10px 16px 10px 44px;
+  width: 100%;
+}
+
+.hsk-search input:focus,
+.hsk-controls input:focus,
+.hsk-controls select:focus {
+  border-color: $brand-color;
+  box-shadow: 0 0 0 3px rgba(139, 26, 26, 0.14);
+  outline: none;
+}
+
+.hsk-controls {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.hsk-controls label {
+  color: $muted-text-color;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.hsk-controls label > span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.hsk-controls input,
+.hsk-controls select {
+  background: $card-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  color: $text-color;
+  font-size: 14px;
+  font-weight: 400;
+  height: 42px;
+  padding: 8px 10px;
+  width: 100%;
+}
+
+.hsk-filter-summary {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+  min-height: 30px;
+}
+
+.hsk-filter-summary > strong {
+  margin-right: 4px;
+}
+
+.hsk-active-filters {
+  display: contents;
+}
+
+.hsk-active-filters button {
+  background: $surface-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  color: $text-color;
+  font-size: 12px;
+  padding: 5px 8px;
+}
+
+.hsk-clear-filters {
+  background: transparent;
+  border: 0;
+  color: $brand-color;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px;
+}
+
+.hsk-card-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.hsk-card {
+  background: $card-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 330px;
+  padding: 16px;
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.hsk-card[hidden] {
+  display: none;
+}
+
+.hsk-card:hover,
+.hsk-card:focus {
+  border-color: $brand-color;
+  box-shadow: 0 5px 16px rgba(28, 18, 8, 0.1);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.hsk-card-character {
+  color: $text-color;
+  display: block;
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.hsk-card-character:hover,
+.hsk-card-character:focus {
+  color: $brand-color;
+  text-decoration: none;
+}
+
+.hsk-readings {
+  border-bottom: 1px solid $grid-line-color;
+  border-top: 1px solid $grid-line-color;
+  margin: 0 0 12px;
+  padding: 9px 0;
+}
+
+.hsk-readings > div {
+  align-items: baseline;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 54px minmax(0, 1fr);
+}
+
+.hsk-readings > div + div {
+  margin-top: 5px;
+}
+
+.hsk-readings dt,
+.hsk-readings dd {
+  font-size: 13px;
+  margin: 0;
+}
+
+.hsk-readings dt {
+  color: $muted-text-color;
+  font-weight: 700;
+}
+
+.hsk-readings dd {
+  color: $text-color;
+  font-weight: 600;
+}
+
+.hsk-speak {
+  background: transparent;
+  border: 0;
+  color: $brand-color;
+  margin-left: 4px;
+  padding: 2px 4px;
+}
+
+.hsk-card-meaning {
+  color: $text-color;
+  flex: 1 1 auto;
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+.hsk-card-meta {
+  color: $muted-text-color;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.hsk-radical-filter {
+  background: transparent;
+  border: 0;
+  color: $brand-color;
+  font-weight: 700;
+  padding: 0 2px;
+}
+
+.hsk-practice-link {
+  border-top: 1px solid $grid-line-color;
+  color: $brand-color;
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  padding-top: 10px;
+  text-align: right;
+}
+
+.hsk-load-more {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.hsk-load-more p {
+  color: $muted-text-color;
+  margin: 0;
+}
+
+.hsk-load-more button,
+.hsk-continue a,
+.hsk-continue button {
+  background: $card-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  color: $brand-color;
+  font-weight: 700;
+  padding: 10px 14px;
+  text-decoration: none;
+}
+
+.hsk-load-more button:hover,
+.hsk-load-more button:focus,
+.hsk-continue a:hover,
+.hsk-continue a:focus,
+.hsk-continue button:hover,
+.hsk-continue button:focus {
+  background: $brand-color;
+  border-color: $brand-color;
+  color: $background-color;
+  text-decoration: none;
+}
+
+.hsk-empty {
+  background: $surface-color;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  color: $muted-text-color;
+  padding: 24px;
+  text-align: center;
+}
+
+.hsk-vocabulary summary span {
+  color: $muted-text-color;
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 3px;
+}
+
+.hsk-vocabulary .word-cloud {
+  margin-top: 16px;
+}
+
+.hsk-continue > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 1100px) {
+  .hsk-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .hsk-controls,
+  .hsk-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .hsk-explorer > h1 {
+    font-size: 30px;
+  }
+
+  .hsk-controls,
+  .hsk-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hsk-card {
+    min-height: 0;
+  }
+
+  .hsk-continue > div {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+// Compact feature discovery cards beside the practice introduction
+.practice-hero {
+  align-items: center;
+  display: grid;
+  gap: 12px 22px;
+  grid-template-columns: 8px minmax(250px, 1fr) minmax(420px, 520px);
+  margin-bottom: 38px;
+}
+
+.practice-hero-spine {
+  grid-column: 1;
+}
+
+.practice-hero-copy {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.practice-hero-promos {
+  display: grid;
+  gap: 8px;
+  grid-column: 3;
+  min-width: 0;
+}
+
+.practice-hero-promos .home-geo-quiz-callout,
+.practice-hero-promos .home-daily-idiom-callout {
+  align-items: center;
+  border-radius: 6px;
+  gap: 9px;
+  margin: 0;
+  max-width: none;
+  min-width: 0;
+  padding: 9px 10px;
+}
+
+.practice-hero-promos .home-geo-quiz-callout i,
+.practice-hero-promos .home-daily-idiom-callout i {
+  font-size: 18px;
+}
+
+.practice-hero-promos .home-geo-quiz-callout strong,
+.practice-hero-promos .home-daily-idiom-callout strong {
+  font-size: 13px;
+}
+
+.practice-hero-promos .home-geo-quiz-callout span,
+.practice-hero-promos .home-daily-idiom-callout span {
+  display: -webkit-box;
+  font-size: 12px;
+  line-height: 1.3;
+  margin-top: 1px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.practice-hero-promos .home-callout-actions {
+  gap: 5px;
+}
+
+.practice-hero-promos .home-geo-quiz-callout a,
+.practice-hero-promos .home-daily-idiom-callout a {
+  font-size: 11px;
+  padding: 6px 8px;
+  white-space: nowrap;
+}
+
+@media (max-width: 991px) {
+  .practice-hero {
+    grid-template-columns: 8px minmax(0, 1fr);
+  }
+
+  .practice-hero-spine {
+    grid-row: 1 / span 2;
+  }
+
+  .practice-hero-promos {
+    grid-column: 2;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .practice-hero-promos .home-geo-quiz-callout,
+  .practice-hero-promos .home-daily-idiom-callout {
+    align-items: stretch;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-wrapper .navbar > .container {
+    max-width: none;
+    width: 100%;
   }
 }
 
@@ -1758,4 +2291,359 @@ body {
     display: flex;
     flex-wrap: wrap;
   }
+}
+
+// Parchment and ink theme
+html,
+body {
+  background-color: $background-color;
+  color: $text-color;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a,
+.btn-link,
+.pronunciation-button-compact {
+  color: $brand-color;
+}
+
+a:hover,
+a:focus,
+.btn-link:hover,
+.btn-link:focus,
+.pronunciation-button:hover:not(:disabled),
+.pronunciation-button:focus:not(:disabled),
+.pronunciation-button.is-speaking {
+  color: darken($brand-color, 8%);
+}
+
+hr,
+.featurette-divider,
+.page-header {
+  border-color: $border-color;
+}
+
+.text-muted,
+small,
+.char-unavailable,
+.reference-breadcrumb,
+.idioms-kicker,
+.idioms-lede,
+.idioms-status,
+.idioms-category,
+.idiom-script-label,
+.geo-quiz-mode span,
+.geo-quiz-progress span,
+.geo-quiz-question-note,
+.geo-quiz-muted,
+.geo-quiz-share-status,
+.geo-quiz-map-note,
+.geo-quiz-local-report-note,
+.char-item .desc {
+  color: $muted-text-color !important;
+}
+
+.demo-target,
+.modal-content,
+.dropdown-menu,
+.panel,
+.idioms-daily,
+.idioms-daily-card,
+.idiom-card,
+.idioms-seo-copy,
+.idioms-category-promo-grid button,
+.geo-quiz-panel,
+.geo-quiz-results,
+.geo-quiz-privacy,
+.geo-quiz-option,
+.geo-quiz-feedback-buttons button,
+.geo-quiz-feedback-location input,
+.geo-quiz-result-meta span,
+.geo-quiz-map-legend,
+.radio-label,
+.form-control,
+input,
+select,
+textarea,
+table,
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  background-color: $card-color;
+  border-color: $border-color;
+  color: $text-color;
+}
+
+.well,
+.language-script-settings,
+.beginner-chars-modal-header,
+.example-box,
+.char-grid,
+.idioms-header,
+.idioms-seo,
+.home-geo-quiz-callout,
+.home-daily-idiom-callout,
+.geo-quiz-intro,
+.geo-quiz-mode-options,
+.geo-quiz-result-summary,
+.geo-quiz-map-insight,
+.geo-quiz-local-report,
+.geo-quiz-feedback,
+.word-cloud span {
+  background-color: $surface-color !important;
+  border-color: $border-color;
+}
+
+.btn-primary,
+.btn-info,
+.radio-label:has(input[type="radio"]:checked),
+.idioms-daily-actions .idiom-practice-link,
+.idioms-category-promo-grid button:hover,
+.idioms-category-promo-grid button:focus,
+.home-geo-quiz-callout a,
+.home-daily-idiom-callout .home-callout-primary,
+.geo-quiz-mode-options button.is-selected,
+.geo-quiz-progress-bar,
+.geo-quiz-button,
+.geo-quiz-feedback-location button,
+.geo-quiz-blend-row i {
+  background-color: $brand-color;
+  border-color: $brand-color;
+  color: $background-color;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-info:hover,
+.btn-info:focus,
+.idioms-daily-actions .idiom-practice-link:hover,
+.idioms-daily-actions .idiom-practice-link:focus,
+.home-geo-quiz-callout a:hover,
+.home-geo-quiz-callout a:focus,
+.home-daily-idiom-callout .home-callout-primary:hover,
+.home-daily-idiom-callout .home-callout-primary:focus,
+.geo-quiz-button:hover,
+.geo-quiz-button:focus {
+  background-color: darken($brand-color, 8%);
+  border-color: darken($brand-color, 8%);
+  color: $background-color;
+}
+
+.radio-label:hover,
+.geo-quiz-option:hover,
+.geo-quiz-option:focus,
+.geo-quiz-feedback-buttons button:hover,
+.geo-quiz-feedback-buttons button:focus,
+.geo-quiz-feedback-location input:focus {
+  border-color: $brand-color;
+}
+
+.geo-quiz-option.is-selected,
+.geo-quiz-feedback-buttons button.is-selected {
+  background: $surface-color;
+  border-color: $brand-color;
+  box-shadow: inset 4px 0 0 $brand-color;
+}
+
+.character-tool-link,
+.component-list li,
+.related-character-list li,
+.idioms-toolbar input,
+.idioms-toolbar select,
+.idioms-daily-more,
+.home-daily-idiom-callout .home-callout-secondary,
+.geo-quiz-button-secondary {
+  background-color: $card-color;
+  border-color: $border-color;
+  color: $text-color;
+}
+
+.book-spine,
+.idiom-card {
+  border-left: 5px solid $brand-color;
+}
+
+#speed-slider,
+#speed-slider::-moz-range-track,
+#speed-slider::-ms-fill-lower,
+#speed-slider::-ms-fill-upper {
+  background: $grid-line-color;
+}
+
+.site-footer {
+  background: $footer-color;
+  color: $background-color;
+  margin-bottom: -40px;
+  padding: 30px 0 40px;
+}
+
+.site-footer a,
+.site-footer .footer-separator {
+  color: $footer-accent;
+  border-color: $footer-accent;
+}
+
+.navbar-inverse .navbar-brand,
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-toggle {
+  color: $background-color;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color: $background-color;
+}
+
+.stroke-rules-table {
+  background-color: $card-color !important;
+}
+
+.navbar-wrapper .language-switch-item {
+  align-items: center;
+  background: rgba(242, 232, 208, 0.14);
+  border: 1px solid rgba(242, 232, 208, 0.42);
+  border-radius: 999px;
+  display: flex;
+  gap: 2px;
+  margin: 10px 0 10px 16px;
+  padding: 3px;
+}
+
+.mobile-language-switch {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .navbar-wrapper .navbar-collapse .language-switch-item {
+    display: none;
+  }
+
+  .mobile-language-switch {
+    align-items: center;
+    background: rgba(242, 232, 208, 0.14);
+    border: 1px solid rgba(242, 232, 208, 0.42);
+    border-radius: 999px;
+    display: flex;
+    float: right;
+    gap: 1px;
+    margin: 9px 7px 0 0;
+    padding: 2px;
+  }
+
+  .mobile-language-switch a {
+    border-radius: 999px;
+    color: rgba(242, 232, 208, 0.7);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 25px;
+    min-width: 29px;
+    padding: 0 6px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .mobile-language-switch a:hover,
+  .mobile-language-switch a:focus,
+  .mobile-language-switch a.is-current {
+    background: $background-color;
+    color: $navigation-color;
+  }
+
+  .navbar-wrapper .navbar-toggle {
+    margin-left: 3px;
+  }
+}
+
+.navbar-wrapper .navbar-nav > .language-switch-item > a.language-option {
+  color: rgba(242, 232, 208, 0.62);
+  border-radius: 999px;
+  line-height: 24px;
+  margin: 0;
+  min-width: 36px;
+  padding: 3px 8px;
+  text-align: center;
+}
+
+.navbar-wrapper .navbar-nav > .language-switch-item > a.language-option:hover,
+.navbar-wrapper .navbar-nav > .language-switch-item > a.language-option:focus,
+.navbar-wrapper .navbar-nav > .language-switch-item > a.language-option.is-current {
+  background: $background-color;
+  color: $navigation-color;
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-top: 122px;
+  }
+
+  .navbar-wrapper .navbar {
+    border-radius: 0;
+    box-shadow: 0 5px 14px rgba(28, 18, 8, 0.16);
+    min-height: 72px;
+  }
+
+  .navbar-wrapper .navbar > .container {
+    align-items: center;
+    display: flex;
+  }
+
+  .navbar-wrapper .navbar-header {
+    flex: 0 0 auto;
+  }
+
+  .navbar-wrapper .navbar-collapse {
+    display: flex !important;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .navbar-wrapper .navbar-nav {
+    align-items: center;
+    display: flex;
+    float: none !important;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .navbar-wrapper .navbar-brand {
+    font-size: 18px;
+    font-weight: 700;
+    height: 70px;
+    line-height: 30px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  .navbar-wrapper .navbar-nav > li > a {
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 6px 2px;
+    padding: 19px 11px;
+  }
+
+  .navbar-wrapper .navbar-nav > .language-switch-item > a.language-option {
+    padding: 3px 8px;
+  }
+
+  .navbar-wrapper .navbar-inverse .navbar-nav > .active > a,
+  .navbar-wrapper .navbar-inverse .navbar-nav > .active > a:hover,
+  .navbar-wrapper .navbar-inverse .navbar-nav > .active > a:focus {
+    background: $background-color;
+    color: $navigation-color;
+  }
+}
+
+// Keep later component rules from overriding the shared corner radius.
+.practice-hero-promos .home-geo-quiz-callout,
+.practice-hero-promos .home-daily-idiom-callout,
+.navbar-wrapper .language-switch-item,
+.navbar-wrapper .navbar-nav > .language-switch-item > a.language-option,
+.mobile-language-switch,
+.mobile-language-switch a {
+  border-radius: $ui-radius;
 }

@@ -18,14 +18,27 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
+            <div class="mobile-language-switch" aria-label="选择语言">
+              <a href="/">EN</a>
+              <a class="is-current" href="/cn/" aria-current="page">简</a>
+              <a href="/tw/">繁</a>
+            </div>
             <a class="navbar-brand" href="/cn/">Hanzi Guide</a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
               <li{% if page.url == '/cn/' or page.url == '/cn/index.html' %} class="active"{% endif %}><a href="/cn/">{{ t.nav.practice }}</a></li>
 
+              <li{% if page.url contains '/hsk-1-characters' or page.url contains '/character/' or page.url contains '/radical/' %} class="active"{% endif %}>
+                <a href="/hsk-1-characters/">HSK 1</a>
+              </li>
+
               <li{% if page.url contains '/cn/geo-quiz' %} class="active"{% endif %}>
                 <a href="/cn/geo-quiz/">{{ t.nav.geo_quiz }}</a>
+              </li>
+
+              <li{% if page.url contains '/idioms' %} class="active"{% endif %}>
+                <a href="/idioms/">{{ t.nav.idioms }}</a>
               </li>
 
               <li class="dropdown{% if page.url contains '/howto' %} active{% endif %}">
@@ -38,9 +51,11 @@
                 </ul>
               </li>
 
-              <li><a href="https://github.com/yorickreum/hanziguide">{{ t.nav.github }}</a></li>
-              <li><a href="/tw/">繁</a></li>
-              <li><a href="/">EN</a></li>
+              <li class="language-switch-item">
+                <a class="language-option" href="/">EN</a>
+                <a class="language-option is-current" href="/cn/" aria-current="page">简</a>
+                <a class="language-option" href="/tw/">繁</a>
+              </li>
             </ul>
           </div>
         </div>
