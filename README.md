@@ -7,6 +7,7 @@
 ## ✨ Features
 
 - **Interactive Character Practice**: Learn to write Chinese characters with animated stroke-by-stroke demonstrations
+- **English Word Lookup**: Search English words or short phrases, then select matching Hanzi to practice
 - **Dual Script Support**: Switch between Simplified and Traditional Chinese characters
 - **Multiple Languages**: Interface available in English, Simplified Chinese, and Traditional Chinese
 - **Pronunciation Guides**: 

@@ -318,6 +318,59 @@ function parseCanto(text) {
   return { charMap: charMap, wordMap: wordMap };
 }
 
+// Keep every sense and reading: the display maps intentionally discard some.
+function parseEnglishEntries(text) {
+  var entries = [];
+  text.split('\n').forEach(function(line) {
+    if (!line || line.charAt(0) === '#') return;
+    var match = /^(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+\/(.+)\//.exec(line);
+    if (!match || !/^[\u3400-\u9fff]+$/.test(match[2]) || match[2].length > 6) return;
+    var defs = match[4].split(/[;/]/).map(function(def) { return def.trim(); }).filter(function(def) {
+      return def && !/^(CL:|classifier |surname |variant of |old variant of |see |also written )/i.test(def);
+    });
+    if (defs.length) entries.push({ traditional: match[1], simplified: match[2], pinyin: match[3], definitions: defs });
+  });
+  return entries;
+}
+
+function normalizeEnglish(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function searchEnglish(entries, input) {
+  var query = normalizeEnglish(input);
+  if (!query) return [];
+  var matches = [];
+  entries.forEach(function(entry) {
+    var score = Infinity;
+    var meaning = '';
+    entry.definitions.forEach(function(def, senseIndex) {
+      var normalized = normalizeEnglish(def);
+      var gloss = normalizeEnglish(def.replace(/\([^)]*\)/g, '')).replace(/^(to |a |an |the )/, '');
+      var rank = normalized === query || gloss === query ? 0 :
+        (' ' + normalized + ' ').indexOf(' ' + query + ' ') !== -1 ? 1 : Infinity;
+      // Prefer primary senses and ordinary usage over slang or literary glosses.
+      rank += Math.min(senseIndex, 20) / 100 + (/slang|archaic|literary|dialect|obsolete/i.test(def) ? 0.5 : 0);
+      if (rank < score) { score = rank; meaning = def; }
+    });
+    if (score !== Infinity) matches.push({ entry: entry, score: score, meaning: meaning });
+  });
+  matches.sort(function(a, b) {
+    return a.score - b.score || a.entry.simplified.length - b.entry.simplified.length ||
+      a.meaning.length - b.meaning.length;
+  });
+  var seen = Object.create(null);
+  return matches.filter(function(match) {
+    var key = match.entry.simplified + '|' + match.entry.traditional + '|' + match.entry.pinyin;
+    if (seen[key]) return false;
+    seen[key] = true;
+    return true;
+  }).slice(0, 20).map(function(match) {
+    return { simplified: match.entry.simplified, traditional: match.entry.traditional,
+      pinyin: match.entry.pinyin, definition: match.meaning };
+  });
+}
+
 function ensureDict() {
   if (dictPromise) return dictPromise;
   dictPromise = Promise.all([
@@ -344,7 +397,8 @@ function ensureDict() {
         charMap: cedictData.charMap, 
         wordMap: cedictData.wordMap,
         cantoCharMap: ccantoData.charMap,
-        cantoWordMap: ccantoData.wordMap
+        cantoWordMap: ccantoData.wordMap,
+        englishEntries: parseEnglishEntries(cedictText)
       };
     });
   return dictPromise;
@@ -352,7 +406,16 @@ function ensureDict() {
 
 self.onmessage = function(evt) {
   var msg = evt.data || {};
-  if (msg.type !== 'lookup' || !msg.id) return;
+  if (!msg.id) return;
+  if (msg.type === 'searchEnglish') {
+    ensureDict().then(function(payload) {
+      self.postMessage({ id: msg.id, result: searchEnglish(payload.englishEntries, msg.text || '') });
+    }).catch(function(err) {
+      self.postMessage({ id: msg.id, error: err.message || String(err) });
+    });
+    return;
+  }
+  if (msg.type !== 'lookup') return;
   var input = msg.text || '';
 
   ensureDict()

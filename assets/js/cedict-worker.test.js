@@ -1,259 +1,11 @@
-// Test for CC-CEDICT parser
+// Run the production worker in a sandbox, rather than copying its parsers.
 // Run with: node assets/js/cedict-worker.test.js
-
-// Mock Web Worker environment
-global.self = {
-  postMessage: function() {},
-  onmessage: null
-};
-
-// Load the worker code (we'll extract and test the parser directly)
-function parseCedict(text) {
-  var charMap = {};
-  var wordMap = {};
-  var lines = text.split('\n');
-  var lineRe = /(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+\/(.+)\//;
-
-  function filterDefs(defs) {
-    var filtered = defs.filter(function(d) {
-      if (!d || d.length < 2) return false;
-      var lower = d.toLowerCase();
-      if (lower.indexOf('surname') !== -1) return false;
-      if (lower.indexOf('classifier') !== -1) return false;
-      if (lower.startsWith('variant of')) return false;
-      if (lower.startsWith('abbr.')) return false;
-      if (lower.startsWith('see ')) return false;
-      var first = d.charAt(0);
-      if (first && first === first.toUpperCase() && first !== first.toLowerCase()) return false;
-      return true;
-    });
-    return filtered.length > 0 ? filtered : defs;
-  }
-
-  function pickBestDefs(defs, maxCount, isSingleChar) {
-    var sorted;
-    if (isSingleChar) {
-      sorted = defs.slice().sort(function(a, b) {
-        return (a ? a.length : 999) - (b ? b.length : 999);
-      });
-    } else {
-      sorted = defs.slice().sort(function(a, b) {
-        return (b ? b.length : 0) - (a ? a.length : 0);
-      });
-    }
-    var result = [];
-    var seen = {};
-    for (var i = 0; i < sorted.length && result.length < maxCount; i++) {
-      var d = sorted[i];
-      if (d && !seen[d]) {
-        seen[d] = true;
-        result.push(d);
-      }
-    }
-    return result;
-  }
-
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    if (!line || line.charAt(0) === '#') continue;
-    var match = lineRe.exec(line);
-    if (!match) continue;
-
-    var trad = match[1];
-    var simp = match[2];
-    var pinyin = match[3];
-    var rawDefs = match[4].split('/').filter(Boolean);
-    var headwordLen = trad.length;
-
-    if (!wordMap[trad]) {
-      wordMap[trad] = { p: pinyin, d: rawDefs[0] || '', len: headwordLen };
-    }
-    if (!wordMap[simp]) {
-      wordMap[simp] = { p: pinyin, d: rawDefs[0] || '', len: headwordLen };
-    }
-
-    var chars = trad + simp;
-    for (var j = 0; j < chars.length; j++) {
-      var ch = chars[j];
-      if (!ch) continue;
-
-      var existing = charMap[ch];
-      
-      if (headwordLen === 1) {
-        var filtered = filterDefs(rawDefs);
-        var best = pickBestDefs(filtered, 3, true);
-        var newDef = best[0] || rawDefs[0] || '';
-        
-        if (existing && existing.len === 1) {
-          var existingIsBad = existing.d && existing.d.toLowerCase().indexOf('surname') !== -1;
-          var newIsBad = newDef && newDef.toLowerCase().indexOf('surname') !== -1;
-          
-          // Don't replace good with bad
-          if (!existingIsBad && newIsBad) {
-            continue;
-          }
-          // Do replace bad with good
-          if (existingIsBad && !newIsBad) {
-            charMap[ch] = { p: pinyin, d: newDef, defs: best, len: 1 };
-            continue;
-          }
-          // Both good or both bad: keep first one
-          continue;
-        }
-        
-        charMap[ch] = {
-          p: pinyin,
-          d: newDef,
-          defs: best,
-          len: 1
-        };
-        continue;
-      }
-
-      if (!existing) {
-        charMap[ch] = {
-          p: pinyin,
-          d: rawDefs[0] || '',
-          defs: [rawDefs[0] || ''],
-          len: headwordLen
-        };
-      } else if (existing.len > 1 && headwordLen <= existing.len) {
-        var seenDefs = {};
-        (existing.defs || []).forEach(function(x) { if (x) seenDefs[x] = true; });
-        for (var k = 0; k < rawDefs.length && existing.defs.length < 3; k++) {
-          if (rawDefs[k] && !seenDefs[rawDefs[k]]) {
-            existing.defs.push(rawDefs[k]);
-            seenDefs[rawDefs[k]] = true;
-          }
-        }
-      }
-    }
-  }
-
-  return { charMap: charMap, wordMap: wordMap };
-}
-
-// Minimal CC-Canto parser for tests
-function parseCanto(text) {
-  var charMap = {};
-  var wordMap = {};
-  var lines = text.split('\n');
-  var lineRe = /(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+\{([^\}]+)\}\s+\/(.+)\//;
-
-  function filterDefs(defs) {
-    var filtered = defs.filter(function(d) {
-      if (!d || d.length < 2) return false;
-      var lower = d.toLowerCase();
-      if (lower.indexOf('surname') !== -1) return false;
-      if (lower.indexOf('classifier') !== -1) return false;
-      if (lower.startsWith('variant of')) return false;
-      if (lower.startsWith('abbr.')) return false;
-      if (lower.startsWith('see ')) return false;
-      var first = d.charAt(0);
-      if (first && first === first.toUpperCase() && first !== first.toLowerCase()) return false;
-      return true;
-    });
-    return filtered.length > 0 ? filtered : defs;
-  }
-
-  function pickBestDefs(defs, maxCount, isSingleChar) {
-    var sorted;
-    if (isSingleChar) {
-      sorted = defs.slice().sort(function(a, b) {
-        return (a ? a.length : 999) - (b ? b.length : 999);
-      });
-    } else {
-      sorted = defs.slice().sort(function(a, b) {
-        return (b ? b.length : 0) - (a ? a.length : 0);
-      });
-    }
-    var result = [];
-    var seen = {};
-    for (var i = 0; i < sorted.length && result.length < maxCount; i++) {
-      var d = sorted[i];
-      if (d && !seen[d]) {
-        seen[d] = true;
-        result.push(d);
-      }
-    }
-    return result;
-  }
-
-  function pickPreferredDef(defs) {
-    if (!defs || !defs.length) return '';
-    for (var i = 0; i < defs.length; i++) {
-      var d = defs[i];
-      if (!d) continue;
-      if (d.toLowerCase().indexOf('slang') !== -1) continue;
-      return d;
-    }
-    return defs[0] || '';
-  }
-
-  function isSlangDef(definition) {
-    return !!(definition && definition.toLowerCase().indexOf('slang') !== -1);
-  }
-
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    if (!line || line.charAt(0) === '#') continue;
-    var match = lineRe.exec(line);
-    if (!match) continue;
-
-    var trad = match[1];
-    var simp = match[2];
-    var rawDefs = match[5].split('/').filter(Boolean);
-    var headwordLen = trad.length;
-    var jyutping = match[4];
-
-    if (headwordLen === 1) {
-      var filtered = filterDefs(rawDefs);
-      var best = pickBestDefs(filtered, 3, true);
-      var newDef = pickPreferredDef(best) || pickPreferredDef(rawDefs);
-
-      var wordKeys = [trad, simp];
-      for (var wk = 0; wk < wordKeys.length; wk++) {
-        var wordKey = wordKeys[wk];
-        if (!wordMap[wordKey]) {
-          wordMap[wordKey] = { j: jyutping, d: newDef, len: headwordLen };
-        } else if (wordMap[wordKey].len === 1) {
-          var existingIsSlang = isSlangDef(wordMap[wordKey].d);
-          var newIsSlang = isSlangDef(newDef);
-          if (existingIsSlang && !newIsSlang) {
-            wordMap[wordKey] = { j: jyutping, d: newDef, len: headwordLen };
-          }
-        }
-      }
-    }
-
-    var chars = trad + simp;
-    for (var j = 0; j < chars.length; j++) {
-      var ch = chars[j];
-      if (!ch) continue;
-      if (headwordLen === 1) {
-        if (!charMap[ch] || charMap[ch].len > 1) {
-          var filteredDefs = filterDefs(rawDefs);
-          var bestDefs = pickBestDefs(filteredDefs, 3, true);
-          var bestDef = pickPreferredDef(bestDefs) || pickPreferredDef(rawDefs);
-          charMap[ch] = { j: jyutping, d: bestDef, defs: bestDefs, len: 1 };
-        } else if (charMap[ch].len === 1) {
-          var existingIsSlang = isSlangDef(charMap[ch].d);
-          var newFiltered = filterDefs(rawDefs);
-          var newBestDefs = pickBestDefs(newFiltered, 3, true);
-          var newBestDef = pickPreferredDef(newBestDefs) || pickPreferredDef(rawDefs);
-          var newIsSlang = isSlangDef(newBestDef);
-          if (existingIsSlang && !newIsSlang) {
-            charMap[ch] = { j: jyutping, d: newBestDef, defs: newBestDefs, len: 1 };
-          }
-        }
-      } else if (!charMap[ch]) {
-        charMap[ch] = { j: jyutping, d: rawDefs[0] || '', defs: rawDefs.slice(), len: headwordLen };
-      }
-    }
-  }
-
-  return { charMap: charMap, wordMap: wordMap };
-}
+var vm = require('node:vm');
+var worker = { self: { postMessage: function() {} } };
+vm.createContext(worker);
+vm.runInContext(require('node:fs').readFileSync(require('node:path').join(__dirname, 'cedict-worker.js'), 'utf8'), worker);
+var parseCedict = worker.parseCedict;
+var parseCanto = worker.parseCanto;
 
 // Test suite
 var tests = [];
@@ -376,6 +128,34 @@ test('CC-Canto single-char avoids slang as primary def', function() {
   ].join('\n');
   var result = parseCanto(input);
   assertEqual(result.wordMap['虎'].d, 'tiger', 'Should prefer non-slang definition');
+});
+
+test('English search ranks exact meanings and keeps secondary senses', function() {
+  var entries = worker.parseEnglishEntries([
+    '水車 水车 [shui3 che1] /water wheel/',
+    '水 水 [shui3] /water; liquid/',
+    '喝 喝 [he1] /to drink/',
+    '媽 妈 [ma1] /mum/mother/'
+  ].join('\n'));
+  assertEqual(worker.searchEnglish(entries, ' WATER ')[0].simplified, '水', 'Exact meaning ranks first');
+  assertEqual(worker.searchEnglish(entries, 'liquid')[0].simplified, '水', 'Secondary sense is searchable');
+  assertEqual(worker.searchEnglish(entries, 'drink')[0].simplified, '喝', 'Infinitive is an exact match');
+  assertEqual(worker.searchEnglish(entries, 'mother')[0].traditional, '媽', 'Traditional form is preserved');
+  assertEqual(worker.searchEnglish(entries, 'mother')[0].pinyin, 'ma1', 'Reading is preserved');
+  assertEqual(worker.searchEnglish(entries, 'wat').length, 0, 'No partial-word matches');
+  assertEqual(worker.searchEnglish(entries, '!!!').length, 0, 'Empty normalized queries return nothing');
+});
+
+test('English search excludes references and deduplicates results', function() {
+  var entries = worker.parseEnglishEntries([
+    '水 水 [shui3] /water/', '水 水 [shui3] /water/',
+    '氵 氵 [shui3] /variant of water/',
+    '你好 你好 [ni3 hao3] /hello/hi/',
+    '謝謝 谢谢 [xie4 xie5] /thank you/'
+  ].join('\n'));
+  assertEqual(worker.searchEnglish(entries, 'water').length, 1, 'Duplicate and reference entries excluded');
+  assertEqual(worker.searchEnglish(entries, 'thank   you')[0].simplified, '谢谢', 'Phrase whitespace normalized');
+  assertEqual(worker.searchEnglish(entries, 'unknown').length, 0, 'Unknown queries return nothing');
 });
 
 // Run tests

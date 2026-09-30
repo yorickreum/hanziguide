@@ -1,4 +1,12 @@
 en:
+  english_search:
+    label: "Find Hanzi from English"
+    placeholder: "Try water, love, or thank you"
+    button: "Search"
+    loading: "Searching…"
+    found: "Select a result to practice. Showing up to 20 matches."
+    empty: "No matches. Try another English word or a shorter phrase."
+    error: "Could not load the dictionary. Please try searching again."
   title: "Hanzi Guide"
   subtitle: "Learn to write Hanzi with proper stroke order"
   nav:
@@ -149,6 +157,14 @@ en:
     source_note: "Quiz questions, scoring weights, region labels, and icon presentation are Hanzi Guide’s derived implementation. They are not an official Linguistic Atlas of Chinese Dialects product and are not endorsed by the authors, Zenodo, OpenStreetMap, or Leaflet."
 
 zh:
+  english_search:
+    label: "输入英文查找汉字"
+    placeholder: "试试 water、love 或 thank you"
+    button: "搜索"
+    loading: "搜索中…"
+    found: "选择结果以练习。最多显示 20 条结果。"
+    empty: "没有匹配结果。请尝试其他英文单词或更短的短语。"
+    error: "无法加载词典。请重新搜索。"
   title: "Hanzi Guide"
   subtitle: "学习正确的笔画顺序书写汉字"
   nav:
@@ -293,6 +309,14 @@ zh:
 
 
 zh-Hant:
+  english_search:
+    label: "輸入英文查找漢字"
+    placeholder: "試試 water、love 或 thank you"
+    button: "搜尋"
+    loading: "搜尋中…"
+    found: "選擇結果以練習。最多顯示 20 筆結果。"
+    empty: "沒有符合的結果。請嘗試其他英文單字或更短的片語。"
+    error: "無法載入詞典。請重新搜尋。"
   title: "Hanzi Guide"
   subtitle: "學習正確的筆畫順序書寫漢字"
   nav:

@@ -71,6 +71,18 @@
   
   <div class="practice-workspace">
     <section class="practice-stage" aria-label="{{ t.stroke_order_animation }}">
+      <form id="english-search-form" class="english-search-form"
+        data-loading="{{ t.english_search.loading }}" data-found="{{ t.english_search.found }}"
+        data-empty="{{ t.english_search.empty }}" data-error="{{ t.english_search.error }}">
+        <label for="english-search">{{ t.english_search.label }}</label>
+        <div class="character-entry-row">
+          <input type="search" class="form-control" id="english-search" placeholder="{{ t.english_search.placeholder }}" maxlength="80" aria-describedby="english-search-status" />
+          <button type="submit" class="btn btn-default">{{ t.english_search.button }}</button>
+        </div>
+        <p id="english-search-status" role="status" aria-live="polite"></p>
+        <ul id="english-search-results" class="english-search-results"></ul>
+      </form>
+
       <form class="char-select-form js-char-form">
         <label for="character-select">{{ t.character_label }}</label>
         <div class="character-entry-row">

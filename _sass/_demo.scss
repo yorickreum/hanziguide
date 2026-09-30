@@ -835,3 +835,34 @@
     padding: 20px;
   }
 }
+
+.english-search-form {
+  margin-bottom: 20px;
+  label { display: block; margin-bottom: 6px; }
+  .character-entry-row { display: flex; gap: 8px; }
+  input { min-width: 0; }
+  [role="status"] { margin: 8px 0; font-size: 14px; }
+}
+.english-search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.english-search-result {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  color: inherit;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  strong { font-size: 24px; }
+  span { font-size: 14px; overflow-wrap: anywhere; }
+  &:hover, &:focus-visible { background: #f0f7fb; outline: 2px solid #337ab7; outline-offset: -2px; }
+}

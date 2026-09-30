@@ -531,7 +531,75 @@ function ensureTranslationInfo() {
   return translationInfoEl;
 }
 
-function lookupCedict(text) {
+function initEnglishSearch() {
+  var form = document.getElementById('english-search-form');
+  if (!form) return;
+  var input = document.getElementById('english-search');
+  var status = document.getElementById('english-search-status');
+  var results = document.getElementById('english-search-results');
+  var request = 0;
+  function closeResults() {
+    request++;
+    results.replaceChildren();
+    status.textContent = '';
+    results.removeAttribute('aria-busy');
+  }
+  input.addEventListener('input', function() {
+    closeResults();
+  });
+  input.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      closeResults();
+    }
+  });
+  document.addEventListener('pointerdown', function(event) {
+    if (results.children.length && !form.contains(event.target)) {
+      closeResults();
+    }
+  });
+  form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    var current = ++request;
+    var query = input.value.trim();
+    results.replaceChildren();
+    status.textContent = '';
+    if (!query) return;
+    status.textContent = form.dataset.loading;
+    results.setAttribute('aria-busy', 'true');
+    try {
+      var matches = await lookupCedict(query, 'searchEnglish');
+      if (current !== request) return;
+      status.textContent = matches.length ? form.dataset.found : form.dataset.empty;
+      matches.forEach(function(match) {
+        var item = document.createElement('li');
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'english-search-result';
+        var hanzi = document.createElement('strong');
+        hanzi.lang = 'zh';
+        hanzi.textContent = match.simplified === match.traditional ? match.simplified :
+          match.simplified + ' / ' + match.traditional;
+        var detail = document.createElement('span');
+        detail.textContent = match.pinyin + ' · ' + match.definition;
+        button.append(hanzi, detail);
+        button.addEventListener('click', function() {
+          clearTimeout(updateTimeout);
+          closeResults();
+          setCharacterInput(getScriptType() === 'traditional' ? match.traditional : match.simplified);
+          document.getElementById('character-select').focus();
+        });
+        item.appendChild(button);
+        results.appendChild(item);
+      });
+    } catch (error) {
+      if (current === request) status.textContent = form.dataset.error;
+    } finally {
+      if (current === request) results.removeAttribute('aria-busy');
+    }
+  });
+}
+
+function lookupCedict(text, type) {
   if (!text || text.trim() === '') {
     return Promise.resolve({});
   }
@@ -550,7 +618,7 @@ function lookupCedict(text) {
     
     cedictPending[id] = { resolve: resolve, reject: reject, timer: timer };
     try {
-      cedictWorker.postMessage({ id: id, type: 'lookup', text: text });
+      cedictWorker.postMessage({ id: id, type: type || 'lookup', text: text });
     } catch (err) {
       clearTimeout(timer);
       delete cedictPending[id];
@@ -1747,6 +1815,7 @@ function shouldShowOutline(demoType) {
 
 $(function() {
   initHomeDailyIdiom();
+  initEnglishSearch();
 
   if (window.speechSynthesis) {
     window.speechSynthesis.addEventListener('voiceschanged', refreshSpeechButtons);
