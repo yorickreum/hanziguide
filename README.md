@@ -1,3 +1,5 @@
+
+
 # HanziGuide
 
 [![Website](https://img.shields.io/badge/website-hanzi.guide-blue)](https://hanzi.guide)
@@ -127,7 +129,7 @@ This project is licensed under the terms specified in [license.html](license.htm
 
 **袁霏篪 Fei Chi Kristy Yuen & Yorick Reum**
 - Email: hanzi@yorickreum.de
-- GitHub: [@kristyctyuen-droid]((ttps://github.com/kristyctyuen-droid), [@yorickreum](https://github.com/yorickreum)
+- GitHub: [@kristyctyuen-droid](https://github.com/kristyctyuen-droid), [@yorickreum](https://github.com/yorickreum)
 
 ## 🙏 Acknowledgments
 
