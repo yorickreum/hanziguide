@@ -68,6 +68,7 @@ jobs:
           if [ -n "$ADSENSE_CLIENT_ID" ]; then
             printf 'adsense_client: "%s"\n' "$ADSENSE_CLIENT_ID" > _config_adsense.yml
             bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}" --config _config.yml,_config_adsense.yml
+            printf 'google.com, %s, DIRECT, f08c47fec0942fa0\n' "${ADSENSE_CLIENT_ID#ca-}" > _site/ads.txt
           else
             bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
           fi
