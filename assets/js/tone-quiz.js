@@ -74,7 +74,7 @@ function showFeedback(correct, title, description, question = null) {
     detail.appendChild(document.createTextNode(' — ' + question.meaning + '.'));
   }
   feedback.hidden = false;
-  feedback.focus();
+  feedback.focus({ preventScroll: window.matchMedia('(max-width: 600px)').matches });
 }
 
 function stopAudio() {
@@ -182,7 +182,7 @@ function renderQuestion() {
     button.hidden = !activeTones().includes(Number(button.dataset.tone));
     button.classList.remove('is-correct', 'is-wrong');
   });
-  document.getElementById('tone-question').focus();
+  document.getElementById('tone-question').focus({ preventScroll: window.matchMedia('(max-width: 600px)').matches });
   playQuestion();
 }
 
@@ -202,6 +202,7 @@ function startRound() {
   ui('language').disabled = true;
   ui('mode').disabled = true;
   renderQuestion();
+  ui('round').scrollIntoView({ block: 'start' });
 }
 
 function answer(tone) {

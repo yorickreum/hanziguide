@@ -58,10 +58,11 @@ function element() {
     addEventListener(name, handler) { this[name] = handler; },
     appendChild(child) { this.children.push(child); },
     removeAttribute(name) { delete this[name]; },
-    focus() { this.focused = true; }
+    focus(options) { this.focused = true; this.focusOptions = options; },
+    scrollIntoView(options) { this.scrollCalls = (this.scrollCalls || 0) + 1; this.scrollOptions = options; }
   };
 }
-function app({ missingVoice = false, saved = null, unsupported = false, mode = 'full', reducedMotion = false } = {}) {
+function app({ missingVoice = false, saved = null, unsupported = false, mode = 'full', reducedMotion = false, mobile = true } = {}) {
   const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'character', 'speed', 'audio-status', 'progress', 'feedback', 'feedback-title', 'feedback-icon', 'feedback-detail', 'celebration', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
   const ui = Object.fromEntries(names.map(name => [name, element()]));
   ui.speed.value = '1';
@@ -107,9 +108,11 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     speak(speech) { spoken.push(speech); }, cancel() { this.speaking = false; this.pending = false; },
     addEventListener(name, handler) { events[name] = handler; }
   };
+  const questionHeading = element();
   const document = {
     getElementById(id) {
       if (id === 'tone-quiz') return quizRoot;
+      if (id === 'tone-question') return questionHeading;
       if (id === 'tone-quiz-data') return { textContent: JSON.stringify(data) };
       return element();
     },
@@ -121,7 +124,7 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     window: {
       speechSynthesis: unsupported ? undefined : synth,
       SpeechSynthesisUtterance: unsupported ? undefined : function (text) { this.text = text; },
-      matchMedia: () => ({ matches: reducedMotion }),
+      matchMedia: query => ({ matches: query.includes('max-width') ? mobile : reducedMotion }),
       addEventListener(name, handler) { events[name] = handler; }
     },
     setTimeout(fn, delay) { const id = Symbol(); timers.set(id, fn); timerDelays.set(id, delay); return id; },
@@ -135,7 +138,7 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     modes.find(input => input.checked).change();
   }
   return {
-    ui, inputs, modes, references, groups, spoken, events, voice, timers, synth,
+    ui, inputs, modes, references, groups, spoken, events, voice, timers, synth, questionHeading,
     tick(delay) {
       const entry = [...timers].find(([id]) => timerDelays.get(id) === delay);
       assert.ok(entry, 'expected an active timer for ' + delay + 'ms');
@@ -693,4 +696,26 @@ test('a voice list change after requesting playback cannot prevent choosing an a
   assert.ok(quiz.groups.mandarin.buttons.every(button => !button.disabled));
   pressKey(quiz, String(question.tone));
   assert.match(quiz.ui.progress.textContent, /1 correct/);
+});
+
+
+test('round start scrolls once; answering and advancing keep focus without scrolling the page', () => {
+  const quiz = app();
+  quiz.ui.start.click();
+  assert.equal(quiz.ui.round.scrollCalls, 1);
+  assert.equal(quiz.questionHeading.focusOptions.preventScroll, true);
+  const question = data.mandarin.questions.find(q => q.character === quiz.spoken.at(-1).text);
+  pressKey(quiz, String(question.tone));
+  assert.equal(quiz.ui.feedback.focusOptions.preventScroll, true);
+  pressKey(quiz, 'Enter');
+  assert.equal(quiz.ui.round.scrollCalls, 1, 'no scroll request on the next question');
+  assert.equal(quiz.questionHeading.focusOptions.preventScroll, true);
+});
+
+
+test('desktop keyboard focus can still reveal feedback below the viewport', () => {
+  const quiz = app({ mobile: false });
+  quiz.ui.start.click();
+  quiz.answerCorrect();
+  assert.equal(quiz.ui.feedback.focusOptions.preventScroll, false);
 });

@@ -100,7 +100,7 @@
 @media (prefers-reduced-motion: reduce) {
   .tone-quiz-confetti { display: none; animation: none; }
 }
-.tone-quiz-answer-links { margin-bottom: 18px; }
+.tone-quiz-answer-links { margin-top: 12px; }
 .tone-quiz-round-header {
   display: flex;
   align-items: center;
@@ -145,8 +145,73 @@
 }
 
 @media (max-width: 600px) {
-  .tone-quiz-round { padding: 16px 12px; }
-  .tone-quiz-option { font-size: 14px; }
+  .tone-quiz {
+    padding-top: 16px;
+    line-height: 1.5;
+    > header h1 { font-size: 28px; }
+    > header .lead { font-size: 16px; }
+    .pronunciation-view-switch {
+      margin: 16px 0;
+      gap: 6px;
+      legend { font-size: 14px; margin-bottom: 6px; }
+      label { flex: 1; min-width: 0; padding: 8px; font-size: 13px; }
+    }
+    [data-quiz-intro] p { font-size: 14px; }
+    [data-quiz-intro] .pronunciation-guide-note { padding: 12px; font-size: 13px; }
+  }
+  .tone-quiz.is-playing {
+    > header h1 { font-size: 22px; margin: 0 0 10px; }
+    .tone-quiz-round { margin-top: 8px; }
+  }
+  .tone-quiz-round {
+    padding: 12px;
+    // The page heading already gives this instruction; keep it available to
+    // assistive technology without another large heading on small screens.
+    > h2 {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    [data-quiz-listening] { font-size: 13px; line-height: 1.4; margin: 8px 0; }
+    [data-quiz-keyboard] { display: none; }
+    [data-quiz-next] { min-height: 44px; max-width: 100%; white-space: normal; }
+  }
+  .tone-quiz .tone-quiz-round { scroll-margin-top: 12px; }
+  .tone-quiz-round-header {
+    gap: 8px;
+    margin-bottom: 8px;
+    .tone-quiz-progress { font-size: 12px; line-height: 1.4; }
+  }
+  .tone-quiz-options { gap: 8px; margin: 12px 0; }
+  .tone-quiz-options[data-quiz-options="cantonese"]:has([data-tone="2"]:not([hidden])) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .tone-quiz-option {
+    min-height: 92px;
+    padding: 8px 6px;
+    gap: 2px;
+    font-size: 12px;
+    line-height: 1.3;
+    strong { font-size: 15px; }
+    .pronunciation-tone-curve { width: 56px; height: 36px; }
+  }
+  .tone-quiz-feedback {
+    padding: 10px;
+    gap: 8px;
+    margin: 12px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    h3 { font-size: 20px; margin-bottom: 4px; }
+  }
+  .tone-quiz-feedback-icon { font-size: 24px; }
+  .tone-quiz-answer-links { margin-top: 8px; font-size: 13px; }
+  .tone-quiz-references { padding: 10px; margin: 12px 0; }
 }
 
 .tone-quiz-speaker { vertical-align: middle; margin-right: 4px; }

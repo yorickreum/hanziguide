@@ -38,7 +38,7 @@
     <script src="/assets/cdn/svg2pdf/svg2pdf.umd.min.js"></script>
   {% endif %}
   {% if page.module %}
-    <script type="module" src="{{ page.js }}{% if page.js contains 'assets/js/index.js' %}?v=component-details-1{% elsif page.js contains 'pronunciation-guide.js' %}?v=pronunciation-switch-1{% elsif page.js contains 'tone-quiz.js' %}?v=quiz-nonblocking-audio-1{% endif %}"></script>
+    <script type="module" src="{{ page.js }}{% if page.js contains 'assets/js/index.js' %}?v=component-details-1{% elsif page.js contains 'pronunciation-guide.js' %}?v=pronunciation-switch-1{% elsif page.js contains 'tone-quiz.js' %}?v=quiz-mobile-compact-1{% endif %}"></script>
   {% else %}
     <script type="application/javascript" src="{{ page.js }}"></script>
   {% endif %}
