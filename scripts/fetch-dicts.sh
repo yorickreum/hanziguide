@@ -11,9 +11,16 @@ cedict_gz="${assets_dir}/cedict_ts.u8.gz"
 cedict_out="${assets_dir}/cedict_ts.u8"
 
 echo "Downloading CC-CEDICT..."
-curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
-  "${cedict_url}" -o "${cedict_gz}"
-gunzip -f "${cedict_gz}"
+if curl -L --fail --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 300 \
+  "${cedict_url}" -o "${cedict_gz}"; then
+  gunzip -f "${cedict_gz}"
+elif [ -s "${cedict_out}" ]; then
+  echo "::warning::CC-CEDICT refresh failed; using the existing cached dictionary."
+  rm -f "${cedict_gz}"
+else
+  echo "CC-CEDICT download failed and no cached dictionary is available." >&2
+  exit 1
+fi
 ls -lh "${cedict_out}"
 
 cccanto_url="https://cantonese.org/cccanto-170202.zip"
