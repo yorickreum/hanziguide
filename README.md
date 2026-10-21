@@ -54,6 +54,8 @@
 
 ## 🛠️ Technology Stack
 
+Advertising uses explicit compact banner placements. See [advertising setup](docs/advertising.md) for AdSense settings and deployment configuration.
+
 - **Jekyll**: Static site generator
 - **Hanzi Writer**: Character animation library by [chanind/hanzi-writer](https://github.com/chanind/hanzi-writer)
 - **OpenCC**: Traditional/Simplified Chinese conversion

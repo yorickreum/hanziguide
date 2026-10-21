@@ -8,6 +8,10 @@ baseurl: "/" # the subpath of your site, e.g. /blog/
 url: "https://www.hanzi.guide" # the base hostname & protocol for your site
 github_username:  yorickreum
 
+# Hanzi Guide Unit Horizontal. ADSENSE_SLOT_ID can override this in deployment.
+# With no slot configured, no advertising script or empty ad space is rendered.
+adsense_slot: "7163092498"
+
 # Build settings
 markdown: kramdown
 

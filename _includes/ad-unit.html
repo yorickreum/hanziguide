@@ -1,0 +1,11 @@
+{% if site.adsense_client and site.adsense_slot and site.adsense_slot != '' and page.adsense != false %}
+{% assign ad_label = 'Advertisement' %}
+{% if page.lang == 'zh' %}{% assign ad_label = '广告' %}{% elsif page.lang == 'zh-Hant' %}{% assign ad_label = '廣告' %}{% endif %}
+<aside class="site-ad container" aria-label="{{ ad_label }}">
+  <div class="site-ad-label">{{ ad_label }}</div>
+  <ins class="adsbygoogle site-ad-banner"
+       data-ad-client="{{ site.adsense_client | escape }}"
+       data-ad-slot="{{ site.adsense_slot | escape }}"
+       data-full-width-responsive="false"></ins>
+</aside>
+{% endif %}

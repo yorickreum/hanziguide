@@ -66,15 +66,26 @@ jobs:
       - name: Build with Jekyll
         run: |
           if [ -n "$ADSENSE_CLIENT_ID" ]; then
+            if ! [[ "$ADSENSE_CLIENT_ID" =~ ^ca-pub-[0-9]+$ ]] || { [ -n "$ADSENSE_SLOT_ID" ] && ! [[ "$ADSENSE_SLOT_ID" =~ ^[0-9]+$ ]]; }; then
+              echo "Invalid AdSense publisher or slot ID"
+              exit 1
+            fi
             printf 'adsense_client: "%s"\n' "$ADSENSE_CLIENT_ID" > _config_adsense.yml
+            if [ -n "$ADSENSE_SLOT_ID" ]; then
+              printf 'adsense_slot: "%s"\n' "$ADSENSE_SLOT_ID" >> _config_adsense.yml
+            fi
             bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}" --config _config.yml,_config_adsense.yml
-            printf 'google.com, %s, DIRECT, f08c47fec0942fa0\n' "${ADSENSE_CLIENT_ID#ca-}" > _site/ads.txt
           else
+            echo "Manual ads disabled: configure ADSENSE_CLIENT_ID to enable them."
             bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+          fi
+          if [[ "$ADSENSE_CLIENT_ID" =~ ^ca-pub-[0-9]+$ ]]; then
+            printf 'google.com, %s, DIRECT, f08c47fec0942fa0\n' "${ADSENSE_CLIENT_ID#ca-}" > _site/ads.txt
           fi
         env:
           JEKYLL_ENV: production
           ADSENSE_CLIENT_ID: ${{ secrets.ADSENSE_CLIENT_ID }}
+          ADSENSE_SLOT_ID: ${{ vars.ADSENSE_SLOT_ID }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

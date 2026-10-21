@@ -1,5 +1,9 @@
 {% assign t = site.data.translations[page.lang] %}
 
+{% unless page.ad_placement == 'practice' or page.ad_placement == 'quiz-results' %}
+  {% include ad-unit.html %}
+{% endunless %}
+
 <hr class="featurette-divider footer-featurette-divider" />
 
 <div class="site-footer">

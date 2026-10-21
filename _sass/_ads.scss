@@ -1,0 +1,19 @@
+// Banner dimensions live inline in head.html, following AdSense's examples.
+.site-ad {
+  clear: both;
+  margin: 32px auto;
+  max-width: 758px;
+  width: 100%;
+  text-align: center;
+}
+
+.site-ad-label {
+  color: $muted-text-color;
+  font-size: 11px;
+  line-height: 16px;
+  margin-bottom: 6px;
+}
+
+@media print {
+  .site-ad { display: none; }
+}

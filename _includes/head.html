@@ -61,13 +61,17 @@
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
     {% comment %}
-    AdSense must not run on error, redirect, legal, or task-only screens. Pages
-    can opt out with `adsense: false` in their front matter; this is deliberately
-    an opt-out rather than relying on the production config to remember it.
+    Load only our manual-placement initializer. It requests AdSense when a
+    configured placement approaches the viewport. Disable Auto ads in AdSense
+    to prevent additional placements. Pages can opt out with `adsense: false`.
     {% endcomment %}
-    {% if site.adsense_client and page.adsense != false %}
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.adsense_client }}"
-     crossorigin="anonymous"></script>
+    {% if site.adsense_client and site.adsense_slot and site.adsense_slot != '' and page.adsense != false %}
+    <!-- Keep ad sizing inline as required by Google's responsive-code examples. -->
+    <style>
+      .site-ad-banner { display: block; width: 100%; height: 100px; }
+      @media (min-width: 800px) { .site-ad-banner { height: 90px; } }
+    </style>
+    <script defer src="{{ '/assets/js/ads.js' | relative_url }}"></script>
     {% endif %}
     
     <!-- Structured Data -->

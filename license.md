@@ -1,5 +1,6 @@
 ---
 layout: default
+adsense: false
 ---
 
 <div class="container license" markdown="1">
