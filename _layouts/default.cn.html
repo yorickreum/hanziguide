@@ -37,6 +37,10 @@
                 <a href="/cn/geo-quiz/">{{ t.nav.geo_quiz }}</a>
               </li>
 
+              <li{% if page.url == '/tone-quiz/' %} class="active"{% endif %}>
+                <a href="/tone-quiz/" hreflang="en"{% if page.url == '/tone-quiz/' %} aria-current="page"{% endif %}>{{ t.nav.tone_quiz }}</a>
+              </li>
+
               <li{% if page.url contains '/idioms' %} class="active"{% endif %}>
                 <a href="/idioms/">{{ t.nav.idioms }}</a>
               </li>
@@ -49,7 +53,6 @@
                   <li><a href="/cn/howto/stroke-order/">{{ t.nav.stroke_order }}</a></li>
                   <li><a href="/cn/howto/radicals/">{{ t.nav.radicals }}</a></li>
                   <li><a href="/howto/pinyin-jyutping-tones/" hreflang="en">{{ t.nav.pronunciation }}</a></li>
-                  <li><a href="/tone-quiz/" hreflang="en">声调听力测验（英文）</a></li>
                   <li><a href="/tutor/" hreflang="en">{{ t.nav.tutor }}</a></li>
                 </ul>
               </li>
