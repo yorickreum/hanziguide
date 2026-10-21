@@ -226,11 +226,13 @@ export function buildStrokeDiagramSvg(charData, opts) {
 
   const numberAnchors = [];
   charData.strokes.forEach((pathD, idx) => {
-    const path = ensureSvgEl("path");
-    path.setAttribute("d", pathD);
-    path.setAttribute("fill", opts.strokeColor);
-    path.setAttribute("stroke", "none");
-    pathsGroup.appendChild(path);
+    if (opts.showStrokes !== false) {
+      const path = ensureSvgEl("path");
+      path.setAttribute("d", pathD);
+      path.setAttribute("fill", opts.strokeColor);
+      path.setAttribute("stroke", "none");
+      pathsGroup.appendChild(path);
+    }
 
     const median = charData.medians[idx];
     if (opts.showMedians !== false && median && median.length > 1) {
@@ -255,21 +257,22 @@ export function buildStrokeDiagramSvg(charData, opts) {
       arrow.setAttribute("fill", opts.arrowColor);
       arrow.setAttribute("stroke", "none");
       mediansGroup.appendChild(arrow);
+    }
 
-      if (opts.showNumbers !== false) {
-        const start = median[0];
-        const numberX = start[0];
-        let numberY = flipYOffset - start[1];
-        if (numberY < numberClampMin) numberY = numberClampMin;
-        if (numberY > numberClampMax) numberY = numberClampMax;
-        numberAnchors.push({
-          stroke: idx + 1,
-          x: numberX,
-          y: numberY,
-          anchorX: numberX,
-          anchorY: numberY
-        });
-      }
+    // Number placement uses median starts, independently of visible arrows.
+    if (opts.showNumbers !== false && median && median.length > 1) {
+      const start = median[0];
+      const numberX = start[0];
+      let numberY = flipYOffset - start[1];
+      if (numberY < numberClampMin) numberY = numberClampMin;
+      if (numberY > numberClampMax) numberY = numberClampMax;
+      numberAnchors.push({
+        stroke: idx + 1,
+        x: numberX,
+        y: numberY,
+        anchorX: numberX,
+        anchorY: numberY
+      });
     }
   });
 

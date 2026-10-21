@@ -150,7 +150,8 @@ import { buildStrokeDiagramSvg } from '/assets/js/hanzi_practice_pdf.js';
 
 var XRAY_DIAGRAM_OPTIONS = {
   diagramPx: 300,
-  strokeColor: '#d6d6d6',
+  showStrokes: false,
+  showMedians: true,
   arrowColor: '#2b2b2b',
   numberFill: 'rgba(255,255,255,0.86)',
   numberStroke: '#9a9a9a',
@@ -329,8 +330,7 @@ function isXrayModeOn() {
 }
 
 function syncXrayViewVisibility() {
-  var show = isXrayModeOn();
-  $('.xray-stroke-view').toggle(show);
+  $('.xray-stroke-view').toggle(isXrayModeOn());
 }
 
 function renderXrayStrokeView(charData, targetEl, size) {
@@ -341,13 +341,13 @@ function renderXrayStrokeView(charData, targetEl, size) {
   targetEl.innerHTML = '';
   var svg = buildStrokeDiagramSvg(charData, {
     ...XRAY_DIAGRAM_OPTIONS,
-    diagramPx: size
+    diagramPx: size - 10 // Match the animation writer's 5px padding.
   });
   svg.classList.add('xray-stroke-svg');
   svg.setAttribute('role', 'img');
-  svg.setAttribute('aria-label', 'Static numbered stroke order diagram');
+  svg.setAttribute('aria-label', 'Stroke order numbers and direction arrows');
   targetEl.appendChild(svg);
-  targetEl.style.display = isXrayModeOn() ? 'block' : 'none';
+  syncXrayViewVisibility();
 }
 
 // Initialize OpenCC converters
@@ -833,16 +833,23 @@ function updateCharacter() {
     pinyinDiv.style.minHeight = '20px';
     charContainer.appendChild(pinyinDiv);
 
+    // Keep the stroke order overlay in the same square as the live animation.
+    var characterView = document.createElement('div');
+    characterView.style.position = 'relative';
+    characterView.style.width = size + 'px';
+    characterView.style.height = size + 'px';
+    charContainer.appendChild(characterView);
+
     // Create animation writer
     var animDiv = document.createElement('div');
     animDiv.id = 'anim-char-' + index;
-    charContainer.appendChild(animDiv);
+    characterView.appendChild(animDiv);
 
     var xrayDiv = document.createElement('div');
     xrayDiv.id = 'xray-char-' + index;
     xrayDiv.className = 'xray-stroke-view';
-    xrayDiv.style.display = isXrayModeOn() ? 'block' : 'none';
-    charContainer.appendChild(xrayDiv);
+    xrayDiv.style.display = 'none';
+    characterView.appendChild(xrayDiv);
 
     // Create components display
     var componentsDiv = document.createElement('div');
