@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const root = path.join(__dirname, '..');
 const guideSource = fs.readFileSync(path.join(root, 'assets/js/pronunciation-guide.js'), 'utf8')
-  .replace(/^import[^\n]+\n/, '');
+  .replace(/^import[^\n]+\n/gm, '');
 
 function element() {
   return {
@@ -36,6 +36,7 @@ function lesson({ voice = true, writer = true } = {}) {
   soundExample.querySelector = () => ({ textContent: '花' });
   const soundTable = { dataset: { speechLanguage: 'zh-HK' }, querySelectorAll: () => [{ querySelector: () => soundExample }] };
   const context = {
+    initPronunciationView() {},
     window: {
       SpeechSynthesisUtterance: function () {},
       speechSynthesis: { addEventListener(event, fn) { voiceEvents[event] = fn; } }

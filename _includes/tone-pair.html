@@ -1,4 +1,4 @@
-<article class="tone-pair" aria-labelledby="{{ include.pair.id }}">
+<article data-pronunciation-language="{% if include.pair.language == 'zh-HK' %}cantonese{% else %}mandarin{% endif %}" class="tone-pair" aria-labelledby="{{ include.pair.id }}">
   <h3 id="{{ include.pair.id }}">{{ include.pair.title }}</h3>
   <p>{{ include.pair.explanation }}</p>
   <div class="pronunciation-guide-pair">

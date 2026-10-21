@@ -2,6 +2,7 @@
 <section id="sound-tables" aria-labelledby="sound-tables-title">
   <h2 id="sound-tables-title">Sound tables: build a syllable</h2>
   <p>Use these as a reference while listening. The German labels <strong>Anlaut</strong>, <strong>Zwischenlaut</strong>, and <strong>Auslaut</strong> describe different positions in a syllable. A <em>final</em> is the whole part after the initial, so it can contain several sounds.</p>
+  <div data-pronunciation-language="mandarin">
   <table class="pronunciation-glossary-table">
     <caption>The parts of a syllable</caption>
     <thead><tr><th scope="col">Part</th><th scope="col">What it does</th><th scope="col">Example</th></tr></thead>
@@ -15,9 +16,11 @@
     </tbody>
   </table>
   <p>For example, <span lang="zh-Hans">段</span> <strong>duàn</strong> breaks down as <strong>d + u + a + n + tone 4</strong>. Not every syllable needs every part. Cantonese is described below using initials, vowels, and codas, without imposing Mandarin’s medial categories on it.</p>
-  <p class="pronunciation-guide-note">Open a language below. Each example links to the writing tool; its listening button plays the <strong>whole character</strong>, not an isolated letter. Audio needs a matching voice on your device. The tips describe mouth movements; recordings remain the best model.</p>
+  </div>
+  <p data-pronunciation-language="cantonese">In Cantonese <strong>jan4</strong> (<span lang="zh-Hant">人</span>, “person”), <strong>j</strong> is the initial, <strong>a</strong> is the vowel, <strong>n</strong> is the coda, and <strong>4</strong> is the tone. The whole final is <strong>an</strong>.</p>
+  <p class="pronunciation-guide-note">Open the reference tables below. Each example links to the writing tool; its listening button plays the <strong>whole character</strong>, not an isolated letter. Audio needs a matching voice on your device. The tips describe mouth movements; recordings remain the best model.</p>
 
-  <details class="pronunciation-reference">
+  <details class="pronunciation-reference" data-pronunciation-language="mandarin">
     <summary>Mandarin Pinyin: initials, medials, finals, and spelling rules</summary>
     <h3>21 consonant initials · Anlaute</h3>
     <p>The symbols in square brackets are IPA sound symbols. Pairs such as <strong>b/p</strong>, <strong>d/t</strong>, and <strong>g/k</strong> mainly contrast a small release of air with a stronger puff, rather than following the English voiced/unvoiced distinction.</p>
@@ -56,7 +59,7 @@
     <p class="pronunciation-guide-source">Reference inventories: <a href="https://web.mit.edu/~jinzhang/www/pinyin/finals/">MIT’s Pinyin finals chart</a> and <a href="https://ocw.mit.edu/courses/res-21g-003-learning-chinese-a-foundation-course-in-mandarin-spring-2011/01af9a25b804b7d58a26fa580691df4f_MITRES_21G_003S11_pinyin.pdf">MIT’s Pinyin overview</a>.</p>
   </details>
 
-  <details class="pronunciation-reference">
+  <details class="pronunciation-reference" data-pronunciation-language="cantonese">
     <summary>Cantonese Jyutping: initials, vowels, all finals, and codas</summary>
     <h3>19 initials · Anlaute</h3>
     {% include pronunciation-sound-table.html rows=sounds.jyutping_initials language="zh-HK" caption="All 19 Jyutping initials" %}

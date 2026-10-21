@@ -13,9 +13,15 @@ module: true
     <p class="pronunciation-guide-kicker">How To · Pronunciation</p>
     <h1>Pinyin, Jyutping &amp; tones</h1>
     <p class="lead">The characters tell you what you are reading. The spelling underneath helps you say it. Start with one word, one sound, and one pitch pattern at a time.</p>
+    <fieldset class="pronunciation-view-switch" data-pronunciation-switch hidden>
+      <legend>What are you learning?</legend>
+      <label><input type="radio" name="pronunciation-view" value="mandarin"> Mandarin Pinyin</label>
+      <label><input type="radio" name="pronunciation-view" value="cantonese"> Cantonese Jyutping</label>
+      <label><input type="radio" name="pronunciation-view" value="both" checked> Both</label>
+    </fieldset>
     <nav class="pronunciation-guide-jumps" aria-label="Guide sections">
-      <a href="#pinyin">Mandarin Pinyin</a>
-      <a href="#jyutping">Cantonese Jyutping</a>
+      <a data-pronunciation-language="mandarin" href="#pinyin">Mandarin Pinyin</a>
+      <a data-pronunciation-language="cantonese" href="#jyutping">Cantonese Jyutping</a>
       <a href="#sound-tables">Initials &amp; finals tables</a>
       <a href="#tone-mixups">Same sound, different meaning</a>
       <a href="#practice-tones">Try it yourself</a>
@@ -23,22 +29,22 @@ module: true
   </header>
 
   <section aria-labelledby="two-spellings">
-    <h2 id="two-spellings">Two ways to write down pronunciation</h2>
+    <h2 id="two-spellings">Read the pronunciation</h2>
     <div class="pronunciation-guide-pair">
-      <div class="pronunciation-guide-card">
+      <div class="pronunciation-guide-card" data-pronunciation-language="mandarin">
         <h3>Pinyin → Mandarin</h3>
         <p><span lang="zh-Hans">水</span> “water” is <strong lang="zh-Latn-pinyin">shuǐ</strong>. The letters describe the syllable; the mark above the vowel gives its tone.</p>
       </div>
-      <div class="pronunciation-guide-card">
+      <div class="pronunciation-guide-card" data-pronunciation-language="cantonese">
         <h3>Jyutping → Cantonese</h3>
-        <p>The same character, <span lang="zh-Hant">水</span>, is <strong>seoi2</strong>. The letters describe a different pronunciation; the final digit gives its tone.</p>
+        <p><span lang="zh-Hant">水</span> “water” is <strong>seoi2</strong>. The letters describe the Cantonese pronunciation; the final digit gives its tone.</p>
       </div>
     </div>
     <p>These are pronunciation systems, not translations. Simplified and traditional characters are writing choices; either can be paired with Mandarin or Cantonese pronunciation.</p>
     <p>A tone is the <strong>pitch pattern within a syllable</strong>. It can help distinguish words, so learn it together with the letters. Higher pitch does not mean louder, and you do not need a musical singing voice.</p>
   </section>
 
-  <section id="pinyin" aria-labelledby="pinyin-title">
+  <section data-pronunciation-language="mandarin" id="pinyin" aria-labelledby="pinyin-title">
     <h2 id="pinyin-title">Read your first Pinyin syllable</h2>
     <p>Take <strong lang="zh-Latn-pinyin">hǎo</strong> (<span lang="zh-Hans">好</span>, “good”): <strong>h</strong> is the beginning sound, <strong>ao</strong> is the ending, and <strong>ǎ</strong> marks tone 3. You may also see it typed as <strong>hao3</strong>.</p>
     <p>Pinyin letters have their own sound values. In particular, <strong>q</strong>, <strong>x</strong>, and <strong>zh</strong> are not read as English spellings. Learn them from recordings rather than guessing. The vowel <strong>ü</strong>, as in <strong lang="zh-Latn-pinyin">nǚ</strong> (<span lang="zh-Hans">女</span>), is different from <strong>u</strong>; its dots are omitted after <strong>j, q, x</strong> and in spellings beginning with <strong>y</strong>.</p>
@@ -68,7 +74,7 @@ module: true
 
   {% include ad-unit.html %}
 
-  <section id="jyutping" aria-labelledby="jyutping-title">
+  <section data-pronunciation-language="cantonese" id="jyutping" aria-labelledby="jyutping-title">
     <h2 id="jyutping-title">Read your first Jyutping syllable</h2>
     <p>In <strong>nei5</strong> (<span lang="zh-Hant">你</span>, “you”), <strong>n</strong> begins the syllable, <strong>ei</strong> completes the sound, and <strong>5</strong> gives the tone. The number is not pronounced aloud. Jyutping uses six tone numbers and does not add Pinyin-style tone marks.</p>
     <p>A few spelling clues: <strong>j</strong> is a y-like beginning sound, <strong>aa</strong> and <strong>a</strong> represent different vowels, and <strong>ng</strong> can begin a syllable or stand on its own, as in <strong>ng5</strong> (<span lang="zh-Hant">五</span>, “five”). These spellings belong to Cantonese: do not read them using Pinyin rules.</p>
@@ -103,7 +109,7 @@ module: true
     {% for pair in site.data.tone_pairs %}
       {% include tone-pair.html pair=pair %}
     {% endfor %}
-    <p class="pronunciation-guide-source">Readings and meanings were checked against our CC-CEDICT / CC-Canto dictionaries. For the soup/sugar contrast, see <a href="https://humanum.arts.cuhk.edu.hk/Lexis/lexi-can/pho-rel.php?s1=t&amp;s2=ong">CUHK’s tong syllable list</a>.</p>
+    <p class="pronunciation-guide-source">Readings and meanings were checked against our CC-CEDICT / CC-Canto dictionaries. <span data-pronunciation-language="cantonese">For the soup/sugar contrast, see <a href="https://humanum.arts.cuhk.edu.hk/Lexis/lexi-can/pho-rel.php?s1=t&amp;s2=ong">CUHK’s tong syllable list</a>.</span></p>
   </section>
 
   <section id="practice-tones" aria-labelledby="practice-tones-title">
@@ -115,9 +121,9 @@ module: true
       <li><strong>Put it into a word or phrase.</strong> Listen again in context; a dictionary reading cannot show every change in connected speech.</li>
     </ol>
     <div class="pronunciation-guide-practice-links">
-      <a href="/?pronunciation=mandarin&amp;script=simplified#妈麻马骂">Compare mā · má · mǎ · mà</a>
-      <a href="/?pronunciation=mandarin&amp;script=simplified#天茶水大">Practise 天 · 茶 · 水 · 大</a>
-      <a href="/?pronunciation=cantonese&amp;script=traditional#買賣">Compare 買 and 賣 in Cantonese</a>
+      <a data-pronunciation-language="mandarin" href="/?pronunciation=mandarin&amp;script=simplified#妈麻马骂">Compare mā · má · mǎ · mà</a>
+      <a data-pronunciation-language="mandarin" href="/?pronunciation=mandarin&amp;script=simplified#天茶水大">Practise 天 · 茶 · 水 · 大</a>
+      <a data-pronunciation-language="cantonese" href="/?pronunciation=cantonese&amp;script=traditional#買賣">Compare 買 and 賣 in Cantonese</a>
     </div>
     <p>Hanzi Guide’s pronunciation buttons use voices available on your device. If Cantonese audio is unavailable, use the linked listening lessons rather than substituting a Mandarin voice.</p>
     <p>Once you have heard the word, <a href="/howto/stroke-order/">practise writing its strokes</a>. Pronunciation and handwriting reinforce each other, but the stroke shape does not determine the tone.</p>

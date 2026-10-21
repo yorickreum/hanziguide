@@ -48,7 +48,7 @@
 - id: cantonese-buy-sell
   title: Cantonese · Buy or sell?
   language: zh-HK
-  explanation: "These are the traditional forms of the buy/sell pair above, now with Cantonese readings. Tone 5 rises from low; tone 6 stays low. Do not transfer the Mandarin tone patterns to these numbers."
+  explanation: "Compare the traditional characters for “buy” and “sell” with their Cantonese readings. Tone 5 rises from low; tone 6 stays low. Do not transfer the Mandarin tone patterns to these numbers."
   words:
     - character: 買
       reading: maai5

@@ -1,4 +1,7 @@
 import { createSpeechButton, refreshSpeechButtons, findSpeechVoice } from '/assets/js/utils/speech.js';
+import { initPronunciationView } from '/assets/js/utils/pronunciation-view.js';
+
+initPronunciationView(document, window);
 
 // Reuse the practice workspace's speech controls. Lessons require an explicit
 // voice match so a missing Cantonese voice can never play a Mandarin example.

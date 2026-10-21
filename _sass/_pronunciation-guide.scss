@@ -17,6 +17,35 @@
   font-weight: 700;
 }
 
+.pronunciation-guide [hidden] { display: none !important; }
+
+.pronunciation-view-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  margin: 24px 0;
+
+  legend { font-size: 16px; font-weight: 700; margin-bottom: 10px; border: 0; }
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 10px 14px;
+    border: 1px solid $border-color;
+    border-radius: $ui-radius;
+    background: $card-color;
+    cursor: pointer;
+  }
+  label:has(input:checked) { border-color: $brand-color; color: $brand-color; }
+  label:focus-within { outline: 2px solid $brand-color; outline-offset: 3px; }
+  input { margin: 0; accent-color: $brand-color; }
+}
+
+.pronunciation-guide-pair:has(> [hidden]) { grid-template-columns: 1fr; }
+
 .pronunciation-guide-jumps,
 .pronunciation-guide-practice-links {
   display: flex;
