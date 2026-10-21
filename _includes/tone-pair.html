@@ -1,0 +1,21 @@
+<article class="tone-pair" aria-labelledby="{{ include.pair.id }}">
+  <h3 id="{{ include.pair.id }}">{{ include.pair.title }}</h3>
+  <p>{{ include.pair.explanation }}</p>
+  <div class="pronunciation-guide-pair">
+    {% for word in include.pair.words %}
+    {% assign writer_id = include.pair.id | append: '-' | append: forloop.index %}
+    <div class="pronunciation-guide-card tone-practice-card" data-tone-card data-character="{{ word.character }}" data-language="{{ include.pair.language }}">
+      <p class="tone-pair-character" lang="{% if include.pair.language == 'zh-HK' %}yue{% else %}zh-Hans{% endif %}">{{ word.character }}</p>
+      <p><strong>{{ word.reading }}</strong> · tone {{ word.tone }}<br>{{ word.meaning }}</p>
+      <div class="tone-pair-listen"></div>
+      <div class="tone-pair-actions" hidden>
+        <button type="button" class="btn btn-default" data-writing-mode="animate" aria-controls="tone-writer-{{ writer_id }}">Watch strokes</button>
+        <button type="button" class="btn btn-default" data-writing-mode="quiz" aria-controls="tone-writer-{{ writer_id }}">Write it</button>
+      </div>
+      <div class="tone-pair-writer" id="tone-writer-{{ writer_id }}" aria-label="Stroke practice for {{ word.character }}" hidden></div>
+      <p class="tone-pair-status" role="status" aria-live="polite"></p>
+      <a href="/?pronunciation={% if include.pair.language == 'zh-HK' %}cantonese&amp;script=traditional{% else %}mandarin&amp;script=simplified{% endif %}#{{ word.character | uri_escape }}">Open full practice for {{ word.character }}</a>
+    </div>
+    {% endfor %}
+  </div>
+</article>

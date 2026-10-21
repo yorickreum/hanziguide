@@ -1,0 +1,73 @@
+- id: mandarin-ma
+  title: Mandarin · One syllable, four meanings
+  language: zh-CN
+  explanation: "The classic ma comparison keeps the beginning and ending sounds the same. Change only the tone: mā is “mum,” má is “hemp,” mǎ is “horse,” and mà is “to scold.” Listen to each word separately, then try saying the four in order."
+  words:
+    - character: 妈
+      reading: mā
+      tone: 1
+      meaning: mum / mom
+    - character: 麻
+      reading: má
+      tone: 2
+      meaning: hemp
+    - character: 马
+      reading: mǎ
+      tone: 3
+      meaning: horse
+    - character: 骂
+      reading: mà
+      tone: 4
+      meaning: to scold
+- id: mandarin-buy-sell
+  title: Mandarin · Buy or sell?
+  language: zh-CN
+  explanation: "The ending sound stays the same. Tone 3 stays low or dips; tone 4 falls. In these examples, you are looking at the simplified forms."
+  words:
+    - character: 买
+      reading: mǎi
+      tone: 3
+      meaning: to buy
+    - character: 卖
+      reading: mài
+      tone: 4
+      meaning: to sell
+- id: mandarin-ask-kiss
+  title: Mandarin · Ask or kiss?
+  language: zh-CN
+  explanation: "Both syllables have the letters wen. A falling tone gives you “ask”; a third tone gives you “kiss.” Practise the syllables separately before trying a sentence."
+  words:
+    - character: 问
+      reading: wèn
+      tone: 4
+      meaning: to ask
+    - character: 吻
+      reading: wěn
+      tone: 3
+      meaning: to kiss
+- id: cantonese-buy-sell
+  title: Cantonese · Buy or sell?
+  language: zh-HK
+  explanation: "These are the traditional forms of the buy/sell pair above, now with Cantonese readings. Tone 5 rises from low; tone 6 stays low. Do not transfer the Mandarin tone patterns to these numbers."
+  words:
+    - character: 買
+      reading: maai5
+      tone: 5
+      meaning: to buy
+    - character: 賣
+      reading: maai6
+      tone: 6
+      meaning: to sell
+- id: cantonese-soup-sugar
+  title: Cantonese · Soup or sugar?
+  language: zh-HK
+  explanation: "Keep tong the same. Tone 1 is high and level; tone 4 is low and often falls. A change of pitch changes what you are asking for."
+  words:
+    - character: 湯
+      reading: tong1
+      tone: 1
+      meaning: soup
+    - character: 糖
+      reading: tong4
+      tone: 4
+      meaning: sugar
