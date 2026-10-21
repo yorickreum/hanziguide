@@ -21,6 +21,14 @@ vendor/
 # Logs
 *.log
 
+# Local planning and operational notes
+/docs/advertising.md
+/membership-plan.md
+/hanzi_guide_seo_growth_plan.md
+/hanzi_guide_geo_prediction.md
+/hanzi_guide_geo_quiz_question_bank.md
+/chinese_idioms_mandarin_cantonese.md
+
 # Build artifacts
 *.gem
 Gemfile.lock
