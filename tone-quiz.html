@@ -1,0 +1,70 @@
+---
+layout: default
+title: Mandarin and Cantonese Tone Listening Quiz
+description: Listen to a Chinese character and choose its tone. Practise four Mandarin tones or six Cantonese tones in a free ten-question listening quiz.
+permalink: /tone-quiz/
+lang: en
+js: /assets/js/tone-quiz.js
+module: true
+ad_placement: quiz-results
+---
+
+<main class="container pronunciation-guide tone-quiz" id="tone-quiz">
+  <header>
+    <p class="pronunciation-guide-kicker">Practice · Listening</p>
+    <h1>Which tone did you hear?</h1>
+    <p class="lead">Listen to one character, then choose its tone. The character and pronunciation stay hidden until you answer.</p>
+    <p><a href="/howto/pinyin-jyutping-tones/">Learn Pinyin, Jyutping, and tones first →</a></p>
+  </header>
+
+  <noscript><p class="pronunciation-guide-note">Please enable JavaScript to play audio and take the quiz. You can still <a href="/howto/pinyin-jyutping-tones/">read the tone guide</a>.</p></noscript>
+  <div data-quiz-app hidden>
+    <fieldset class="pronunciation-view-switch" data-quiz-language>
+      <legend>Choose a language</legend>
+      <label><input type="radio" name="quiz-language" value="mandarin" checked> Mandarin · Pinyin</label>
+      <label><input type="radio" name="quiz-language" value="cantonese"> Cantonese · Jyutping</label>
+    </fieldset>
+    <p class="tone-quiz-audio-status" data-quiz-audio-status role="status" aria-live="polite"></p>
+
+    <div data-quiz-intro>
+      <p>Ten questions per round. Replay as often as you like; your first answer counts. Mandarin rounds use the four main tones; Cantonese rounds use all six Jyutping tones.</p>
+      <p class="pronunciation-guide-note">Audio uses your device’s installed voices. Choose a quiet place and a comfortable volume. These examples are isolated syllables; tones can sound different in connected speech.</p>
+      <button type="button" class="btn btn-primary" data-quiz-start disabled>Start listening quiz</button>
+    </div>
+
+    <section class="tone-quiz-round" data-quiz-round aria-labelledby="tone-question" hidden>
+      <p class="tone-quiz-progress" data-quiz-progress></p>
+      <h2 id="tone-question" tabindex="-1">Listen, then choose the tone</h2>
+      <button type="button" class="btn btn-primary tone-quiz-listen" data-quiz-listen>Listen again</button>
+      <p data-quiz-listening role="status" aria-live="polite"></p>
+      {% for language in site.data.tone_quiz %}
+      <div class="tone-quiz-options" data-quiz-options="{{ language[0] }}" role="group" aria-label="Choose the tone you heard" hidden>
+        {% for tone in language[1].tones %}
+        <button type="button" class="tone-quiz-option" data-tone="{{ tone.number }}" disabled>
+          <strong>Tone {{ tone.number }}</strong>
+          {% include tone-curve.html points=tone.points %}
+          <span>{{ tone.label }}</span>
+        </button>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      <div class="tone-quiz-feedback pronunciation-guide-card" data-quiz-feedback role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden></div>
+      <div class="tone-quiz-answer-links" data-quiz-answer-links hidden>
+        <a data-quiz-practice>Watch strokes or practise writing this character →</a>
+      </div>
+      <button type="button" class="btn btn-primary" data-quiz-next hidden>Next question</button>
+      <button type="button" class="btn btn-default" data-quiz-reset>Start over</button>
+    </section>
+
+    <section data-quiz-results aria-labelledby="tone-results-title" hidden>
+      <h2 id="tone-results-title" tabindex="-1">Round complete</h2>
+      <p class="lead" data-quiz-score></p>
+      <p>Review the words below, then try another round. An isolated syllable is a starting point; keep listening to whole words and phrases too.</p>
+      <ol class="tone-quiz-review" data-quiz-review></ol>
+      <button type="button" class="btn btn-primary" data-quiz-restart>Try another round</button>
+      <p><a href="/howto/pinyin-jyutping-tones/#tone-mixups">Review tone contrasts in the guide →</a></p>
+      {% include ad-unit.html %}
+    </section>
+  </div>
+</main>
+<script type="application/json" id="tone-quiz-data">{{ site.data.tone_quiz | jsonify }}</script>

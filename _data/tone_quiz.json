@@ -1,0 +1,352 @@
+{
+  "mandarin": {
+    "questions": [
+      {
+        "character": "妈",
+        "reading": "mā",
+        "tone": 1,
+        "meaning": "mum / mom"
+      },
+      {
+        "character": "天",
+        "reading": "tiān",
+        "tone": 1,
+        "meaning": "sky"
+      },
+      {
+        "character": "书",
+        "reading": "shū",
+        "tone": 1,
+        "meaning": "book"
+      },
+      {
+        "character": "花",
+        "reading": "huā",
+        "tone": 1,
+        "meaning": "flower"
+      },
+      {
+        "character": "猫",
+        "reading": "māo",
+        "tone": 1,
+        "meaning": "cat"
+      },
+      {
+        "character": "山",
+        "reading": "shān",
+        "tone": 1,
+        "meaning": "mountain"
+      },
+      {
+        "character": "麻",
+        "reading": "má",
+        "tone": 2,
+        "meaning": "hemp"
+      },
+      {
+        "character": "茶",
+        "reading": "chá",
+        "tone": 2,
+        "meaning": "tea"
+      },
+      {
+        "character": "人",
+        "reading": "rén",
+        "tone": 2,
+        "meaning": "person"
+      },
+      {
+        "character": "门",
+        "reading": "mén",
+        "tone": 2,
+        "meaning": "door"
+      },
+      {
+        "character": "牛",
+        "reading": "niú",
+        "tone": 2,
+        "meaning": "cow"
+      },
+      {
+        "character": "鱼",
+        "reading": "yú",
+        "tone": 2,
+        "meaning": "fish"
+      },
+      {
+        "character": "马",
+        "reading": "mǎ",
+        "tone": 3,
+        "meaning": "horse"
+      },
+      {
+        "character": "水",
+        "reading": "shuǐ",
+        "tone": 3,
+        "meaning": "water"
+      },
+      {
+        "character": "手",
+        "reading": "shǒu",
+        "tone": 3,
+        "meaning": "hand"
+      },
+      {
+        "character": "米",
+        "reading": "mǐ",
+        "tone": 3,
+        "meaning": "rice"
+      },
+      {
+        "character": "你",
+        "reading": "nǐ",
+        "tone": 3,
+        "meaning": "you"
+      },
+      {
+        "character": "火",
+        "reading": "huǒ",
+        "tone": 3,
+        "meaning": "fire"
+      },
+      {
+        "character": "骂",
+        "reading": "mà",
+        "tone": 4,
+        "meaning": "to scold"
+      },
+      {
+        "character": "树",
+        "reading": "shù",
+        "tone": 4,
+        "meaning": "tree"
+      },
+      {
+        "character": "课",
+        "reading": "kè",
+        "tone": 4,
+        "meaning": "lesson"
+      },
+      {
+        "character": "菜",
+        "reading": "cài",
+        "tone": 4,
+        "meaning": "vegetables"
+      },
+      {
+        "character": "字",
+        "reading": "zì",
+        "tone": 4,
+        "meaning": "written character"
+      },
+      {
+        "character": "大",
+        "reading": "dà",
+        "tone": 4,
+        "meaning": "big"
+      }
+    ],
+    "tones": [
+      {
+        "number": 1,
+        "label": "High and level",
+        "points": "10,12 90,12"
+      },
+      {
+        "number": 2,
+        "label": "Rising",
+        "points": "10,40 90,12"
+      },
+      {
+        "number": 3,
+        "label": "Low / dipping",
+        "points": "10,38 50,55 90,25"
+      },
+      {
+        "number": 4,
+        "label": "Falling",
+        "points": "10,12 90,55"
+      }
+    ]
+  },
+  "cantonese": {
+    "questions": [
+      {
+        "character": "天",
+        "reading": "tin1",
+        "tone": 1,
+        "meaning": "sky"
+      },
+      {
+        "character": "花",
+        "reading": "faa1",
+        "tone": 1,
+        "meaning": "flower"
+      },
+      {
+        "character": "書",
+        "reading": "syu1",
+        "tone": 1,
+        "meaning": "book"
+      },
+      {
+        "character": "詩",
+        "reading": "si1",
+        "tone": 1,
+        "meaning": "poem"
+      },
+      {
+        "character": "水",
+        "reading": "seoi2",
+        "tone": 2,
+        "meaning": "water"
+      },
+      {
+        "character": "狗",
+        "reading": "gau2",
+        "tone": 2,
+        "meaning": "dog"
+      },
+      {
+        "character": "手",
+        "reading": "sau2",
+        "tone": 2,
+        "meaning": "hand"
+      },
+      {
+        "character": "火",
+        "reading": "fo2",
+        "tone": 2,
+        "meaning": "fire"
+      },
+      {
+        "character": "四",
+        "reading": "sei3",
+        "tone": 3,
+        "meaning": "four"
+      },
+      {
+        "character": "課",
+        "reading": "fo3",
+        "tone": 3,
+        "meaning": "lesson"
+      },
+      {
+        "character": "菜",
+        "reading": "coi3",
+        "tone": 3,
+        "meaning": "vegetables"
+      },
+      {
+        "character": "笑",
+        "reading": "siu3",
+        "tone": 3,
+        "meaning": "to laugh"
+      },
+      {
+        "character": "人",
+        "reading": "jan4",
+        "tone": 4,
+        "meaning": "person"
+      },
+      {
+        "character": "茶",
+        "reading": "caa4",
+        "tone": 4,
+        "meaning": "tea"
+      },
+      {
+        "character": "糖",
+        "reading": "tong4",
+        "tone": 4,
+        "meaning": "sugar"
+      },
+      {
+        "character": "牛",
+        "reading": "ngau4",
+        "tone": 4,
+        "meaning": "cow"
+      },
+      {
+        "character": "五",
+        "reading": "ng5",
+        "tone": 5,
+        "meaning": "five"
+      },
+      {
+        "character": "買",
+        "reading": "maai5",
+        "tone": 5,
+        "meaning": "to buy"
+      },
+      {
+        "character": "女",
+        "reading": "neoi5",
+        "tone": 5,
+        "meaning": "female / woman"
+      },
+      {
+        "character": "雨",
+        "reading": "jyu5",
+        "tone": 5,
+        "meaning": "rain"
+      },
+      {
+        "character": "路",
+        "reading": "lou6",
+        "tone": 6,
+        "meaning": "road"
+      },
+      {
+        "character": "賣",
+        "reading": "maai6",
+        "tone": 6,
+        "meaning": "to sell"
+      },
+      {
+        "character": "字",
+        "reading": "zi6",
+        "tone": 6,
+        "meaning": "written character"
+      },
+      {
+        "character": "樹",
+        "reading": "syu6",
+        "tone": 6,
+        "meaning": "tree"
+      }
+    ],
+    "tones": [
+      {
+        "number": 1,
+        "label": "High level",
+        "points": "10,12 90,12"
+      },
+      {
+        "number": 2,
+        "label": "High rising",
+        "points": "10,35 90,12"
+      },
+      {
+        "number": 3,
+        "label": "Mid level",
+        "points": "10,32 90,32"
+      },
+      {
+        "number": 4,
+        "label": "Low falling",
+        "points": "10,43 90,55"
+      },
+      {
+        "number": 5,
+        "label": "Low rising",
+        "points": "10,50 90,32"
+      },
+      {
+        "number": 6,
+        "label": "Low level",
+        "points": "10,45 90,45"
+      }
+    ]
+  }
+}
