@@ -6,7 +6,7 @@ permalink: /tone-quiz/
 lang: en
 js: /assets/js/tone-quiz.js
 module: true
-ad_placement: quiz-results
+ad_placement: quiz-inline
 ---
 
 <main class="container pronunciation-guide tone-quiz" id="tone-quiz">
@@ -100,8 +100,9 @@ ad_placement: quiz-results
       <ol class="tone-quiz-review" data-quiz-review></ol>
       <button type="button" class="btn btn-primary" data-quiz-restart>Try another round</button>
       <p><a href="/howto/pinyin-jyutping-tones/#tone-mixups">Review tone contrasts in the guide →</a></p>
-      {% include ad-unit.html %}
     </section>
+
+    {% include ad-unit.html %}
   </div>
 </main>
 <script type="application/json" id="tone-quiz-data">{{ site.data.tone_quiz | jsonify }}</script>
