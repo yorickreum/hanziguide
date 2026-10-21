@@ -62,7 +62,7 @@ function element() {
   };
 }
 function app({ missingVoice = false, saved = null, unsupported = false, mode = 'full', reducedMotion = false } = {}) {
-  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'speed', 'audio-status', 'progress', 'feedback', 'feedback-title', 'feedback-icon', 'feedback-detail', 'celebration', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
+  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'character', 'speed', 'audio-status', 'progress', 'feedback', 'feedback-title', 'feedback-icon', 'feedback-detail', 'celebration', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
   const ui = Object.fromEntries(names.map(name => [name, element()]));
   ui.speed.value = '1';
   const feedbackBody = element();
@@ -554,4 +554,22 @@ test('Space replays the question without scrolling or changing the score and pre
   quiz.spoken.at(-1).onend();
   quiz.answerCorrect();
   assert.equal(pressKey(quiz, ' ').prevented, true, 'replay after answering too');
+});
+
+
+test('Hanzi follows each question while reference playback leaves it unchanged', () => {
+  for (const language of ['mandarin', 'cantonese']) {
+    const quiz = app({ saved: language });
+    quiz.ui.start.click();
+    assert.equal(quiz.ui.character.textContent, quiz.spoken.at(-1).text);
+    assert.equal(quiz.ui.feedback.hidden, true);
+    const question = quiz.answerCorrect(language);
+    quiz.references[language].buttons[0].click();
+    assert.equal(quiz.ui.character.textContent, question.character);
+    quiz.spoken.at(-1).onend();
+    quiz.ui.next.click();
+    assert.equal(quiz.ui.character.textContent, quiz.spoken.at(-1).text);
+    assert.notEqual(quiz.ui.character.textContent, question.character);
+    assert.equal(quiz.ui.feedback.hidden, true);
+  }
 });

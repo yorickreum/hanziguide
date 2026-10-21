@@ -19,8 +19,8 @@
   align-items: end;
   gap: 12px;
   max-width: 400px;
-  .tone-quiz-listen { min-width: 0; }
-  label { margin: 0; font-size: 13px; }
+  .tone-quiz-listen { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+  label { min-width: 0; margin: 0; font-size: 13px; }
   select { min-height: 48px; font-size: 16px; }
 }
 .tone-quiz-options {
@@ -148,3 +148,7 @@
 }
 
 .tone-quiz-speaker { vertical-align: middle; margin-right: 4px; }
+
+.tone-quiz-sound-row { display: flex; align-items: end; gap: 12px; }
+.tone-quiz-character { flex-shrink: 0; font-size: 28px; line-height: 48px; color: $muted-text-color; }
+.tone-quiz-sound-row .tone-quiz-audio-controls { flex: 1 1 0; min-width: 0; }

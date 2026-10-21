@@ -13,7 +13,7 @@ ad_placement: quiz-inline
   <header>
     <p class="pronunciation-guide-kicker">Practice · Listening</p>
     <h1>Which tone did you hear?</h1>
-    <p class="lead">Listen to one character, then choose its tone. The character and pronunciation stay hidden until you answer.</p>
+    <p class="lead">Listen to one character, then choose its tone. The pronunciation and meaning stay hidden until you answer.</p>
     <p><a href="/howto/pinyin-jyutping-tones/">Learn Pinyin, Jyutping, and tones first →</a></p>
   </header>
 
@@ -41,14 +41,17 @@ ad_placement: quiz-inline
       <div class="tone-quiz-celebration" data-quiz-celebration aria-hidden="true"></div>
       <p class="tone-quiz-progress" data-quiz-progress></p>
       <h2 id="tone-question" tabindex="-1">Listen, then choose the tone</h2>
-      <div class="tone-quiz-audio-controls">
-        <button type="button" class="btn btn-primary tone-quiz-listen" data-quiz-listen aria-keyshortcuts="Space"><svg class="tone-quiz-speaker" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16"/></svg> Listen again</button>
-        <label for="quiz-audio-speed">Audio speed
-          <select id="quiz-audio-speed" class="form-control" data-quiz-speed>
-            <option value="1">Normal</option>
-            <option value="0.25">Slow</option>
-          </select>
-        </label>
+      <div class="tone-quiz-sound-row">
+        <div class="tone-quiz-audio-controls">
+          <button type="button" class="btn btn-primary tone-quiz-listen" data-quiz-listen aria-keyshortcuts="Space"><svg class="tone-quiz-speaker" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16"/></svg> Listen again</button>
+          <label for="quiz-audio-speed">Audio speed
+            <select id="quiz-audio-speed" class="form-control" data-quiz-speed>
+              <option value="1">Normal</option>
+              <option value="0.25">Slow</option>
+            </select>
+          </label>
+        </div>
+        <span class="tone-quiz-character" data-quiz-character lang="zh"></span>
       </div>
       <p data-quiz-listening role="status" aria-live="polite"></p>
       {% for language in site.data.tone_quiz %}

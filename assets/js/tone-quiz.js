@@ -144,6 +144,7 @@ function playQuestion() {
 function renderQuestion() {
   clearCelebration();
   updateProgress();
+  ui('character').textContent = session.current.character;
   ui('feedback').hidden = true;
   ui('feedback-title').textContent = '';
   ui('feedback-detail').textContent = '';
