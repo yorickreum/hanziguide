@@ -49,6 +49,7 @@ function refreshAudio() {
   const available = !!voice();
   ui('start').disabled = !available;
   ui('listen').disabled = !available || playing;
+  ui('speed').disabled = playing;
   ui('next').disabled = playing;
   referenceButtons.forEach(button => { button.disabled = !available || playing; });
   ui('audio-status').textContent = available ? '' : languageName() + ' audio is unavailable. Install a ' + languageName() + ' voice in your device’s speech settings, then reload this page, or choose the other language. The quiz needs a matching voice.';
@@ -69,7 +70,7 @@ function playSound(character, referenceTone = null) {
   utterance = speech; // Keep a reference while the native voice is speaking.
   speech.lang = speechLanguage();
   speech.voice = selectedVoice;
-  speech.rate = 1;
+  speech.rate = Number(ui('speed').value) === 0.75 ? 0.75 : 1;
   speech.pitch = 1;
   playing = true;
   ui('listening').textContent = isReference ? 'Reference tone ' + referenceTone + '…' : 'Listening…';

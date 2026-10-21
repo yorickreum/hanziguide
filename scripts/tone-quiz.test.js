@@ -57,8 +57,9 @@ function element() {
   };
 }
 function app({ missingVoice = false, saved = null, unsupported = false, mode = 'full' } = {}) {
-  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'audio-status', 'progress', 'feedback', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
+  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'speed', 'audio-status', 'progress', 'feedback', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
   const ui = Object.fromEntries(names.map(name => [name, element()]));
+  ui.speed.value = '1';
   ['results', 'round', 'feedback', 'answer-links', 'next', 'app'].forEach(name => { ui[name].hidden = true; });
   const inputs = ['mandarin', 'cantonese'].map(value => Object.assign(element(), { value }));
   const modes = ['beginner', 'full'].map(value => Object.assign(element(), { value }));
@@ -416,6 +417,32 @@ test('reference panel offers every active tone in Beginner and Full Quiz for bot
       assert.match(quiz.ui.progress.textContent, /Question 1 of/);
       assert.equal(quiz.ui.next.hidden, true, 'references never answer the question');
       assert.equal(quiz.ui.feedback.hidden, true);
+    }
+  }
+});
+
+test('slower audio applies to questions and references in either language and mode', () => {
+  for (const language of ['mandarin', 'cantonese']) {
+    for (const mode of ['beginner', 'full']) {
+      const quiz = app({ mode, saved: language });
+      quiz.ui.start.click();
+      assert.equal(quiz.spoken.at(-1).rate, 1);
+      assert.equal(quiz.ui.speed.disabled, true, 'keep a playing sound at one speed');
+      quiz.spoken.at(-1).onend();
+      assert.equal(quiz.ui.speed.disabled, false);
+      quiz.ui.speed.value = '0.75';
+      quiz.ui.listen.click();
+      assert.equal(quiz.spoken.at(-1).rate, 0.75);
+      assert.equal(quiz.spoken.at(-1).pitch, 1);
+      quiz.spoken.at(-1).onend();
+      quiz.references[language].buttons[0].click();
+      assert.equal(quiz.spoken.at(-1).rate, 0.75);
+      assert.equal(quiz.spoken.at(-1).pitch, 1);
+      quiz.spoken.at(-1).onend();
+      quiz.ui.speed.value = '1'; quiz.ui.listen.click();
+      assert.equal(quiz.spoken.at(-1).rate, 1);
+      quiz.spoken.at(-1).onerror();
+      assert.equal(quiz.ui.speed.disabled, false);
     }
   }
 });

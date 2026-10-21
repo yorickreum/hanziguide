@@ -40,7 +40,15 @@ ad_placement: quiz-results
     <section class="tone-quiz-round" data-quiz-round aria-labelledby="tone-question" hidden>
       <p class="tone-quiz-progress" data-quiz-progress></p>
       <h2 id="tone-question" tabindex="-1">Listen, then choose the tone</h2>
-      <button type="button" class="btn btn-primary tone-quiz-listen" data-quiz-listen>Listen again</button>
+      <div class="tone-quiz-audio-controls">
+        <button type="button" class="btn btn-primary tone-quiz-listen" data-quiz-listen>Listen again</button>
+        <label for="quiz-audio-speed">Audio speed
+          <select id="quiz-audio-speed" class="form-control" data-quiz-speed>
+            <option value="1">Normal (1×)</option>
+            <option value="0.75">Slower (0.75×)</option>
+          </select>
+        </label>
+      </div>
       <p data-quiz-listening role="status" aria-live="polite"></p>
       {% for language in site.data.tone_quiz %}
       <div class="tone-quiz-options" data-quiz-options="{{ language[0] }}" role="group" aria-label="Choose the tone you heard" hidden>
@@ -66,7 +74,7 @@ ad_placement: quiz-results
       <details class="tone-quiz-references" data-quiz-references="{{ language[0] }}" aria-label="Reference tones to compare" hidden>
         <summary>Reference sounds · listen and compare</summary>
         <p data-reference-tip>{{ language[1].referenceTip }}</p>
-        <p>Use these examples for comparison, then replay the quiz sound above. Choose your answer in the quiz:</p>
+        <p>These examples use the audio speed selected above. Compare them, then replay the quiz sound and choose your answer in the quiz:</p>
         <div class="tone-quiz-reference-buttons">
           {% for reference in language[1].references %}
           <button type="button" class="btn btn-default" data-reference-tone="{{ reference.tone }}" data-reference-character="{{ reference.character }}" data-reference-language="{{ language[0] }}">Play reference · tone {{ reference.tone }} · {{ reference.reading }}<small>{{ reference.label }}</small></button>
