@@ -5,7 +5,8 @@ HanziGuide uses explicit placements, with at most two visible ads per page. Auto
 - Practice, mobile/tablet (up to 900 px): a compact banner after the introduction and before the workspace, plus one after the entire workspace, including settings and pronunciation controls.
 - Practice, desktop (over 900 px): the same introductory banner, plus a non-sticky 250×250 square below the sidebar settings. The lower mobile banner is hidden and is not requested.
 - Long tutorials (English basics and all three stroke-order tutorials) and the HSK list: a banner after opening content, plus the standard end-of-content banner.
-- Short character/radical reference pages, the short radicals tutorial, and idioms: one banner after page content, before the footer.
+- Idioms: a compact banner after Idiom of the Day, before the filters, plus the standard end-of-content banner. The card grid and search controls contain no ads.
+- Short character/radical reference pages and the short radicals tutorial: one banner after page content, before the footer.
 - Quiz: inside the results section, after the results and actions. No ad request is made while questions are being answered.
 - Legal, PDF, stroke-matching, and error/redirect pages: no ads.
 
