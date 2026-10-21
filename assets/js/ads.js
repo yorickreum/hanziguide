@@ -4,8 +4,34 @@
   'use strict';
 
   var libraryRequested = false;
+  var libraryFailed = false;
+  var units = document.querySelectorAll('.site-ad-banner');
+
+  function collapseAd(unit) {
+    // Never hide a creative that Google has reported as filled.
+    if (unit.getAttribute('data-ad-status') !== 'filled') {
+      unit.closest('.site-ad').hidden = true;
+    }
+  }
+
+  units.forEach(function (unit) {
+    if (!('MutationObserver' in window)) return;
+    // Google explicitly marks empty inventory as unfilled. Do not use a
+    // timeout: a slow or consent-delayed request may still return a valid ad.
+    var statusObserver = new MutationObserver(function () {
+      if (unit.getAttribute('data-ad-status') === 'unfilled') {
+        collapseAd(unit);
+        statusObserver.disconnect();
+      }
+    });
+    statusObserver.observe(unit, { attributes: true, attributeFilter: ['data-ad-status'] });
+  });
 
   function requestAd(unit) {
+    if (libraryFailed) {
+      collapseAd(unit);
+      return;
+    }
     // Hidden quiz results and containers too narrow for a banner stay untouched.
     if (unit.dataset.adRequested || unit.getBoundingClientRect().width < 250 || !unit.getClientRects().length) return;
     unit.dataset.adRequested = 'true';
@@ -15,6 +41,10 @@
       var script = document.createElement('script');
       script.async = true;
       script.crossOrigin = 'anonymous';
+      script.onerror = function () {
+        libraryFailed = true;
+        units.forEach(collapseAd);
+      };
       script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(unit.dataset.adClient);
       document.head.appendChild(script);
     }
@@ -24,7 +54,10 @@
 
   // Fail quietly without loading ads on older browsers. IntersectionObserver
   // also waits for the quiz results to become visible before requesting an ad.
-  if (!('IntersectionObserver' in window)) return;
+  if (!('IntersectionObserver' in window)) {
+    units.forEach(collapseAd);
+    return;
+  }
   var observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
@@ -34,7 +67,7 @@
     });
   }, { rootMargin: '200px 0px' });
 
-  document.querySelectorAll('.site-ad-banner').forEach(function (unit) {
+  units.forEach(function (unit) {
     observer.observe(unit);
   });
 })();

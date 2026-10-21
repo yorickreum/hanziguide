@@ -14,6 +14,10 @@
   margin-bottom: 6px;
 }
 
+.site-ad[hidden] {
+  display: none !important;
+}
+
 @media print {
   .site-ad { display: none; }
 }

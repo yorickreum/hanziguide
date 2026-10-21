@@ -28,7 +28,7 @@ The site code cannot change AdSense account settings. Complete these steps befor
 
 - `_includes/ad-unit.html` renders the guarded, localized unit.
 - `_includes/head.html` includes Google's supported inline sizing pattern and the deferred local loader only when configured and permitted.
-- `assets/js/ads.js` waits for a visible, sufficiently wide placement before requesting Google's library and pushing one ad request. Browsers without IntersectionObserver simply show no ads.
+- `assets/js/ads.js` waits for a visible, sufficiently wide placement before requesting Google's library and pushing one ad request. A script load error (including browser blocking) collapses the entire placement, including its label and margins. Google's `data-ad-status="unfilled"` also collapses the placement. Filled ads and `unfill-optimized` placements are left alone. There is no timeout that could hide a slow or consent-delayed ad. Browsers without IntersectionObserver show no ads or reserved space.
 - `_includes/practice.html` and `_includes/geo-quiz.html` own their specific placements. Their page front matter sets `ad_placement: practice` or `ad_placement: quiz-results` to suppress the general footer placement.
 - `_includes/footer.html` provides the single default placement on other pages.
 - `adsense: false` in front matter opts a page out of both the initializer and unit markup.
@@ -52,3 +52,4 @@ Fewer placements may reduce revenue. If the reduction is unacceptable, test a se
 
 - [Auto ads settings](https://support.google.com/adsense/answer/9305577?hl=en)
 - [Supported responsive ad code modifications](https://support.google.com/adsense/answer/9183363?hl=en)
+- [Google's unfilled ad status handling](https://support.google.com/adsense/answer/10762946?hl=en)
