@@ -13,6 +13,7 @@ var cedictSeq = 0;
 var translationInfoEl = null;
 var lastTrackedSnapshotKey = null;
 import { createSpeechButton, refreshSpeechButtons } from '/assets/js/utils/speech.js';
+import { renderPracticeSyllables } from '/assets/js/utils/practice-syllables.js';
 import { applyPracticePreset } from '/assets/js/utils/practice-preset.js';
 
 function renderPhraseSpeechActions(characters, showMandarin, showCantonese) {
@@ -22,6 +23,7 @@ function renderPhraseSpeechActions(characters, showMandarin, showCantonese) {
   if (showMandarin) actions.appendChild(createSpeechButton(characters, 'zh-CN', false));
   if (showCantonese) actions.appendChild(createSpeechButton(characters, 'zh-HK', false));
   actions.hidden = !actions.children.length;
+  renderPracticeSyllables(document.getElementById('practice-syllables'), characters, showMandarin, showCantonese);
   refreshSpeechButtons();
 }
 
@@ -671,6 +673,7 @@ function updateCharacter() {
     updateStrokeSliderMax();
     var emptyActions = document.getElementById('pronunciation-actions');
     if (emptyActions) emptyActions.hidden = true;
+    renderPracticeSyllables(document.getElementById('practice-syllables'), '', false, false);
     return;
   }
 

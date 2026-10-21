@@ -160,6 +160,11 @@
           <label><input type="checkbox" id="show-cantonese" /> <span>{{ t.cantonese_label }}</span></label>
         </div>
         <div class="pronunciation-actions" id="pronunciation-actions" hidden></div>
+        <details class="practice-syllables" id="practice-syllables" data-initial="{{ t.syllable_initial }}" data-final="{{ t.syllable_final }}" data-tone="{{ t.syllable_tone }}" data-none="{{ t.syllable_none }}" data-neutral="{{ t.syllable_neutral }}" hidden>
+          <summary><svg class="practice-syllable-chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="m5 3 5 5-5 5" /></svg><span>{{ t.syllable_breakdown }}</span></summary>
+          <p class="text-muted">{{ t.syllable_note }} <a href="/howto/pinyin-jyutping-tones/#sound-tables" hreflang="en">{{ t.nav.pronunciation }}</a></p>
+          <div class="practice-syllable-list" data-syllable-list></div>
+        </details>
       </section>
 
       {% include ad-unit.html shape="square" slot=site.adsense_square_slot variant="site-ad--desktop" %}
