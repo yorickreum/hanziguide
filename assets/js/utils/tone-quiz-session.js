@@ -23,11 +23,14 @@ export function createToneRound(bank, count = 10, random = Math.random) {
 }
 
 export class ToneQuizSession {
-  constructor(questions) {
+  constructor(questions, { retryWrong = false } = {}) {
     this.questions = questions;
     this.index = 0;
     this.answers = [];
     this.heard = false;
+    this.retryWrong = retryWrong;
+    this.attemptCount = 0;
+    this.firstChoice = null;
   }
   get current() { return this.questions[this.index]; }
   get answered() { return this.answers.length > this.index; }
@@ -36,14 +39,20 @@ export class ToneQuizSession {
   markHeard() { if (!this.complete) this.heard = true; }
   answer(tone) {
     if (this.complete || !this.heard || this.answered || !Number.isInteger(tone)) return null;
+    this.attemptCount++;
+    if (this.firstChoice === null) this.firstChoice = tone;
     const result = { question: this.current, chosen: tone, correct: tone === this.current.tone };
-    this.answers.push(result);
+    if (!this.retryWrong || result.correct) {
+      this.answers.push({ ...result, chosen: this.firstChoice, correct: result.correct && this.attemptCount === 1 });
+    }
     return result;
   }
   next() {
     if (!this.answered) return false;
     this.index++;
     this.heard = false;
+    this.attemptCount = 0;
+    this.firstChoice = null;
     return true;
   }
 }

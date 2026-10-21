@@ -167,7 +167,41 @@
         "label": "Falling",
         "points": "10,12 90,55"
       }
-    ]
+    ],
+    "beginner": {
+      "tones": [
+        1,
+        4
+      ],
+      "tip": "Listen for the difference between a high, steady tone and a sharp fall. Trace a flat line or a downward line with your hand."
+    },
+    "references": [
+      {
+        "character": "妈",
+        "reading": "mā",
+        "tone": 1,
+        "label": "High and level"
+      },
+      {
+        "character": "麻",
+        "reading": "má",
+        "tone": 2,
+        "label": "Rising"
+      },
+      {
+        "character": "马",
+        "reading": "mǎ",
+        "tone": 3,
+        "label": "Low / dipping"
+      },
+      {
+        "character": "骂",
+        "reading": "mà",
+        "tone": 4,
+        "label": "Falling"
+      }
+    ],
+    "referenceTip": "Compare the pitch height and direction: high and level, rising, low/dipping, or falling."
   },
   "cantonese": {
     "questions": [
@@ -347,6 +381,52 @@
         "label": "Low level",
         "points": "10,45 90,45"
       }
-    ]
+    ],
+    "beginner": {
+      "tones": [
+        1,
+        6
+      ],
+      "tip": "Compare a high, steady tone with a low, steady tone. Listen for their relative height rather than a rise or fall."
+    },
+    "references": [
+      {
+        "character": "詩",
+        "reading": "si1",
+        "tone": 1,
+        "label": "High and level"
+      },
+      {
+        "character": "史",
+        "reading": "si2",
+        "tone": 2,
+        "label": "High rising"
+      },
+      {
+        "character": "試",
+        "reading": "si3",
+        "tone": 3,
+        "label": "Mid level"
+      },
+      {
+        "character": "時",
+        "reading": "si4",
+        "tone": 4,
+        "label": "Low falling"
+      },
+      {
+        "character": "市",
+        "reading": "si5",
+        "tone": 5,
+        "label": "Low rising"
+      },
+      {
+        "character": "事",
+        "reading": "si6",
+        "tone": 6,
+        "label": "Low level"
+      }
+    ],
+    "referenceTip": "Compare the pitch height and direction: high, mid, or low level tones, and rising or falling tones."
   }
 }

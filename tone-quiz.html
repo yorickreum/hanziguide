@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Mandarin and Cantonese Tone Listening Quiz
-description: Listen to a Chinese character and choose its tone. Practise four Mandarin tones or six Cantonese tones in a free ten-question listening quiz.
+description: Learn Mandarin or Cantonese tones with a six-question beginner mode, reference sounds, and retries, or test all tones in a ten-question listening quiz.
 permalink: /tone-quiz/
 lang: en
 js: /assets/js/tone-quiz.js
@@ -24,10 +24,15 @@ ad_placement: quiz-results
       <label><input type="radio" name="quiz-language" value="mandarin" checked> Mandarin · Pinyin</label>
       <label><input type="radio" name="quiz-language" value="cantonese"> Cantonese · Jyutping</label>
     </fieldset>
+    <fieldset class="pronunciation-view-switch" data-quiz-mode>
+      <legend>Choose your level</legend>
+      <label><input type="radio" name="quiz-mode" value="beginner" checked> Beginner · two tones</label>
+      <label><input type="radio" name="quiz-mode" value="full"> Full quiz · all tones</label>
+    </fieldset>
     <p class="tone-quiz-audio-status" data-quiz-audio-status role="status" aria-live="polite"></p>
 
     <div data-quiz-intro>
-      <p>Ten questions per round. Replay as often as you like; your first answer counts. Mandarin rounds use the four main tones; Cantonese rounds use all six Jyutping tones.</p>
+      <p data-quiz-description>Begin with six questions and just two contrasting tones. Compare reference sounds, replay as often as you like, and retry mistakes before moving on.</p>
       <p class="pronunciation-guide-note">Audio uses your device’s installed voices. Choose a quiet place and a comfortable volume. These examples are isolated syllables; tones can sound different in connected speech.</p>
       <button type="button" class="btn btn-primary" data-quiz-start disabled>Start listening quiz</button>
     </div>
@@ -48,7 +53,7 @@ ad_placement: quiz-results
         {% endfor %}
       </div>
       {% endfor %}
-      <p class="tone-quiz-progress">Keyboard: press <strong>1–4</strong> for Mandarin or <strong>1–6</strong> for Cantonese. Press <strong>Enter</strong> after answering to continue.</p>
+      <p class="tone-quiz-progress" data-quiz-keyboard>Keyboard: choose a tone using its number. Press Enter after completing a question to continue.</p>
       <div class="tone-quiz-feedback pronunciation-guide-card" data-quiz-feedback role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden></div>
       <div class="tone-quiz-answer-links" data-quiz-answer-links hidden>
         <a data-quiz-practice>Watch strokes or practise writing this character →</a>
@@ -56,6 +61,19 @@ ad_placement: quiz-results
       <button type="button" class="btn btn-primary" data-quiz-next hidden>Next question</button>
       <button type="button" class="btn btn-default" data-quiz-reset>Start over</button>
     </section>
+
+      {% for language in site.data.tone_quiz %}
+      <details class="tone-quiz-references" data-quiz-references="{{ language[0] }}" aria-label="Reference tones to compare" hidden>
+        <summary>Reference sounds · listen and compare</summary>
+        <p data-reference-tip>{{ language[1].referenceTip }}</p>
+        <p>Use these examples for comparison, then replay the quiz sound above. Choose your answer in the quiz:</p>
+        <div class="tone-quiz-reference-buttons">
+          {% for reference in language[1].references %}
+          <button type="button" class="btn btn-default" data-reference-tone="{{ reference.tone }}" data-reference-character="{{ reference.character }}" data-reference-language="{{ language[0] }}">Play reference · tone {{ reference.tone }} · {{ reference.reading }}<small>{{ reference.label }}</small></button>
+          {% endfor %}
+        </div>
+      </details>
+      {% endfor %}
 
     <section data-quiz-results aria-labelledby="tone-results-title" hidden>
       <h2 id="tone-results-title" tabindex="-1">Round complete</h2>

@@ -1,6 +1,6 @@
 .tone-quiz { max-width: 800px; }
 .tone-quiz.is-playing {
-  > header p, [data-quiz-language] { display: none; }
+  > header p, [data-quiz-language], [data-quiz-mode] { display: none; }
   > header h1 { font-size: 28px; }
   .tone-quiz-round { margin-top: 20px; }
 }
@@ -43,6 +43,24 @@
 .tone-quiz-answer-links { margin-bottom: 18px; }
 .tone-quiz-review { padding-left: 24px; }
 .tone-quiz-audio-status { color: $brand-color; }
+.tone-quiz-references {
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  padding: 14px;
+  margin: 18px 0;
+  font-size: 14px;
+  background: $surface-color;
+  summary { display: list-item; cursor: pointer; color: $muted-text-color; font-size: 15px; font-weight: 600; }
+  p:first-of-type { margin-top: 14px; }
+  p:last-of-type { margin-bottom: 10px; }
+}
+.tone-quiz-reference-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  .btn { flex: 1 1 120px; white-space: normal; min-height: 48px; }
+  small { display: block; }
+}
 
 @media (max-width: 600px) {
   .tone-quiz-round { padding: 16px 12px; }

@@ -28,7 +28,7 @@ Worksheet links use `https://www.hanzi.guide/pdf.html#%E4%BD%A0%E5%A5%BD` and st
 - [Practise 你好](https://www.hanzi.guide/?pronunciation=mandarin&script=simplified#%E4%BD%A0%E5%A5%BD): Open short-phrase Mandarin practice.
 - [Hear 水 in Cantonese](https://www.hanzi.guide/?pronunciation=cantonese&script=traditional#%E6%B0%B4): Open Cantonese practice and use the listening controls.
 - [Worksheet for 你好](https://www.hanzi.guide/pdf.html#%E4%BD%A0%E5%A5%BD): Generate a printable writing worksheet.
-- [Tone listening quiz](https://www.hanzi.guide/tone-quiz/): Listen and identify Mandarin or Cantonese tones.
+- [Tone listening quiz](https://www.hanzi.guide/tone-quiz/): Beginner two-tone comparisons with reference sounds and retries, plus full Mandarin or Cantonese tone challenges.
 
 ## Character references
 

@@ -1,11 +1,14 @@
 import { findSpeechVoice } from '/assets/js/utils/speech.js';
-import { createToneRound, ToneQuizSession } from '/assets/js/utils/tone-quiz-session.js';
+import { createToneRound, ToneQuizSession } from '/assets/js/utils/tone-quiz-session.js?v=beginner-1';
 
 const root = document.getElementById('tone-quiz');
 const banks = JSON.parse(document.getElementById('tone-quiz-data').textContent);
 const ui = name => root.querySelector('[data-quiz-' + name + ']');
 const languageInputs = root.querySelectorAll('input[name="quiz-language"]');
+const modeInputs = root.querySelectorAll('input[name="quiz-mode"]');
+const referenceButtons = root.querySelectorAll('[data-reference-tone]');
 let language = 'mandarin';
+let mode = 'beginner';
 let session = null;
 let utterance = null;
 let audioTimeout = null;
@@ -19,7 +22,20 @@ const languageName = () => language === 'cantonese' ? 'Cantonese' : 'Mandarin';
 const voice = () => window.SpeechSynthesisUtterance && findSpeechVoice(speechLanguage());
 const options = () => root.querySelector('[data-quiz-options="' + language + '"]');
 const buttons = () => options().querySelectorAll('[data-tone]');
+const activeTones = () => mode === 'beginner' ? banks[language].beginner.tones : banks[language].tones.map(tone => tone.number);
 const practiceURL = question => '/?pronunciation=' + language + '&script=' + (language === 'cantonese' ? 'traditional' : 'simplified') + '#' + encodeURIComponent(question.character);
+
+function describeMode() {
+  const tones = activeTones();
+  ui('description').textContent = mode === 'beginner'
+    ? 'Six questions: compare tone ' + tones[0] + ' with tone ' + tones[1] + '. Use the reference sounds and retry mistakes before moving on. We’ll show how many you recognised on your first try.'
+    : 'Ten questions using all ' + tones.length + ' tones. Replay as often as you like; your first answer counts.';
+  ui('keyboard').textContent = 'Keyboard: ' + tones.join(', ') + ' to choose a tone. Enter after completing a question to continue.';
+}
+
+function updateProgress() {
+  ui('progress').textContent = languageName() + ' · ' + (mode === 'beginner' ? 'Beginner' : 'Full quiz') + ' · Question ' + (session.index + 1) + ' of ' + session.questions.length + ' · ' + session.score + (mode === 'beginner' ? ' on first try' : ' correct');
+}
 
 function stopAudio() {
   // Invalidate old callbacks before cancelling a voice or changing questions.
@@ -34,27 +50,29 @@ function refreshAudio() {
   ui('start').disabled = !available;
   ui('listen').disabled = !available || playing;
   ui('next').disabled = playing;
+  referenceButtons.forEach(button => { button.disabled = !available || playing; });
   ui('audio-status').textContent = available ? '' : languageName() + ' audio is unavailable. Install a ' + languageName() + ' voice in your device’s speech settings, then reload this page, or choose the other language. The quiz needs a matching voice.';
   if (session && !session.complete) {
-    buttons().forEach(button => { button.disabled = !available || playing || !session.heard || session.answered; });
+    buttons().forEach(button => { button.disabled = button.hidden || !available || playing || !session.heard || session.answered; });
   }
 }
 
-function playQuestion() {
+function playSound(character, referenceTone = null) {
   if (!session || session.complete || playing) return;
   const selectedVoice = voice();
   if (!selectedVoice) { refreshAudio(); return; }
   stopAudio();
-  // A failed replay must not leave an unheard/failed question answerable.
-  session.heard = false;
-  const speech = new window.SpeechSynthesisUtterance(session.current.character);
+  const isReference = referenceTone !== null;
+  // Reference audio does not count as hearing the quiz question.
+  if (!isReference) session.heard = false;
+  const speech = new window.SpeechSynthesisUtterance(character);
   utterance = speech; // Keep a reference while the native voice is speaking.
   speech.lang = speechLanguage();
   speech.voice = selectedVoice;
   speech.rate = 1;
   speech.pitch = 1;
   playing = true;
-  ui('listening').textContent = 'Listening…';
+  ui('listening').textContent = isReference ? 'Reference tone ' + referenceTone + '…' : 'Listening…';
   refreshAudio();
 
   function finish(error) {
@@ -66,8 +84,8 @@ function playQuestion() {
       window.speechSynthesis.cancel();
       ui('listening').textContent = 'Audio could not play. Check your volume and voice settings, then try Listen again.';
     } else {
-      session.markHeard();
-      ui('listening').textContent = session.answered ? 'Replay finished.' : 'Which tone did you hear? You can listen again.';
+      if (!isReference) session.markHeard();
+      ui('listening').textContent = isReference ? 'Reference finished. Use Listen again to compare with the quiz sound.' : (session.answered ? 'Replay finished.' : 'Which tone did you hear? You can listen again.');
     }
     refreshAudio();
   }
@@ -77,15 +95,28 @@ function playQuestion() {
   try { window.speechSynthesis.speak(speech); } catch (_) { finish(true); }
 }
 
+function playQuestion() {
+  if (session && !session.complete) playSound(session.current.character);
+}
+
 function renderQuestion() {
-  ui('progress').textContent = languageName() + ' · Question ' + (session.index + 1) + ' of ' + session.questions.length + ' · ' + session.score + ' correct';
+  updateProgress();
   ui('feedback').hidden = true;
   ui('feedback').textContent = '';
   ui('answer-links').hidden = true;
   ui('practice').removeAttribute('href');
   ui('next').hidden = true;
   root.querySelectorAll('[data-quiz-options]').forEach(group => { group.hidden = group.dataset.quizOptions !== language; });
+  root.querySelectorAll('[data-quiz-references]').forEach(group => {
+    group.hidden = group.dataset.quizReferences !== language;
+    const bank = banks[group.dataset.quizReferences];
+    group.querySelector('[data-reference-tip]').textContent = mode === 'beginner' ? bank.beginner.tip : bank.referenceTip;
+  });
+  referenceButtons.forEach(button => {
+    button.hidden = !activeTones().includes(Number(button.dataset.referenceTone));
+  });
   buttons().forEach(button => {
+    button.hidden = !activeTones().includes(Number(button.dataset.tone));
     button.classList.remove('is-correct', 'is-wrong');
   });
   document.getElementById('tone-question').focus();
@@ -95,27 +126,39 @@ function renderQuestion() {
 function startRound() {
   if (!voice()) { refreshAudio(); return; }
   stopAudio();
-  session = new ToneQuizSession(createToneRound(banks[language].questions));
+  const bank = banks[language].questions.filter(question => activeTones().includes(question.tone));
+  session = new ToneQuizSession(createToneRound(bank, mode === 'beginner' ? 6 : 10), { retryWrong: mode === 'beginner' });
   ui('intro').hidden = true;
   ui('results').hidden = true;
   ui('round').hidden = false;
   root.classList.add('is-playing');
   ui('language').disabled = true;
+  ui('mode').disabled = true;
   renderQuestion();
 }
 
 function answer(tone) {
-  if (playing || !voice()) return;
+  if (!session || playing || !voice() || !activeTones().includes(tone)) return;
   const result = session.answer(tone);
   if (!result) return;
   const question = result.question;
+  const feedback = ui('feedback');
+  if (mode === 'beginner' && !result.correct) {
+    buttons().forEach(button => {
+      if (Number(button.dataset.tone) === tone) button.classList.add('is-wrong');
+    });
+    feedback.textContent = 'Try again. Open Reference sounds below to compare, replay the quiz sound, then choose the other tone.';
+    feedback.hidden = false;
+    feedback.focus();
+    refreshAudio();
+    return;
+  }
   buttons().forEach(button => {
     button.disabled = true;
     button.classList.toggle('is-correct', Number(button.dataset.tone) === question.tone);
     button.classList.toggle('is-wrong', Number(button.dataset.tone) === tone && !result.correct);
   });
-  const feedback = ui('feedback');
-  feedback.textContent = (result.correct ? 'Correct! ' : 'You chose tone ' + tone + '. The answer is tone ' + question.tone + '. ');
+  feedback.textContent = result.correct ? (mode === 'beginner' && session.attemptCount > 1 ? 'You found it! ' : 'Correct! ') : 'You chose tone ' + tone + '. The answer is tone ' + question.tone + '. ';
   const word = document.createElement('strong');
   word.textContent = question.character + ' · ' + question.reading + ' · tone ' + question.tone;
   feedback.appendChild(word);
@@ -126,16 +169,20 @@ function answer(tone) {
   ui('answer-links').hidden = false;
   ui('next').textContent = session.index === session.questions.length - 1 ? 'See my results' : 'Next question';
   ui('next').hidden = false;
-  ui('progress').textContent = languageName() + ' · Question ' + (session.index + 1) + ' of ' + session.questions.length + ' · ' + session.score + ' correct';
+  updateProgress();
 }
 
 function showResults() {
   stopAudio();
+  root.querySelectorAll('[data-quiz-references]').forEach(group => { group.hidden = true; });
   root.classList.remove('is-playing');
   ui('round').hidden = true;
   ui('results').hidden = false;
   ui('language').disabled = false;
-  ui('score').textContent = session.score + ' / ' + session.questions.length + ' correct in ' + languageName() + '.';
+  ui('mode').disabled = false;
+  ui('score').textContent = mode === 'beginner'
+    ? 'All ' + session.questions.length + ' questions completed in ' + languageName() + '. ' + session.score + ' recognised on your first try.'
+    : session.score + ' / ' + session.questions.length + ' correct in ' + languageName() + '.';
   const review = ui('review');
   review.textContent = '';
   session.answers.forEach(result => {
@@ -144,7 +191,9 @@ function showResults() {
     link.href = practiceURL(result.question);
     link.textContent = result.question.character + ' · ' + result.question.reading + ' — ' + result.question.meaning;
     item.appendChild(link);
-    item.appendChild(document.createTextNode(' · ' + (result.correct ? 'Correct' : 'You chose ' + result.chosen + '; correct tone: ' + result.question.tone)));
+    item.appendChild(document.createTextNode(' · ' + (mode === 'beginner'
+      ? (result.correct ? 'First try' : 'After retry; first choice: tone ' + result.chosen)
+      : (result.correct ? 'Correct' : 'You chose ' + result.chosen + '; correct tone: ' + result.question.tone))));
     review.appendChild(item);
   });
   document.getElementById('tone-results-title').focus();
@@ -152,13 +201,16 @@ function showResults() {
 
 function resetQuiz() {
   stopAudio();
+  root.querySelectorAll('[data-quiz-references]').forEach(group => { group.hidden = true; });
   root.classList.remove('is-playing');
   session = null;
   ui('results').hidden = true;
   ui('round').hidden = true;
   ui('intro').hidden = false;
   ui('language').disabled = false;
+  ui('mode').disabled = false;
   ui('listening').textContent = '';
+  describeMode();
   refreshAudio();
 }
 
@@ -170,6 +222,18 @@ languageInputs.forEach(input => {
     resetQuiz();
   });
 });
+modeInputs.forEach(input => {
+  input.checked = input.value === mode;
+  input.addEventListener('change', () => {
+    if (!input.checked) return;
+    mode = input.value;
+    resetQuiz();
+  });
+});
+referenceButtons.forEach(button => button.addEventListener('click', () => {
+  if (button.hidden || button.dataset.referenceLanguage !== language || ui('round').hidden) return;
+  playSound(button.dataset.referenceCharacter, Number(button.dataset.referenceTone));
+}));
 root.querySelectorAll('[data-tone]').forEach(button => button.addEventListener('click', () => answer(Number(button.dataset.tone))));
 ui('start').addEventListener('click', startRound);
 ui('restart').addEventListener('click', startRound);
@@ -190,7 +254,7 @@ window.addEventListener('keydown', event => {
   if (target && (target.isContentEditable || target.closest?.('input, textarea, select, [contenteditable]'))) return;
   if (/^[1-6]$/.test(event.key)) {
     const button = Array.from(buttons()).find(option => option.dataset.tone === event.key);
-    if (!button || button.disabled) return;
+    if (!button || button.hidden || button.disabled) return;
     event.preventDefault();
     button.click();
   } else if (event.key === 'Enter' && !ui('next').hidden && !ui('next').disabled) {
@@ -209,4 +273,5 @@ window.addEventListener('pageshow', () => {
   }
 });
 ui('app').hidden = false;
+describeMode();
 refreshAudio();
