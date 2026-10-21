@@ -1,0 +1,19 @@
+.tutor-link-builder {
+  > div { margin-bottom: 18px; }
+  label { display: block; margin-bottom: 6px; }
+  small { display: block; color: $muted-text-color; margin-top: 6px; }
+  input, select { min-height: 44px; }
+  [aria-invalid="true"] { border-color: $brand-color; }
+}
+.tutor-selects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.tutor-link-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.tutor-url-example { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+.tutor-examples h3 { margin-top: 0; }
+.home-tutor-link { margin-top: 16px; }
+@media (max-width: 600px) {
+  .tutor-selects { grid-template-columns: 1fr; }
+}

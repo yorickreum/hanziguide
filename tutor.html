@@ -1,0 +1,134 @@
+---
+layout: default
+title: Use Hanzi Guide with Your Tutor
+description: Turn a lesson from your teacher or AI tutor into Hanzi writing practice, Mandarin or Cantonese listening, and printable worksheets. Create links for characters and short phrases.
+permalink: /tutor/
+lang: en
+js: /assets/js/tutor.js
+module: true
+---
+
+<main class="container pronunciation-guide tutor-guide" data-tutor data-site-url="{{ site.url | escape }}">
+  <header>
+    <p class="pronunciation-guide-kicker">From a lesson to practice</p>
+    <h1>Use Hanzi Guide with your tutor</h1>
+    <p class="lead">Bring a character or short phrase from your teacher, language app, or AI tutor. Hear it, watch its strokes, then try writing it yourself.</p>
+    <nav class="pronunciation-guide-jumps" aria-label="Tutor guide sections">
+      <a href="#make-exercise">Make a practice link</a>
+      <a href="#try-examples">Try an example</a>
+      <a href="#ask-your-tutor">Ask your tutor</a>
+      <a href="#exercise-links">Link reference</a>
+    </nav>
+  </header>
+
+  <section id="make-exercise" aria-labelledby="make-exercise-title">
+    <h2 id="make-exercise-title">Make a practice link</h2>
+    <p>Use one to six Hanzi, without spaces or punctuation. For a sentence, practise one short word or group at a time.</p>
+    <form class="tutor-link-builder pronunciation-guide-card" data-exercise-form>
+      <div>
+        <label for="exercise-text">Characters to practise</label>
+        <input id="exercise-text" name="text" class="form-control" value="你好" required aria-describedby="exercise-text-help exercise-status" autocomplete="off" spellcheck="false">
+        <small id="exercise-text-help">For example: 你, 你好, or 謝謝. Longer text is kept in the box so you can split it yourself.</small>
+      </div>
+      <div class="tutor-selects">
+        <div>
+          <label for="exercise-pronunciation">Pronunciation</label>
+          <select id="exercise-pronunciation" name="pronunciation" class="form-control">
+            <option value="mandarin">Mandarin · Pinyin</option>
+            <option value="cantonese">Cantonese · Jyutping</option>
+          </select>
+        </div>
+        <div>
+          <label for="exercise-script">Character form</label>
+          <select id="exercise-script" name="script" class="form-control">
+            <option value="simplified">Simplified</option>
+            <option value="traditional">Traditional</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-default" type="submit">Create practice link</button>
+      <p id="exercise-status" data-exercise-status role="status" aria-live="polite"></p>
+      <div data-exercise-result>
+        <label for="exercise-url">Share this link with your tutor</label>
+        <input id="exercise-url" class="form-control" type="text" readonly data-exercise-url value="{{ site.url }}/?pronunciation=mandarin&amp;script=simplified#%E4%BD%A0%E5%A5%BD">
+        <div class="tutor-link-actions">
+          <a class="btn btn-primary" data-exercise-open href="/?pronunciation=mandarin&amp;script=simplified#%E4%BD%A0%E5%A5%BD">Open practice for 你好</a>
+          <button class="btn btn-default" data-exercise-copy type="button" hidden>Copy link</button>
+        </div>
+      </div>
+    </form>
+    <noscript><p>The link builder needs JavaScript. You can use the example links and link reference below without it.</p></noscript>
+  </section>
+
+  <section id="try-examples" aria-labelledby="try-examples-title">
+    <h2 id="try-examples-title">Turn a lesson into an exercise</h2>
+    <div class="pronunciation-guide-pair tutor-examples">
+      <article class="pronunciation-guide-card">
+        <h3>Write one character</h3>
+        <p><a href="/?pronunciation=mandarin&amp;script=simplified#%E4%BD%A0">Practise 你</a>. Press <strong>Play</strong> to watch the strokes, then enable <strong>I want to write!</strong> to draw them in order.</p>
+        <p><a href="/character/你/">Read the character reference for 你</a> for its meaning, readings, and stroke count.</p>
+      </article>
+      <article class="pronunciation-guide-card">
+        <h3>Practise a short phrase</h3>
+        <p><a href="/?pronunciation=mandarin&amp;script=simplified#%E4%BD%A0%E5%A5%BD">Open 你好 in Mandarin</a>. Listen to the whole phrase, then watch or write each character.</p>
+        <p>Keep the full sentence from your lesson nearby so you remember the context.</p>
+      </article>
+      <article class="pronunciation-guide-card">
+        <h3>Hear Mandarin or Cantonese</h3>
+        <p>Compare <a href="/?pronunciation=mandarin&amp;script=simplified#%E6%B0%B4">水 in Mandarin</a> with <a href="/?pronunciation=cantonese&amp;script=traditional#%E6%B0%B4">水 in Cantonese</a>. Use the listening buttons beside the reading or in Language &amp; Romanization.</p>
+        <p><a href="/howto/pinyin-jyutping-tones/">Learn Pinyin, Jyutping, and tones</a>, then <a href="/tone-quiz/">try the tone listening quiz</a>.</p>
+      </article>
+      <article class="pronunciation-guide-card">
+        <h3>Take it to paper</h3>
+        <p><a href="/pdf.html#%E4%BD%A0%E5%A5%BD">Generate a worksheet for 你好</a> with stroke order and tracing boxes. This opens the PDF generator and starts a download.</p>
+        <p>On the practice page, <strong>Practice PDF</strong> creates a worksheet for the characters you are working on.</p>
+      </article>
+    </div>
+    <p class="pronunciation-guide-note">Listening uses voices installed on your device. Cantonese needs a Cantonese voice. Stroke data is available for many common characters; an unavailable character may still have a reading or dictionary entry. Ask your tutor about pronunciation in context, especially characters with multiple readings and tone changes.</p>
+  </section>
+
+  <section id="ask-your-tutor" aria-labelledby="ask-your-tutor-title">
+    <h2 id="ask-your-tutor-title">Ask your tutor for practice links</h2>
+    <p>Try one of these requests with a teacher or AI assistant. Include <a href="{{ site.url }}/tutor/">this guide</a> so they can follow the link format.</p>
+    <blockquote>Teach me how to write 你好. Explain the meaning, give me a Hanzi Guide practice link with Mandarin pronunciation and simplified characters, and suggest a short writing exercise.</blockquote>
+    <blockquote>I’m learning Cantonese with traditional characters. Give me three useful words, each no longer than six Hanzi, with meanings, Jyutping, and a Hanzi Guide practice link. Use https://www.hanzi.guide/tutor/ for the link format.</blockquote>
+    <p>Check unfamiliar readings and explanations with a trusted teacher or dictionary. An AI assistant may need you to supply the guide link; providing this page does not guarantee that it can operate the interactive controls.</p>
+  </section>
+
+  <section id="exercise-links" aria-labelledby="exercise-links-title">
+    <h2 id="exercise-links-title">Exercise links for tutors and assistants</h2>
+    <p>A practice link supplies the characters, pronunciation language, and character form:</p>
+    <pre class="tutor-url-example"><code>{{ site.url }}/?pronunciation=mandarin&amp;script=simplified#%E4%BD%A0%E5%A5%BD</code></pre>
+    <p>That example opens <strong>你好</strong> with Mandarin pronunciation and simplified characters. Percent-encode the Hanzi after <code>#</code>; a browser may display the decoded characters in its address bar.</p>
+    <table class="pronunciation-spelling-table">
+      <caption>Supported practice-link fields</caption>
+      <thead><tr><th scope="col">Field</th><th scope="col">Supported values</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><code>pronunciation</code></th><td><code>mandarin</code> or <code>cantonese</code>. Shows Pinyin or Jyutping and the matching listening controls.</td></tr>
+        <tr><th scope="row"><code>script</code></th><td><code>simplified</code> or <code>traditional</code>. Selects the character form in the practice tool.</td></tr>
+        <tr><th scope="row">Fragment after <code>#</code></th><td>A short group of Hanzi, up to the practice input’s six-character limit. Remove punctuation and split longer sentences into words or short groups.</td></tr>
+      </tbody>
+    </table>
+    <p>Explicit language and character-form choices take precedence over saved display preferences. Once the exercise opens, use <strong>Play</strong>, a listening button, or <strong>I want to write!</strong> to begin the activity.</p>
+    <p>For a worksheet, use <code>{{ site.url }}/pdf.html#%E4%BD%A0%E5%A5%BD</code>. The PDF uses the characters exactly as supplied; the practice link’s language and character-form fields do not configure the PDF.</p>
+    <p>For longer sentences, provide several short practice links and keep the complete sentence in the lesson. Character readings are displayed individually; use the phrase listening button and your tutor’s explanation to check connected pronunciation.</p>
+  </section>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": {{ page.title | jsonify }},
+  "description": {{ page.description | jsonify }},
+  "url": {{ page.url | absolute_url | jsonify }},
+  "inLanguage": "en",
+  "learningResourceType": "Guide",
+  "isAccessibleForFree": true,
+  "about": [
+    { "@type": "Thing", "name": "Chinese character writing" },
+    { "@type": "Thing", "name": "Mandarin pronunciation" },
+    { "@type": "Thing", "name": "Cantonese pronunciation" }
+  ]
+}
+</script>

@@ -43,7 +43,7 @@
                 <a href="/idioms/">{{ t.nav.idioms }}</a>
               </li>
 
-              <li class="dropdown{% if page.url contains '/howto' %} active{% endif %}">
+              <li class="dropdown{% if page.url contains '/howto' or page.url == '/tutor/' %} active{% endif %}">
                 <a href="/howto/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   {{ t.nav.howto }} <span class="caret"></span>
                 </a>
@@ -52,6 +52,7 @@
                   <li><a href="/howto/radicals/">{{ t.nav.radicals }}</a></li>
                   <li><a href="/howto/pinyin-jyutping-tones/">{{ t.nav.pronunciation }}</a></li>
                   <li><a href="/tone-quiz/">Tone listening quiz</a></li>
+                  <li><a href="/tutor/">{{ t.nav.tutor }}</a></li>
                 </ul>
               </li>
 
