@@ -1,35 +1,28 @@
 {% assign sounds = site.data.pronunciation_sounds %}
 <section id="sound-tables" aria-labelledby="sound-tables-title">
   <h2 id="sound-tables-title">Sound tables: build a syllable</h2>
-  <p>Use these as a reference while listening. Initials, medials, vowels, and codas describe different parts of a syllable. A <em>final</em> is the whole part after the initial, so it can contain several sounds.</p>
+  <p>Use these as a reference while listening. Start with an initial, a final, and a tone. A <em>final</em> is the whole part after the initial, so it can contain several sounds.</p>
   <div data-pronunciation-language="mandarin">
   <table class="pronunciation-glossary-table">
     <caption>The parts of a syllable</caption>
     <thead><tr><th scope="col">Part</th><th scope="col">What it does</th><th scope="col">Example</th></tr></thead>
     <tbody>
       <tr><th scope="row">Initial</th><td>The opening consonant, if present.</td><td><strong>d</strong> in duàn</td></tr>
-      <tr><th scope="row">Medial</th><td>A short glide before the main vowel, in the Mandarin breakdown.</td><td><strong>u</strong> in duàn</td></tr>
-      <tr><th scope="row">Nucleus</th><td>The main vowel sound.</td><td><strong>a</strong> in duàn</td></tr>
-      <tr><th scope="row">Coda</th><td>The closing sound, if present.</td><td><strong>n</strong> in duàn</td></tr>
       <tr><th scope="row">Final</th><td>Everything after the initial, excluding tone.</td><td><strong>uan</strong> in duàn</td></tr>
       <tr><th scope="row">Tone</th><td>The syllable’s pitch pattern.</td><td>The falling fourth tone in du<strong>à</strong>n</td></tr>
     </tbody>
   </table>
-  <p>For example, <span lang="zh-Hans">段</span> <strong>duàn</strong> breaks down as <strong>d + u + a + n + tone 4</strong>. Not every syllable needs every part. Cantonese is described below using initials, vowels, and codas, without imposing Mandarin’s medial categories on it.</p>
+  <p>For example, <span lang="zh-Hans">段</span> <strong>duàn</strong> breaks down as <strong>d + uan + tone 4</strong>. Some syllables have no initial.</p>
   </div>
-  <p data-pronunciation-language="cantonese">In Cantonese <strong>jan4</strong> (<span lang="zh-Hant">人</span>, “person”), <strong>j</strong> is the initial, <strong>a</strong> is the vowel, <strong>n</strong> is the coda, and <strong>4</strong> is the tone. The whole final is <strong>an</strong>.</p>
+  <p data-pronunciation-language="cantonese">In Cantonese <strong>jan4</strong> (<span lang="zh-Hant">人</span>, “person”), <strong>j</strong> is the initial, <strong>an</strong> is the final, and <strong>4</strong> is the tone.</p>
   <p class="pronunciation-guide-note">Open the reference tables below. Each example links to the writing tool; its listening button plays the <strong>whole character</strong>, not an isolated letter. Audio needs a matching voice on your device. The tips describe mouth movements; recordings remain the best model.</p>
 
   <details class="pronunciation-reference" data-pronunciation-language="mandarin">
-    <summary>Mandarin Pinyin: initials, medials, finals, and spelling rules</summary>
+    <summary>Mandarin Pinyin: initials, finals, and spelling rules</summary>
     <h3>21 consonant initials</h3>
     <p>The symbols in square brackets are IPA sound symbols. Pairs such as <strong>b/p</strong>, <strong>d/t</strong>, and <strong>g/k</strong> mainly contrast a small release of air with a stronger puff, rather than following the English voiced/unvoiced distinction.</p>
     {% include pronunciation-sound-table.html rows=sounds.pinyin_initials language="zh-CN" caption="All 21 Pinyin consonant initials" %}
     <p><strong>What about y and w?</strong> They help spell syllables without a consonant initial: <strong>yi, ya, wu, wa, yu</strong>. They are not extra members of the 21-initial list. A vowel can also start a syllable directly, as in <strong>ài</strong> (<span lang="zh-Hans">爱</span>, “love”).</p>
-
-    <h3>Three medials</h3>
-    <p>When these occur before another vowel, move quickly through them into the main vowel. The same written letters can also serve as the main vowel in other syllables.</p>
-    {% include pronunciation-sound-table.html rows=sounds.pinyin_medials language="zh-CN" caption="The three Mandarin medials" %}
 
     <h3>36 conventional finals</h3>
     <p>This table includes simple vowels and whole vowel combinations. Forms in parentheses show the fuller spelling behind a shortened final. Read each example as a syllable; not every initial can combine with every final.</p>
@@ -63,10 +56,10 @@
     <summary>Cantonese Jyutping: initials, vowels, all finals, and codas</summary>
     <h3>19 initials</h3>
     {% include pronunciation-sound-table.html rows=sounds.jyutping_initials language="zh-HK" caption="All 19 Jyutping initials" %}
-    <p>A syllable can also have <strong>no initial</strong>, as in <strong>aa3</strong> (<span lang="zh-Hant">亞</span>). Unlike the Pinyin spelling helpers, Jyutping <strong>j</strong> and <strong>w</strong> are initials. <strong>gw</strong> and <strong>kw</strong> each count as one rounded consonant initial, not g/k plus a separate Mandarin-style medial.</p>
+    <p>A syllable can also have <strong>no initial</strong>, as in <strong>aa3</strong> (<span lang="zh-Hant">亞</span>). Unlike the Pinyin spelling helpers, Jyutping <strong>j</strong> and <strong>w</strong> are initials. <strong>gw</strong> and <strong>kw</strong> each count as one rounded consonant initial.</p>
 
     <h3>Nine vowel spellings</h3>
-    <p>Jyutping does not use Pinyin’s three-medial table. Start with these vowel spellings, then check how they combine with endings. Vowel quality can shift with the ending; the same letter is not a promise of one identical sound in every final.</p>
+    <p>These vowel spellings combine with endings to form finals. Vowel quality can shift with the ending; the same letter is not a promise of one identical sound in every final.</p>
     {% include pronunciation-sound-table.html rows=sounds.jyutping_vowels language="zh-HK" caption="The vowel spellings used in Jyutping finals" %}
 
     <h3>Complete written-final chart</h3>

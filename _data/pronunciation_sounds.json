@@ -169,29 +169,6 @@
       "ipa": "s"
     }
   ],
-  "pinyin_medials": [
-    {
-      "symbol": "i",
-      "character": "家",
-      "reading": "jiā",
-      "meaning": "home",
-      "tip": "A brief y-like glide before the main vowel; j + i + a."
-    },
-    {
-      "symbol": "u",
-      "character": "花",
-      "reading": "huā",
-      "meaning": "flower",
-      "tip": "A brief w-like glide before the main vowel; h + u + a."
-    },
-    {
-      "symbol": "ü",
-      "character": "雪",
-      "reading": "xuě",
-      "meaning": "snow",
-      "tip": "A rounded front glide; x + ü + e is written xue. Round your lips while keeping the tongue forward."
-    }
-  ],
   "pinyin_finals": [
     {
       "symbol": "a",
@@ -296,21 +273,21 @@
       "character": "家",
       "reading": "jiā",
       "meaning": "home",
-      "tip": "Medial i + a."
+      "tip": "Move quickly from an i-like sound into a."
     },
     {
       "symbol": "ie",
       "character": "写",
       "reading": "xiě",
       "meaning": "to write",
-      "tip": "Medial i + an open e-like vowel."
+      "tip": "Move quickly from an i-like sound into an open e-like vowel."
     },
     {
       "symbol": "iao",
       "character": "小",
       "reading": "xiǎo",
       "meaning": "small",
-      "tip": "Medial i + ao."
+      "tip": "Move quickly from an i-like sound into ao."
     },
     {
       "symbol": "iu (iou)",
@@ -338,7 +315,7 @@
       "character": "江",
       "reading": "jiāng",
       "meaning": "river",
-      "tip": "Medial i + ang."
+      "tip": "Move quickly from an i-like sound into ang."
     },
     {
       "symbol": "ing",
@@ -352,7 +329,7 @@
       "character": "熊",
       "reading": "xióng",
       "meaning": "bear",
-      "tip": "Rounded medial/vowel + ng; standalone spelling yong."
+      "tip": "A rounded vowel combination ending in ng; standalone spelling yong."
     },
     {
       "symbol": "u",
@@ -366,21 +343,21 @@
       "character": "花",
       "reading": "huā",
       "meaning": "flower",
-      "tip": "Medial u + a."
+      "tip": "Move quickly from a u-like sound into a."
     },
     {
       "symbol": "uo",
       "character": "国",
       "reading": "guó",
       "meaning": "country",
-      "tip": "Medial u + o."
+      "tip": "Move quickly from a u-like sound into o."
     },
     {
       "symbol": "uai",
       "character": "快",
       "reading": "kuài",
       "meaning": "fast",
-      "tip": "Medial u + ai."
+      "tip": "Move quickly from a u-like sound into ai."
     },
     {
       "symbol": "ui (uei)",
@@ -394,7 +371,7 @@
       "character": "关",
       "reading": "guān",
       "meaning": "to close",
-      "tip": "Medial u + an."
+      "tip": "Move quickly from a u-like sound into an."
     },
     {
       "symbol": "un (uen)",
@@ -408,7 +385,7 @@
       "character": "光",
       "reading": "guāng",
       "meaning": "light",
-      "tip": "Medial u + ang."
+      "tip": "Move quickly from a u-like sound into ang."
     },
     {
       "symbol": "ueng",
