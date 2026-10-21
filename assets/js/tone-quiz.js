@@ -12,6 +12,9 @@ let mode = 'beginner';
 let session = null;
 let utterance = null;
 let audioTimeout = null;
+let audioPollTimeout = null;
+let audioRecoveryTimeout = null;
+let audioRecovery = null;
 let playing = false;
 let celebrationTimeout = null;
 let lastSound = null;
@@ -77,11 +80,23 @@ function showFeedback(correct, title, description, question = null) {
   feedback.focus();
 }
 
+function clearAudioWatchers() {
+  clearTimeout(audioTimeout);
+  clearTimeout(audioPollTimeout);
+  clearTimeout(audioRecoveryTimeout);
+}
+
+function clearAudioRecovery() {
+  audioRecovery = null;
+  ui('audio-recovery').hidden = true;
+}
+
 function stopAudio() {
   // Invalidate old callbacks before cancelling a voice or changing questions.
   utterance = null;
   playing = false;
-  clearTimeout(audioTimeout);
+  clearAudioWatchers();
+  clearAudioRecovery();
   if (window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
@@ -94,7 +109,7 @@ function refreshAudio() {
   referenceButtons.forEach(button => { button.disabled = !available || playing; });
   ui('audio-status').textContent = available ? '' : languageName() + ' audio is unavailable. Install a ' + languageName() + ' voice in your device’s speech settings, then reload this page, or choose the other language. The quiz needs a matching voice.';
   if (session && !session.complete) {
-    buttons().forEach(button => { button.disabled = button.hidden || !available || playing || !session.heard || session.answered; });
+    buttons().forEach(button => { button.disabled = button.hidden || playing || !session.heard || session.answered; });
   }
 }
 
@@ -117,23 +132,72 @@ function playSound(character, referenceTone = null) {
   ui('listening').textContent = isReference ? 'Reference tone ' + referenceTone + '…' : 'Listening…';
   refreshAudio();
 
-  function finish(error) {
+  let started = false;
+
+  function completeListening() {
+    if (!isReference) session.markHeard();
+    ui('listening').textContent = isReference ? 'Reference finished. Use Listen again to compare with the quiz sound.' : (session.answered ? 'Replay finished.' : 'Which tone did you hear? You can listen again.');
+  }
+
+  function confirmHeard() {
+    // Reset, navigation, or a new playback invalidates this recovery action.
+    if (audioRecovery !== confirmHeard) return;
+    utterance = null;
+    playing = false;
+    clearAudioWatchers();
+    clearAudioRecovery();
+    window.speechSynthesis.cancel();
+    completeListening();
+    refreshAudio();
+  }
+
+  function offerRecovery() {
+    audioRecovery = confirmHeard;
+    ui('audio-recovery').textContent = isReference ? 'I heard the reference — continue' : 'I heard it — continue';
+    ui('audio-recovery').hidden = false;
+  }
+
+  function finish(error, allowRecovery = false) {
     if (utterance !== speech) return;
     utterance = null;
     playing = false;
-    clearTimeout(audioTimeout);
+    clearAudioWatchers();
+    clearAudioRecovery();
     if (error) {
       window.speechSynthesis.cancel();
-      ui('listening').textContent = 'Audio could not play. Check your volume and voice settings, then try Listen again.';
+      ui('listening').textContent = allowRecovery
+        ? 'If you heard the sound, continue below. Otherwise, try Listen again.'
+        : 'Audio could not play. Check your volume and voice settings, then try Listen again.';
+      if (allowRecovery) offerRecovery();
     } else {
-      if (!isReference) session.markHeard();
-      ui('listening').textContent = isReference ? 'Reference finished. Use Listen again to compare with the quiz sound.' : (session.answered ? 'Replay finished.' : 'Which tone did you hear? You can listen again.');
+      completeListening();
     }
     refreshAudio();
   }
+
+  function checkPlayback() {
+    if (utterance !== speech) return;
+    const synth = window.speechSynthesis;
+    // Some browsers omit utterance events. Require evidence of a start before
+    // treating an idle engine as completion; an unstarted request is not heard.
+    if (synth.speaking === true) started = true;
+    if (started && synth.speaking === false && synth.pending === false && !synth.paused) {
+      finish(false);
+      return;
+    }
+    audioPollTimeout = setTimeout(checkPlayback, 200);
+  }
+
+  speech.onstart = () => { if (utterance === speech) started = true; };
   speech.onend = () => finish(false);
   speech.onerror = () => finish(true);
-  audioTimeout = setTimeout(() => finish(true), 12000);
+  audioTimeout = setTimeout(() => finish(true, true), 12000);
+  audioRecoveryTimeout = setTimeout(() => {
+    if (utterance !== speech) return;
+    offerRecovery();
+    ui('listening').textContent = 'Heard the sound? Continue below, or wait for playback to finish.';
+  }, 4000);
+  audioPollTimeout = setTimeout(checkPlayback, 200);
   try { window.speechSynthesis.speak(speech); } catch (_) { finish(true); }
 }
 
@@ -187,7 +251,7 @@ function startRound() {
 }
 
 function answer(tone) {
-  if (!session || playing || !voice() || !activeTones().includes(tone)) return;
+  if (!session || playing || !activeTones().includes(tone)) return;
   const result = session.answer(tone);
   if (!result) return;
   const question = result.question;
@@ -284,6 +348,7 @@ root.querySelectorAll('[data-tone]').forEach(button => button.addEventListener('
 ui('start').addEventListener('click', startRound);
 ui('restart').addEventListener('click', startRound);
 ui('listen').addEventListener('click', playQuestion);
+ui('audio-recovery').addEventListener('click', () => { if (audioRecovery) audioRecovery(); });
 ui('speed').addEventListener('change', () => {
   if (lastSound && session && !session.complete && !ui('round').hidden) {
     playSound(lastSound.character, lastSound.referenceTone);

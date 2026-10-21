@@ -62,7 +62,7 @@ function element() {
   };
 }
 function app({ missingVoice = false, saved = null, unsupported = false, mode = 'full', reducedMotion = false } = {}) {
-  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'character', 'speed', 'audio-status', 'progress', 'feedback', 'feedback-title', 'feedback-icon', 'feedback-detail', 'celebration', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
+  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'audio-recovery', 'character', 'speed', 'audio-status', 'progress', 'feedback', 'feedback-title', 'feedback-icon', 'feedback-detail', 'celebration', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
   const ui = Object.fromEntries(names.map(name => [name, element()]));
   ui.speed.value = '1';
   const feedbackBody = element();
@@ -85,7 +85,7 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     }));
     return [language, group];
   }));
-  const events = {}, timers = new Map(), spoken = [];
+  const events = {}, timers = new Map(), timerDelays = new Map(), spoken = [];
   const voice = { name: 'exact language voice' };
   let voiceAvailable = !missingVoice;
   const quizRoot = {
@@ -103,7 +103,8 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     }
   };
   const synth = {
-    speak(speech) { spoken.push(speech); }, cancel() {},
+    speaking: false, pending: false, paused: false,
+    speak(speech) { spoken.push(speech); }, cancel() { this.speaking = false; this.pending = false; },
     addEventListener(name, handler) { events[name] = handler; }
   };
   const document = {
@@ -123,8 +124,8 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
       matchMedia: () => ({ matches: reducedMotion }),
       addEventListener(name, handler) { events[name] = handler; }
     },
-    setTimeout(fn) { const id = Symbol(); timers.set(id, fn); return id; },
-    clearTimeout(id) { timers.delete(id); },
+    setTimeout(fn, delay) { const id = Symbol(); timers.set(id, fn); timerDelays.set(id, delay); return id; },
+    clearTimeout(id) { timers.delete(id); timerDelays.delete(id); },
     findSpeechVoice: () => voiceAvailable ? voice : null,
     createToneRound: model.createToneRound, ToneQuizSession: model.ToneQuizSession
   };
@@ -134,7 +135,13 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     modes.find(input => input.checked).change();
   }
   return {
-    ui, inputs, modes, references, groups, spoken, events, voice, timers,
+    ui, inputs, modes, references, groups, spoken, events, voice, timers, synth,
+    tick(delay) {
+      const entry = [...timers].find(([id]) => timerDelays.get(id) === delay);
+      assert.ok(entry, 'expected an active timer for ' + delay + 'ms');
+      const [id, callback] = entry;
+      timers.delete(id); timerDelays.delete(id); callback();
+    },
     setVoice(value) { voiceAvailable = value; events.voiceschanged(); },
     select(language) { inputs.forEach(input => { input.checked = input.value === language; }); inputs.find(input => input.checked).change(); },
     selectMode(value) { modes.forEach(input => { input.checked = input.value === value; }); modes.find(input => input.checked).change(); },
@@ -220,7 +227,7 @@ test('audio failure or timeout allows replay without scoring; stale audio callba
     if (fail === 'error') oldSpeech.onerror(); else [...quiz.timers.values()][0]();
     assert.equal(quiz.ui.listen.disabled, false);
     assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
-    assert.match(quiz.ui.listening.textContent, /could not play/);
+    assert.match(quiz.ui.listening.textContent, fail === 'error' ? /could not play/ : /If you heard the sound/);
     quiz.ui.listen.click(); quiz.answerCorrect();
     assert.match(quiz.ui.progress.textContent, /1 correct/);
     quiz.ui.next.click();
@@ -571,5 +578,134 @@ test('Hanzi follows each question while reference playback leaves it unchanged',
     assert.equal(quiz.ui.character.textContent, quiz.spoken.at(-1).text);
     assert.notEqual(quiz.ui.character.textContent, question.character);
     assert.equal(quiz.ui.feedback.hidden, true);
+  }
+});
+
+
+test('missing end events recover automatically when a started speech engine becomes idle', () => {
+  for (const start of ['event', 'state']) {
+    const quiz = app();
+    quiz.ui.start.click();
+    if (start === 'event') quiz.spoken.at(-1).onstart();
+    else {
+      quiz.synth.speaking = true;
+      quiz.tick(200);
+    }
+    quiz.synth.speaking = false;
+    quiz.tick(200);
+    assert.equal(quiz.ui.listen.disabled, false);
+    assert.ok(quiz.groups.mandarin.buttons.every(button => !button.disabled));
+    assert.match(quiz.ui.listening.textContent, /Which tone/);
+    assert.equal(quiz.ui['audio-recovery'].hidden, true);
+    assert.equal(quiz.timers.size, 0, 'all audio watchers are cleared');
+    assert.match(quiz.ui.progress.textContent, /0 correct/);
+  }
+});
+
+test('idle, queued or paused speech never automatically counts as hearing the question', () => {
+  const quiz = app();
+  quiz.ui.start.click();
+  quiz.tick(200);
+  assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled), 'idle before start is not completion');
+  quiz.spoken.at(-1).onstart();
+  quiz.synth.pending = true;
+  quiz.tick(200);
+  assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
+  quiz.synth.pending = false; quiz.synth.paused = true;
+  quiz.tick(200);
+  assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
+  quiz.spoken.at(-1).onerror();
+  assert.equal(quiz.ui['audio-recovery'].hidden, true);
+  assert.equal(quiz.ui.listen.disabled, false);
+  assert.equal(quiz.timers.size, 0);
+});
+
+test('missing speech events or stuck speaking state offer an explicit recovery without scoring automatically', () => {
+  for (const language of ['mandarin', 'cantonese']) {
+    const quiz = app({ saved: language, mode: 'beginner' });
+    quiz.ui.start.click();
+    const speech = quiz.spoken.at(-1);
+    quiz.synth.speaking = true;
+    quiz.tick(4000);
+    assert.equal(quiz.ui['audio-recovery'].hidden, false);
+    assert.match(quiz.ui['audio-recovery'].textContent, /I heard it/);
+    assert.ok(quiz.groups[language].buttons.every(button => button.disabled));
+    quiz.ui['audio-recovery'].click();
+    assert.equal(quiz.ui['audio-recovery'].hidden, true);
+    assert.ok(quiz.groups[language].buttons.filter(button => !button.hidden).every(button => !button.disabled));
+    assert.equal(quiz.ui.listen.disabled, false);
+    assert.match(quiz.ui.progress.textContent, /0 on first try/);
+    assert.equal(quiz.timers.size, 0);
+    speech.onend(); speech.onerror();
+    assert.match(quiz.ui.listening.textContent, /Which tone/);
+    const question = data[language].questions.find(q => q.character === speech.text);
+    pressKey(quiz, String(question.tone));
+    assert.match(quiz.ui.progress.textContent, /1 on first try/);
+  }
+});
+
+test('a timeout still offers recovery for sound that played without browser events, or a fresh replay', () => {
+  const quiz = app();
+  quiz.ui.start.click();
+  quiz.tick(12000);
+  assert.equal(quiz.ui['audio-recovery'].hidden, false);
+  assert.equal(quiz.ui.listen.disabled, false);
+  assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
+  quiz.ui['audio-recovery'].click();
+  assert.ok(quiz.groups.mandarin.buttons.every(button => !button.disabled));
+  quiz.ui.listen.click();
+  assert.equal(quiz.ui['audio-recovery'].hidden, true);
+  assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
+  quiz.spoken.at(-1).onend();
+  assert.ok(quiz.groups.mandarin.buttons.every(button => !button.disabled));
+});
+
+test('reference recovery cannot count as hearing the quiz question', () => {
+  for (const timeout of [false, true]) {
+    const quiz = app();
+    quiz.ui.start.click(); quiz.spoken.at(-1).onerror();
+    quiz.references.mandarin.buttons[0].click();
+    quiz.tick(timeout ? 12000 : 4000);
+    assert.match(quiz.ui['audio-recovery'].textContent, /heard the reference/);
+    quiz.ui['audio-recovery'].click();
+    assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
+    assert.match(quiz.ui.listening.textContent, /Reference finished/);
+    assert.equal(quiz.ui.listen.disabled, false);
+  }
+});
+
+test('reset and page navigation discard recovery actions and playback watchers', () => {
+  for (const action of ['reset', 'pagehide']) {
+    const quiz = app();
+    quiz.ui.start.click();
+    const speech = quiz.spoken.at(-1);
+    quiz.tick(4000);
+    if (action === 'reset') quiz.ui.reset.click(); else quiz.events.pagehide();
+    assert.equal(quiz.ui['audio-recovery'].hidden, true);
+    assert.equal(quiz.timers.size, 0);
+    quiz.ui['audio-recovery'].click(); speech.onend(); speech.onerror();
+    if (action === 'reset') assert.equal(quiz.ui.round.hidden, true);
+    else {
+      quiz.events.pageshow();
+      assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
+      assert.equal(quiz.ui.listen.disabled, false);
+    }
+  }
+});
+
+
+test('a voice list change after listening cannot prevent choosing an answer', () => {
+  for (const recovery of [false, true]) {
+    const quiz = app();
+    quiz.ui.start.click();
+    const speech = quiz.spoken.at(-1);
+    const question = data.mandarin.questions.find(q => q.character === speech.text);
+    quiz.setVoice(false);
+    if (recovery) { quiz.tick(4000); quiz.ui['audio-recovery'].click(); }
+    else speech.onend();
+    assert.equal(quiz.ui.listen.disabled, true, 'replay waits for an available voice');
+    assert.ok(quiz.groups.mandarin.buttons.every(button => !button.disabled));
+    pressKey(quiz, String(question.tone));
+    assert.match(quiz.ui.progress.textContent, /1 correct/);
   }
 });

@@ -152,3 +152,5 @@
 .tone-quiz-sound-row { display: flex; align-items: end; gap: 12px; }
 .tone-quiz-character { flex-shrink: 0; font-size: 28px; line-height: 48px; color: $muted-text-color; }
 .tone-quiz-sound-row .tone-quiz-audio-controls { flex: 1 1 0; min-width: 0; }
+
+.tone-quiz-audio-recovery { max-width: 100%; white-space: normal; }

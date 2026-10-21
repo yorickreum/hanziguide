@@ -54,6 +54,7 @@ ad_placement: quiz-inline
         <span class="tone-quiz-character" data-quiz-character lang="zh"></span>
       </div>
       <p data-quiz-listening role="status" aria-live="polite"></p>
+      <button type="button" class="btn btn-default tone-quiz-audio-recovery" data-quiz-audio-recovery hidden>I heard it — continue</button>
       {% for language in site.data.tone_quiz %}
       <div class="tone-quiz-options" data-quiz-options="{{ language[0] }}" role="group" aria-label="Choose the tone you heard" hidden>
         {% for tone in language[1].tones %}
