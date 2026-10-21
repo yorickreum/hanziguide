@@ -21,6 +21,7 @@ plugins:
   - jekyll-sitemap
 
 exclude:
+  - docs/open-ideas-todo.md
   - docs/advertising.md
   - membership-plan.md
   - hanzi_guide_seo_growth_plan.md
