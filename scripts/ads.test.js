@@ -45,6 +45,7 @@ function makeUnit() {
   const wrapper = { hidden: false };
   return {
     dataset: { adClient: 'ca-pub-123', adSlot: '456' },
+    classList: new Set(),
     width: 300, visible: true, wrapper,
     getBoundingClientRect() { return { width: this.width }; },
     getClientRects() { return this.visible ? [{}] : []; },
@@ -103,8 +104,18 @@ test('hidden quiz results and narrow or distant units do not request ads', () =>
   unit.width = 300;
   app.approach(unit, false);
   assert.equal(app.scripts.length, 0);
+  assert.equal(unit.classList.has('adsbygoogle'), false);
   app.approach(unit);
   assert.equal(app.scripts.length, 1);
+  assert.equal(unit.classList.has('adsbygoogle'), true);
+});
+
+test('only the approached unit is registered with AdSense, regardless of DOM order', () => {
+  const app = setup();
+  app.approach(app.units[1]);
+  assert.equal(app.units[0].classList.has('adsbygoogle'), false);
+  assert.equal(app.units[1].classList.has('adsbygoogle'), true);
+  assert.equal(app.window.adsbygoogle.length, 1);
 });
 
 test('unsupported browsers collapse unused placements', () => {

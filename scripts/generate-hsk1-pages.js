@@ -466,6 +466,7 @@ function renderHskPage(context) {
   content.push('<h1>HSK 1 Chinese Characters</h1>');
   content.push(`<p class="lead">Explore the ${rows.length} Chinese characters found in HSK 1 vocabulary, with Mandarin Pinyin and Cantonese Jyutping, meanings, radicals, stroke counts, pronunciation, and interactive stroke-order practice.</p>`);
   content.push('<details class="hsk-about"><summary>What is HSK 1?</summary><p>HSK is a standardized Mandarin Chinese proficiency test. HSK 1 introduces foundational vocabulary for beginners. Hanzi Guide uses those vocabulary words as a character set while giving Mandarin Pinyin and Cantonese Jyutping equal space for learners of either spoken variety.</p></details>');
+  content.push('{% include ad-unit.html %}');
   content.push('<section class="reference-section hsk-browser" aria-labelledby="hsk-browser-title">');
   content.push('<h2 id="hsk-browser-title">Explore the characters</h2>');
   content.push('<fieldset class="hsk-script-choice"><legend>Character form</legend><div class="script-segment"><label><input type="radio" name="hsk-script" value="simplified" checked><span>Simplified 简体</span></label><label><input type="radio" name="hsk-script" value="traditional"><span>Traditional 繁體</span></label></div></fieldset>');

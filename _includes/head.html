@@ -58,7 +58,7 @@
     {% if page.leaflet %}
     <link rel="stylesheet" href="/assets/cdn/leaflet/leaflet.css">
     {% endif %}
-    <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}?v=ad-placements-2">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
     {% comment %}
     Load only our manual-placement initializer. It requests AdSense when a
@@ -69,9 +69,10 @@
     <!-- Keep ad sizing inline as required by Google's responsive-code examples. -->
     <style>
       .site-ad-banner { display: block; width: 100%; height: 100px; }
+      .site-ad-square { display: block; width: 250px; height: 250px; }
       @media (min-width: 800px) { .site-ad-banner { height: 90px; } }
     </style>
-    <script defer src="{{ '/assets/js/ads.js' | relative_url }}"></script>
+    <script defer src="{{ '/assets/js/ads.js' | relative_url }}?v=2"></script>
     {% endif %}
     
     <!-- Structured Data -->

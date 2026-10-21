@@ -11,6 +11,7 @@ github_username:  yorickreum
 # Hanzi Guide Unit Horizontal. ADSENSE_SLOT_ID can override this in deployment.
 # With no slot configured, no advertising script or empty ad space is rendered.
 adsense_slot: "7163092498"
+adsense_square_slot: "9573633413"
 
 # Build settings
 markdown: kramdown

@@ -67,6 +67,8 @@
     </aside>
   </header>
 
+  {% include ad-unit.html %}
+
   <!-- <h4>{{ t.stroke_order_animation }}</h4>-->
   
   <div class="practice-workspace">
@@ -158,11 +160,13 @@
         <div class="pronunciation-actions" id="pronunciation-actions" hidden></div>
       </section>
 
+      {% include ad-unit.html shape="square" slot=site.adsense_square_slot variant="site-ad--desktop" %}
+
     </aside>
   </div>
 </div>
 
-{% include ad-unit.html %}
+{% include ad-unit.html variant="site-ad--mobile" %}
 
 <!-- Beginner Characters Modal -->
 <div id="beginner-chars-modal" class="beginner-chars-modal" style="display: none;">

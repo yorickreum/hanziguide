@@ -5,7 +5,7 @@
 
   var libraryRequested = false;
   var libraryFailed = false;
-  var units = document.querySelectorAll('.site-ad-banner');
+  var units = document.querySelectorAll('.site-ad-unit');
 
   function collapseAd(unit) {
     // Never hide a creative that Google has reported as filled.
@@ -35,6 +35,10 @@
     // Hidden quiz results and containers too narrow for a banner stay untouched.
     if (unit.dataset.adRequested || unit.getBoundingClientRect().width < 250 || !unit.getClientRects().length) return;
     unit.dataset.adRequested = 'true';
+    // AdSense selects the next unprocessed .adsbygoogle element for each push.
+    // Register only the visible unit being requested, so hidden desktop/mobile
+    // alternatives and distant placements cannot consume another unit's push.
+    unit.classList.add('adsbygoogle');
 
     if (!libraryRequested) {
       libraryRequested = true;
