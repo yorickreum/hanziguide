@@ -1,6 +1,6 @@
 en:
   english_search:
-    label: "Find Hanzi from English"
+    label: "Search by English meaning"
     placeholder: "Try water, love, or thank you"
     button: "Search"
     loading: "Searching…"

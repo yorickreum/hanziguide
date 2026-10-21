@@ -471,6 +471,7 @@ function initEnglishSearch() {
         button.addEventListener('click', function() {
           clearTimeout(updateTimeout);
           closeResults();
+          $('#beginner-chars-modal').fadeOut(200);
           setCharacterInput(getScriptType() === 'traditional' ? match.traditional : match.simplified);
           document.getElementById('character-select').focus();
         });
@@ -1827,7 +1828,9 @@ $(function() {
 
 		// Handle beginner characters modal
 		$('#open-beginner-chars-btn').on('click', function() {
-			$('#beginner-chars-modal').fadeIn(200);
+			$('#beginner-chars-modal').fadeIn(200, function() {
+        document.getElementById('english-search').focus();
+      });
 		});
 
 		$('#close-beginner-chars-btn, .beginner-chars-modal-overlay').on('click', function() {
