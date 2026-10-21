@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Mandarin and Cantonese Tone Listening Quiz
-description: Learn Mandarin or Cantonese tones with a six-question beginner mode, reference sounds, and retries, or test all tones in a ten-question listening quiz.
+description: Learn Mandarin or Cantonese tones with a 20-question beginner mode, reference sounds, and retries, or test all tones in a 20-question listening quiz.
 permalink: /tone-quiz/
 lang: en
 js: /assets/js/tone-quiz.js
@@ -32,7 +32,7 @@ ad_placement: quiz-results
     <p class="tone-quiz-audio-status" data-quiz-audio-status role="status" aria-live="polite"></p>
 
     <div data-quiz-intro>
-      <p data-quiz-description>Begin with six questions and just two contrasting tones. Compare reference sounds, replay as often as you like, and retry mistakes before moving on.</p>
+      <p data-quiz-description>Begin with 20 questions and just two contrasting tones. Compare reference sounds, replay as often as you like, and retry mistakes before moving on.</p>
       <p class="pronunciation-guide-note">Audio uses your device’s installed voices. Choose a quiet place and a comfortable volume. These examples are isolated syllables; tones can sound different in connected speech.</p>
       <button type="button" class="btn btn-primary" data-quiz-start disabled>Start listening quiz</button>
     </div>
@@ -42,11 +42,11 @@ ad_placement: quiz-results
       <p class="tone-quiz-progress" data-quiz-progress></p>
       <h2 id="tone-question" tabindex="-1">Listen, then choose the tone</h2>
       <div class="tone-quiz-audio-controls">
-        <button type="button" class="btn btn-primary tone-quiz-listen" data-quiz-listen>Listen again</button>
+        <button type="button" class="btn btn-primary tone-quiz-listen" data-quiz-listen aria-keyshortcuts="Space"><svg class="tone-quiz-speaker" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16"/></svg> Listen again</button>
         <label for="quiz-audio-speed">Audio speed
           <select id="quiz-audio-speed" class="form-control" data-quiz-speed>
-            <option value="1">Normal (1×)</option>
-            <option value="0.75">Slower (0.75×)</option>
+            <option value="1">Normal</option>
+            <option value="0.25">Slow</option>
           </select>
         </label>
       </div>
@@ -62,7 +62,7 @@ ad_placement: quiz-results
         {% endfor %}
       </div>
       {% endfor %}
-      <p class="tone-quiz-progress" data-quiz-keyboard>Keyboard: choose a tone using its number. Press Enter after completing a question to continue.</p>
+      <p class="tone-quiz-progress" data-quiz-keyboard>Keyboard: choose a tone using its number. Press Space to listen again. Press Enter after completing a question to continue.</p>
       <div class="tone-quiz-feedback pronunciation-guide-card" data-quiz-feedback role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden>
         <span class="tone-quiz-feedback-icon" data-quiz-feedback-icon aria-hidden="true"></span>
         <div>

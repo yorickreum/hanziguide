@@ -168,20 +168,20 @@ test('quiz hides the answer until playback completes and a tone is chosen', () =
   assert.match(quiz.ui.progress.textContent, /1 correct/);
 });
 
-test('ten answers produce a score, a review, and a playable new round', () => {
+test('twenty answers produce a score, a review, and a playable new round', () => {
   const quiz = app();
   quiz.ui.start.click();
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     quiz.answerCorrect(); quiz.ui.next.click();
   }
   assert.equal(quiz.ui.results.hidden, false);
   assert.equal(quiz.ui.round.hidden, true);
-  assert.match(quiz.ui.score.textContent, /10 \/ 10 correct in Mandarin/);
-  assert.equal(quiz.ui.review.children.length, 10);
+  assert.match(quiz.ui.score.textContent, /20 \/ 20 correct in Mandarin/);
+  assert.equal(quiz.ui.review.children.length, 20);
   assert.equal(quiz.ui.language.disabled, false);
   quiz.ui.restart.click();
   assert.equal(quiz.ui.results.hidden, true);
-  assert.match(quiz.ui.progress.textContent, /Question 1 of 10 · 0 correct/);
+  assert.match(quiz.ui.progress.textContent, /Question 1 of 20 · 0 correct/);
 });
 
 test('missing voices and unsupported speech block play; voices can become available later', () => {
@@ -258,7 +258,7 @@ test('browser Back during an answered question replay preserves the score and re
   assert.ok(quiz.groups.mandarin.buttons.every(button => button.disabled));
   assert.match(quiz.ui.progress.textContent, /1 correct/);
   quiz.ui.next.click();
-  assert.match(quiz.ui.progress.textContent, /Question 2 of 10 · 1 correct/);
+  assert.match(quiz.ui.progress.textContent, /Question 2 of 20 · 1 correct/);
 });
 
 function pressKey(quiz, key, extra = {}) {
@@ -280,7 +280,7 @@ test('number keys answer in either language and Enter advances after feedback', 
     assert.match(quiz.ui.progress.textContent, /1 correct/);
     assert.equal(pressKey(quiz, '1').prevented, false, 'cannot answer twice');
     assert.equal(pressKey(quiz, 'Enter').prevented, true);
-    assert.match(quiz.ui.progress.textContent, /Question 2 of 10 · 1 correct/);
+    assert.match(quiz.ui.progress.textContent, /Question 2 of 20 · 1 correct/);
     assert.equal(pressKey(quiz, 'Enter').prevented, false, 'cannot skip a question');
   }
 });
@@ -311,7 +311,7 @@ test('quiz shortcuts ignore typing, modifiers, key repeat and native Enter contr
   assert.equal(pressKey(quiz, '0').prevented, false);
   pressKey(quiz, '1');
   assert.equal(pressKey(quiz, 'Enter', { target: { closest: () => ({}) } }).prevented, false);
-  assert.match(quiz.ui.progress.textContent, /Question 1 of 10/);
+  assert.match(quiz.ui.progress.textContent, /Question 1 of 20/);
 });
 
 test('beginner retries cannot advance early or inflate first-try scoring', () => {
@@ -331,7 +331,7 @@ test('beginner retries cannot advance early or inflate first-try scoring', () =>
   assert.equal(session.score, 1);
 });
 
-test('beginner defaults to six balanced questions with two choices in either language', () => {
+test('beginner defaults to twenty balanced questions with two choices in either language', () => {
   for (const language of ['mandarin', 'cantonese']) {
     const quiz = app({ mode: 'beginner', saved: language });
     assert.equal(quiz.modes[0].checked, true);
@@ -341,17 +341,17 @@ test('beginner defaults to six balanced questions with two choices in either lan
     const active = quiz.groups[language].buttons.filter(button => !button.hidden).map(button => Number(button.dataset.tone));
     assert.deepEqual(active, data[language].beginner.tones);
     const seen = [], counts = new Map();
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 20; i++) {
       const question = quiz.answerCorrect(language);
       seen.push(question.character); counts.set(question.tone, (counts.get(question.tone) || 0) + 1);
       quiz.ui.next.click();
     }
-    assert.equal(new Set(seen).size, 6);
-    assert.deepEqual([...counts.values()], [3, 3]);
+    assert.equal(new Set(seen).size, data[language].questions.filter(q => active.includes(q.tone)).length);
+    assert.deepEqual([...counts.values()], [10, 10]);
     assert.equal(quiz.ui.results.hidden, false);
     assert.equal(quiz.references[language].hidden, true, 'reference help is hidden on results');
-    assert.match(quiz.ui.score.textContent, /All 6 questions completed/);
-    assert.match(quiz.ui.score.textContent, /6 recognised on your first try/);
+    assert.match(quiz.ui.score.textContent, /All 20 questions completed/);
+    assert.match(quiz.ui.score.textContent, /20 recognised on your first try/);
     assert.equal(quiz.ui.mode.disabled, false);
   }
 });
@@ -399,7 +399,7 @@ test('changing level resets the round; full quiz restores all tones and first-an
   quiz.selectMode('full'); quiz.ui.start.click();
   assert.equal(quiz.references.mandarin.hidden, false);
   assert.ok(quiz.groups.mandarin.buttons.every(button => !button.hidden));
-  assert.match(quiz.ui.progress.textContent, /Question 1 of 10/);
+  assert.match(quiz.ui.progress.textContent, /Question 1 of 20/);
   const question = data.mandarin.questions.find(q => q.character === quiz.spoken.at(-1).text);
   quiz.spoken.at(-1).onend();
   pressKey(quiz, String(question.tone === 1 ? 2 : 1));
@@ -439,13 +439,13 @@ test('slower audio applies to questions and references in either language and mo
       assert.equal(quiz.ui.speed.disabled, true, 'keep a playing sound at one speed');
       quiz.spoken.at(-1).onend();
       assert.equal(quiz.ui.speed.disabled, false);
-      quiz.ui.speed.value = '0.75';
+      quiz.ui.speed.value = '0.25';
       quiz.ui.listen.click();
-      assert.equal(quiz.spoken.at(-1).rate, 0.75);
+      assert.equal(quiz.spoken.at(-1).rate, 0.25);
       assert.equal(quiz.spoken.at(-1).pitch, 1);
       quiz.spoken.at(-1).onend();
       quiz.references[language].buttons[0].click();
-      assert.equal(quiz.spoken.at(-1).rate, 0.75);
+      assert.equal(quiz.spoken.at(-1).rate, 0.25);
       assert.equal(quiz.spoken.at(-1).pitch, 1);
       quiz.spoken.at(-1).onend();
       quiz.ui.speed.value = '1'; quiz.ui.listen.click();
@@ -504,4 +504,54 @@ test('reduced-motion preference keeps feedback and skips confetti', () => {
   assert.equal(quiz.ui['feedback-title'].textContent, 'Correct!');
   assert.equal(quiz.ui.feedback.classList.contains('is-correct'), true);
   assert.equal(quiz.ui.celebration.children.length, 0);
+});
+
+test('changing speed immediately replays the same quiz or reference sound without changing the score', () => {
+  const quiz = app();
+  quiz.ui.start.click();
+  const questionSound = quiz.spoken.at(-1).text;
+  quiz.spoken.at(-1).onend();
+  quiz.ui.speed.value = '0.25'; quiz.ui.speed.change();
+  assert.equal(quiz.spoken.at(-1).text, questionSound);
+  assert.equal(quiz.spoken.at(-1).rate, 0.25);
+  quiz.spoken.at(-1).onend();
+  const reference = quiz.references.mandarin.buttons[0];
+  reference.click(); quiz.spoken.at(-1).onend();
+  quiz.ui.speed.value = '1'; quiz.ui.speed.change();
+  assert.equal(quiz.spoken.at(-1).text, reference.dataset.referenceCharacter);
+  assert.equal(quiz.spoken.at(-1).rate, 1);
+  assert.equal(quiz.spoken.at(-1).pitch, 1);
+  assert.equal(quiz.ui.next.hidden, true);
+  quiz.spoken.at(-1).onend();
+  assert.equal(quiz.ui.feedback.hidden, true);
+  quiz.ui.reset.click();
+  const count = quiz.spoken.length;
+  quiz.ui.speed.change();
+  assert.equal(quiz.spoken.length, count);
+});
+
+
+test('Space replays the question without scrolling or changing the score and preserves native controls', () => {
+  const quiz = app();
+  assert.equal(pressKey(quiz, ' ').prevented, false);
+  quiz.ui.start.click();
+  assert.equal(pressKey(quiz, ' ').prevented, false, 'ignore during playback');
+  const first = quiz.spoken.at(-1);
+  first.onend();
+  for (const extra of [
+    { repeat: true }, { ctrlKey: true }, { altKey: true }, { metaKey: true }, { shiftKey: true },
+    { isComposing: true }, { defaultPrevented: true }, { target: { isContentEditable: true } },
+    { target: { closest: () => ({}) } }
+  ]) {
+    assert.equal(pressKey(quiz, ' ', extra).prevented, false);
+  }
+  assert.equal(quiz.spoken.length, 1);
+  const progress = quiz.ui.progress.textContent;
+  assert.equal(pressKey(quiz, ' ').prevented, true);
+  assert.equal(quiz.spoken.length, 2);
+  assert.equal(quiz.spoken.at(-1).text, first.text);
+  assert.equal(quiz.ui.progress.textContent, progress);
+  quiz.spoken.at(-1).onend();
+  quiz.answerCorrect();
+  assert.equal(pressKey(quiz, ' ').prevented, true, 'replay after answering too');
 });

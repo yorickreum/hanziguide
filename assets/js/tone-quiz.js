@@ -1,5 +1,5 @@
 import { findSpeechVoice } from '/assets/js/utils/speech.js';
-import { createToneRound, ToneQuizSession } from '/assets/js/utils/tone-quiz-session.js?v=beginner-1';
+import { createToneRound, ToneQuizSession } from '/assets/js/utils/tone-quiz-session.js?v=long-rounds-1';
 
 const root = document.getElementById('tone-quiz');
 const banks = JSON.parse(document.getElementById('tone-quiz-data').textContent);
@@ -14,6 +14,7 @@ let utterance = null;
 let audioTimeout = null;
 let playing = false;
 let celebrationTimeout = null;
+let lastSound = null;
 try {
   if (localStorage.getItem('pronunciation-guide-view') === 'cantonese') language = 'cantonese';
 } catch (_) {}
@@ -29,9 +30,9 @@ const practiceURL = question => '/?pronunciation=' + language + '&script=' + (la
 function describeMode() {
   const tones = activeTones();
   ui('description').textContent = mode === 'beginner'
-    ? 'Six questions: compare tone ' + tones[0] + ' with tone ' + tones[1] + '. Use the reference sounds and retry mistakes before moving on. We’ll show how many you recognised on your first try.'
-    : 'Ten questions using all ' + tones.length + ' tones. Replay as often as you like; your first answer counts.';
-  ui('keyboard').textContent = 'Keyboard: ' + tones.join(', ') + ' to choose a tone. Enter after completing a question to continue.';
+    ? 'Twenty questions: compare tone ' + tones[0] + ' with tone ' + tones[1] + '. Use the reference sounds and retry mistakes before moving on. We’ll show how many you recognised on your first try.'
+    : 'Twenty questions using all ' + tones.length + ' tones. Replay as often as you like; your first answer counts.';
+  ui('keyboard').textContent = 'Keyboard: ' + tones.join(', ') + ' to choose a tone. Space to listen again. Enter after completing a question to continue.';
 }
 
 function updateProgress() {
@@ -103,13 +104,14 @@ function playSound(character, referenceTone = null) {
   if (!selectedVoice) { refreshAudio(); return; }
   stopAudio();
   const isReference = referenceTone !== null;
+  lastSound = { character, referenceTone };
   // Reference audio does not count as hearing the quiz question.
   if (!isReference) session.heard = false;
   const speech = new window.SpeechSynthesisUtterance(character);
   utterance = speech; // Keep a reference while the native voice is speaking.
   speech.lang = speechLanguage();
   speech.voice = selectedVoice;
-  speech.rate = Number(ui('speed').value) === 0.75 ? 0.75 : 1;
+  speech.rate = Number(ui('speed').value) === 0.25 ? 0.25 : 1;
   speech.pitch = 1;
   playing = true;
   ui('listening').textContent = isReference ? 'Reference tone ' + referenceTone + '…' : 'Listening…';
@@ -169,7 +171,11 @@ function startRound() {
   if (!voice()) { refreshAudio(); return; }
   stopAudio();
   const bank = banks[language].questions.filter(question => activeTones().includes(question.tone));
-  session = new ToneQuizSession(createToneRound(bank, mode === 'beginner' ? 6 : 10), { retryWrong: mode === 'beginner' });
+  const questions = [];
+  while (questions.length < 20) {
+    questions.push(...createToneRound(bank, 20 - questions.length));
+  }
+  session = new ToneQuizSession(questions, { retryWrong: mode === 'beginner' });
   ui('intro').hidden = true;
   ui('results').hidden = true;
   ui('round').hidden = false;
@@ -242,6 +248,7 @@ function resetQuiz() {
   root.querySelectorAll('[data-quiz-references]').forEach(group => { group.hidden = true; });
   root.classList.remove('is-playing');
   session = null;
+  lastSound = null;
   ui('results').hidden = true;
   ui('round').hidden = true;
   ui('intro').hidden = false;
@@ -276,6 +283,11 @@ root.querySelectorAll('[data-tone]').forEach(button => button.addEventListener('
 ui('start').addEventListener('click', startRound);
 ui('restart').addEventListener('click', startRound);
 ui('listen').addEventListener('click', playQuestion);
+ui('speed').addEventListener('change', () => {
+  if (lastSound && session && !session.complete && !ui('round').hidden) {
+    playSound(lastSound.character, lastSound.referenceTone);
+  }
+});
 ui('reset').addEventListener('click', () => {
   resetQuiz();
   ui('start').focus();
@@ -295,6 +307,11 @@ window.addEventListener('keydown', event => {
     if (!button || button.hidden || button.disabled) return;
     event.preventDefault();
     button.click();
+  } else if (event.key === ' ' && !ui('listen').disabled) {
+    // Let focused controls keep their native Space action.
+    if (target && target.closest?.('button, a, summary, [role="button"]')) return;
+    event.preventDefault();
+    ui('listen').click();
   } else if (event.key === 'Enter' && !ui('next').hidden && !ui('next').disabled) {
     // Preserve Enter's normal action on a focused link or button.
     if (target && target.closest?.('button, a')) return;
