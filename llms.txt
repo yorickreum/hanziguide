@@ -1,0 +1,42 @@
+# Hanzi Guide
+
+> Free Chinese character writing practice with animated stroke order, handwriting exercises, Mandarin Pinyin, Cantonese Jyutping, device-voice listening, and printable worksheets. Supports simplified and traditional characters.
+
+Use the tutor guide below for exercise-link instructions. Practice, animations, listening, quizzes, and PDF generation run in the visitor's browser and require JavaScript. Character references and learning guides contain readable HTML.
+
+Practice links use this format:
+`https://www.hanzi.guide/?pronunciation=mandarin&script=simplified#%E4%BD%A0%E5%A5%BD`
+
+Set `pronunciation` to `mandarin` or `cantonese`, and `script` to `simplified` or `traditional`. Put percent-encoded Hanzi after `#`; the example opens 你好. Explicit language and script choices override saved display preferences. Character form and spoken language are separate choices.
+
+Keep each exercise within the practice input's six-character limit. Uncommon supplementary characters can occupy two input positions. Supply Hanzi without spaces or punctuation; split longer sentences into short words or groups and preserve the full sentence in the lesson. Full sentence navigation is not available.
+
+Links open the practice workspace. The learner can press Play, use listening buttons, or enable “I want to write!” for stroke practice. Listening depends on installed device voices; Cantonese requires a Cantonese voice. Individual character readings can differ from pronunciation in context, especially for polyphonic characters and tone changes. Stroke data may be unavailable for some characters.
+
+Worksheet links use `https://www.hanzi.guide/pdf.html#%E4%BD%A0%E5%A5%BD` and start PDF generation in the browser. Supply the desired characters directly; the practice link's language and script parameters do not configure the PDF.
+
+## Guides
+
+- [Use Hanzi Guide with your tutor](https://www.hanzi.guide/tutor/): Exercise-link builder, supported URL fields, examples, and suggested tutor requests.
+- [Pinyin, Jyutping, and tones](https://www.hanzi.guide/howto/pinyin-jyutping-tones/): Initials, finals, tone diagrams, listening examples, and tone contrasts.
+- [Stroke order](https://www.hanzi.guide/howto/stroke-order/): Writing principles and practice guidance.
+- [Radicals](https://www.hanzi.guide/howto/radicals/): Introduction to character radicals.
+
+## Practice examples
+
+- [Write 你](https://www.hanzi.guide/?pronunciation=mandarin&script=simplified#%E4%BD%A0): Open single-character Mandarin practice.
+- [Practise 你好](https://www.hanzi.guide/?pronunciation=mandarin&script=simplified#%E4%BD%A0%E5%A5%BD): Open short-phrase Mandarin practice.
+- [Hear 水 in Cantonese](https://www.hanzi.guide/?pronunciation=cantonese&script=traditional#%E6%B0%B4): Open Cantonese practice and use the listening controls.
+- [Worksheet for 你好](https://www.hanzi.guide/pdf.html#%E4%BD%A0%E5%A5%BD): Generate a printable writing worksheet.
+- [Tone listening quiz](https://www.hanzi.guide/tone-quiz/): Listen and identify Mandarin or Cantonese tones.
+
+## Character references
+
+- [HSK 1 character list](https://www.hanzi.guide/hsk-1-characters/): Browse beginner characters and their reference pages.
+- [Character reference: 你](https://www.hanzi.guide/character/%E4%BD%A0/): Example reference with readings, meaning, stroke count, and writing practice.
+- [Sitemap](https://www.hanzi.guide/sitemap.xml): Discover available public pages.
+
+## Optional
+
+- [Chinese idioms](https://www.hanzi.guide/idioms/): Idiom meanings and practice links.
+- [Chinese variety quiz](https://www.hanzi.guide/geo-quiz/): Explore regional Chinese language patterns.
