@@ -40,7 +40,7 @@ ad_placement: quiz-results
       {% for language in site.data.tone_quiz %}
       <div class="tone-quiz-options" data-quiz-options="{{ language[0] }}" role="group" aria-label="Choose the tone you heard" hidden>
         {% for tone in language[1].tones %}
-        <button type="button" class="tone-quiz-option" data-tone="{{ tone.number }}" disabled>
+        <button type="button" class="tone-quiz-option" data-tone="{{ tone.number }}" aria-keyshortcuts="{{ tone.number }}" disabled>
           <strong>Tone {{ tone.number }}</strong>
           {% include tone-curve.html points=tone.points %}
           <span>{{ tone.label }}</span>
@@ -48,6 +48,7 @@ ad_placement: quiz-results
         {% endfor %}
       </div>
       {% endfor %}
+      <p class="tone-quiz-progress">Keyboard: press <strong>1–4</strong> for Mandarin or <strong>1–6</strong> for Cantonese. Press <strong>Enter</strong> after answering to continue.</p>
       <div class="tone-quiz-feedback pronunciation-guide-card" data-quiz-feedback role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden></div>
       <div class="tone-quiz-answer-links" data-quiz-answer-links hidden>
         <a data-quiz-practice>Watch strokes or practise writing this character →</a>

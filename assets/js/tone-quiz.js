@@ -183,6 +183,23 @@ ui('next').addEventListener('click', () => {
   if (!session.next()) return;
   if (session.complete) showResults(); else renderQuestion();
 });
+window.addEventListener('keydown', event => {
+  if (event.defaultPrevented || event.repeat || event.isComposing || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+  if (!session || session.complete || ui('round').hidden) return;
+  const target = event.target;
+  if (target && (target.isContentEditable || target.closest?.('input, textarea, select, [contenteditable]'))) return;
+  if (/^[1-6]$/.test(event.key)) {
+    const button = Array.from(buttons()).find(option => option.dataset.tone === event.key);
+    if (!button || button.disabled) return;
+    event.preventDefault();
+    button.click();
+  } else if (event.key === 'Enter' && !ui('next').hidden && !ui('next').disabled) {
+    // Preserve Enter's normal action on a focused link or button.
+    if (target && target.closest?.('button, a')) return;
+    event.preventDefault();
+    ui('next').click();
+  }
+});
 if (window.speechSynthesis) window.speechSynthesis.addEventListener('voiceschanged', refreshAudio);
 window.addEventListener('pagehide', stopAudio);
 window.addEventListener('pageshow', () => {

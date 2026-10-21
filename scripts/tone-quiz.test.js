@@ -234,3 +234,56 @@ test('browser Back during an answered question replay preserves the score and re
   quiz.ui.next.click();
   assert.match(quiz.ui.progress.textContent, /Question 2 of 10 · 1 correct/);
 });
+
+function pressKey(quiz, key, extra = {}) {
+  const event = { key, prevented: false, preventDefault() { this.prevented = true; }, ...extra };
+  quiz.events.keydown(event);
+  return event;
+}
+
+test('number keys answer in either language and Enter advances after feedback', () => {
+  for (const language of ['mandarin', 'cantonese']) {
+    const quiz = app({ saved: language });
+    assert.equal(pressKey(quiz, '1').prevented, false);
+    quiz.ui.start.click();
+    assert.equal(pressKey(quiz, '1').prevented, false, 'wait for audio');
+    const speech = quiz.spoken.at(-1);
+    const question = data[language].questions.find(q => q.character === speech.text);
+    speech.onend();
+    assert.equal(pressKey(quiz, String(question.tone)).prevented, true);
+    assert.match(quiz.ui.progress.textContent, /1 correct/);
+    assert.equal(pressKey(quiz, '1').prevented, false, 'cannot answer twice');
+    assert.equal(pressKey(quiz, 'Enter').prevented, true);
+    assert.match(quiz.ui.progress.textContent, /Question 2 of 10 · 1 correct/);
+    assert.equal(pressKey(quiz, 'Enter').prevented, false, 'cannot skip a question');
+  }
+});
+
+test('Cantonese accepts 5 and 6; Mandarin ignores them', () => {
+  for (const key of ['5', '6']) {
+    for (const language of ['mandarin', 'cantonese']) {
+      const quiz = app({ saved: language });
+      quiz.ui.start.click(); quiz.spoken.at(-1).onend();
+      assert.equal(pressKey(quiz, key).prevented, language === 'cantonese');
+      assert.equal(quiz.ui.feedback.hidden, language === 'mandarin');
+    }
+  }
+});
+
+test('quiz shortcuts ignore typing, modifiers, key repeat and native Enter controls', () => {
+  const quiz = app();
+  quiz.ui.start.click(); quiz.spoken.at(-1).onend();
+  for (const extra of [
+    { repeat: true }, { isComposing: true }, { defaultPrevented: true },
+    { ctrlKey: true }, { altKey: true }, { metaKey: true }, { shiftKey: true },
+    { target: { isContentEditable: true } },
+    { target: { closest: selector => selector.includes('input') ? {} : null } }
+  ]) {
+    assert.equal(pressKey(quiz, '1', extra).prevented, false);
+    assert.equal(quiz.ui.feedback.hidden, true);
+  }
+  assert.equal(pressKey(quiz, '0').prevented, false);
+  pressKey(quiz, '1');
+  assert.equal(pressKey(quiz, 'Enter', { target: { closest: () => ({}) } }).prevented, false);
+  assert.match(quiz.ui.progress.textContent, /Question 1 of 10/);
+});
