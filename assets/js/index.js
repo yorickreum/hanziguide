@@ -1140,11 +1140,6 @@ function componentContainsRadical(kidsMap, component, radicalChar, seen) {
   return found;
 }
 
-function buildDecompRaw(entry) {
-  if (!entry) return '';
-  return entry.t + '(' + entry.c.join(',') + ')';
-}
-
 var radicalVariantMap = {
   '衣': ['衣', '衤', '𧘇'],
   '雨': ['雨', '⻗', '⾬'],
@@ -1204,6 +1199,23 @@ function needsHeavyComponentsFont(components) {
     if (codepoint >= 0xF0000 && codepoint <= 0xFFFFD) return true; // Plane 15 PUA
     if (codepoint >= 0x100000 && codepoint <= 0x10FFFD) return true; // Plane 16 PUA
     return false;
+  });
+}
+
+function renderComponentDetailText(targetEl, text) {
+  targetEl.textContent = '';
+  // Use the same glyph fallback as the clickable component row, preserving
+  // the popup's normal text font and line breaks.
+  String(text).split(/([\u{20000}-\u{10ffff}])/u).forEach(function(part) {
+    if (!part) return;
+    if (part.codePointAt(0) >= 0x20000) {
+      var glyph = document.createElement('span');
+      glyph.className = getComponentGlyphClass(part);
+      glyph.textContent = part;
+      targetEl.appendChild(glyph);
+    } else {
+      targetEl.appendChild(document.createTextNode(part));
+    }
   });
 }
 
@@ -1320,7 +1332,7 @@ function showComponentsToast(text) {
     return;
   }
   componentsToastLast = text;
-  componentsToastContentEl.textContent = text;
+  renderComponentDetailText(componentsToastContentEl, text);
   componentsToastEl.style.display = 'block';
   componentsToastVisible = true;
 }
@@ -1344,7 +1356,7 @@ function appendInfoIcon(targetEl, detailText, ariaLabel) {
   infoIcon.setAttribute('tabindex', '0');
   infoIcon.setAttribute('role', 'button');
   infoIcon.setAttribute('aria-label', ariaLabel || 'Show details');
-  infoIcon.setAttribute('title', detailText);
+  infoIcon.setAttribute('title', ariaLabel || 'Show details');
   infoIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
   infoIcon.onclick = function(e) {
     e.stopPropagation();
@@ -1376,7 +1388,7 @@ function formatComponentDefinition(entry, showMandarin, showCantonese) {
   return hasCanto ? entry.cantoDef : (entry.d || '');
 }
 
-function buildComponentsDetail(raw, components) {
+function buildComponentsDetail(components) {
   var lines = [];
   var showMandarin = $('#show-mandarin').prop('checked');
   var showCantonese = $('#show-cantonese').prop('checked');
@@ -1390,7 +1402,7 @@ function buildComponentsDetail(raw, components) {
     var suffix = extra.length ? ' (' + extra.join(' / ') + ')' : '';
     lines.push(component + ': ' + def + suffix);
   });
-  if (raw) lines.push('Decomp: ' + raw);
+  if (components.length) lines.push(getComponentsLabel() + ' ' + components.join(' + '));
   return lines.join('\n');
 }
 
@@ -1407,7 +1419,6 @@ function renderKidsComponents(char, targetEl) {
       targetEl.classList.remove('components-heavy-font');
       return;
     }
-    var raw = buildDecompRaw(entry);
     var components = expandDecompComponents(kidsMap, entry.c);
     if (!components.length) {
       targetEl.style.display = 'none';
@@ -1435,7 +1446,7 @@ function renderKidsComponents(char, targetEl) {
 
     lookupPromise.then(function() {
       targetEl.textContent = '';
-      targetEl.setAttribute('title', raw);
+      targetEl.setAttribute('title', getComponentsLabel() + ' ' + components.join(' + '));
       targetEl.style.display = 'block';
 
       var labelSpan = document.createElement('span');
@@ -1443,7 +1454,7 @@ function renderKidsComponents(char, targetEl) {
       labelSpan.className = 'components-label';
       targetEl.appendChild(labelSpan);
 
-      var detailText = buildComponentsDetail(raw, components);
+      var detailText = buildComponentsDetail(components);
       targetEl.appendChild(document.createTextNode(' '));
 
       components.forEach(function(component, idx) {
@@ -1495,7 +1506,7 @@ function getRadicalRemainder(kidsMap, entry, radicalChar) {
   return { main: remainder[0] || '', all: remainder };
 }
 
-function buildRadicalDetail(radicalChar, remainderParts, raw) {
+function buildRadicalDetail(radicalChar, remainderParts) {
   var lines = [];
   var showMandarin = $('#show-mandarin').prop('checked');
   var showCantonese = $('#show-cantonese').prop('checked');
@@ -1510,7 +1521,7 @@ function buildRadicalDetail(radicalChar, remainderParts, raw) {
     var suffix = extra.length ? ' (' + extra.join(' / ') + ')' : '';
     lines.push(ch + ': ' + def + suffix);
   });
-  if (raw) lines.push('Decomp: ' + raw);
+  if (remainderParts && remainderParts.length) lines.push(getComponentsLabel() + ' ' + chars.join(' + '));
   return lines.join('\n');
 }
 
@@ -1588,7 +1599,6 @@ function renderRadical(char, targetEl, index) {
       return;
     }
     var entry = getDecompEntry(kidsMap, char);
-    var raw = entry ? buildDecompRaw(entry) : '';
     var displayRadical = normalizeRadicalChar(radical);
     var remainder = getRadicalRemainder(kidsMap, entry, displayRadical);
     var detailChars = [displayRadical].concat(remainder.all || []);
@@ -1607,7 +1617,7 @@ function renderRadical(char, targetEl, index) {
       : Promise.resolve();
 
     lookupPromise.then(function() {
-      var detail = buildRadicalDetail(displayRadical, remainder.all, raw);
+      var detail = buildRadicalDetail(displayRadical, remainder.all);
       renderRadicalLine(targetEl, displayRadical, remainder.main, remainder.all, detail);
       targetEl.style.display = 'block';
     });
