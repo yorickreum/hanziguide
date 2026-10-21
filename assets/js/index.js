@@ -1188,6 +1188,13 @@ function matchesRadical(component, radicalChar) {
   return variants.indexOf(component) !== -1;
 }
 
+function getComponentGlyphClass(component) {
+  // System Chinese fonts often omit supplementary ideographs such as 𦣞.
+  return Array.from(component).some(function(ch) { return ch.codePointAt(0) >= 0x20000; })
+    ? 'component-glyph component-glyph--supplementary'
+    : 'component-glyph';
+}
+
 function needsHeavyComponentsFont(components) {
   return components.some(function(component) {
     var codepoint = component.codePointAt(0);
@@ -1441,6 +1448,7 @@ function renderKidsComponents(char, targetEl) {
       components.forEach(function(component, idx) {
         var componentSpan = document.createElement('span');
         componentSpan.textContent = component;
+        componentSpan.className = getComponentGlyphClass(component);
         componentSpan.style.cursor = 'pointer';
         componentSpan.setAttribute('tabindex', '0');
         componentSpan.setAttribute('role', 'button');
@@ -1516,6 +1524,7 @@ function renderRadicalLine(targetEl, radicalChar, remainderText, remainderParts,
 
   var radicalSpan = document.createElement('span');
   radicalSpan.textContent = radicalChar;
+  radicalSpan.className = getComponentGlyphClass(radicalChar);
   radicalSpan.style.cursor = 'pointer';
   radicalSpan.setAttribute('tabindex', '0');
   radicalSpan.setAttribute('role', 'button');
@@ -1533,13 +1542,18 @@ function renderRadicalLine(targetEl, radicalChar, remainderText, remainderParts,
   targetEl.appendChild(radicalSpan);
 
   if (remainderText) {
-    targetEl.appendChild(document.createTextNode(' '));
+    var remainderLabel = document.createElement('span');
+    var practiceEl = document.getElementById('practice');
+    remainderLabel.className = 'components-label';
+    remainderLabel.textContent = ' · ' + (practiceEl && practiceEl.getAttribute('data-radical-remainder-label') || 'Other components:') + ' ';
+    targetEl.appendChild(remainderLabel);
     var remainder = Array.isArray(remainderParts) && remainderParts.length
       ? remainderParts
       : [remainderText];
     remainder.forEach(function(part, idx) {
       var remainderSpan = document.createElement('span');
       remainderSpan.textContent = part;
+      remainderSpan.className = getComponentGlyphClass(part);
       remainderSpan.style.cursor = 'pointer';
       remainderSpan.setAttribute('tabindex', '0');
       remainderSpan.setAttribute('role', 'button');

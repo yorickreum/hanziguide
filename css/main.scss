@@ -167,6 +167,11 @@ body {
   font-family: "HanaMinExtA", "HanaMinExtB", "HanaMinA", "HanaMinB", $base-font-family;
 }
 
+// Load the existing broad-coverage font only for rare component glyphs.
+.component-glyph.component-glyph--supplementary {
+  font-family: "HanaMinB", "HanaMinExtB", $base-font-family;
+}
+
 .radical-line {
   font-family: $base-font-family;
 }
