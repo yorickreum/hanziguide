@@ -16,6 +16,7 @@ module: true
     <nav class="pronunciation-guide-jumps" aria-label="Guide sections">
       <a href="#pinyin">Mandarin Pinyin</a>
       <a href="#jyutping">Cantonese Jyutping</a>
+      <a href="#sound-tables">Initials &amp; finals tables</a>
       <a href="#tone-mixups">Same sound, different meaning</a>
       <a href="#practice-tones">Try it yourself</a>
     </nav>
@@ -91,6 +92,8 @@ module: true
     <p class="pronunciation-guide-note"><strong>A Jyutping number is not a Pinyin number.</strong> Mandarin tone 3 is low/dipping; Cantonese tone 3 is mid-level. Keep the two systems separate when practising.</p>
     <p class="pronunciation-guide-source">The <a href="https://jyutping.org/en/jyutping/">Linguistic Society of Hong Kong’s Jyutping scheme</a> explains the sounds and tone categories. The <a href="https://www.ilc.cuhk.edu.hk/workshop/Chinese/Cantonese/Romanization/ch4_tones/2_learn.aspx">Chinese University of Hong Kong’s tone lesson</a> provides listening examples.</p>
   </section>
+
+  {% include pronunciation-sound-tables.html %}
 
   <section id="tone-mixups" aria-labelledby="tone-mixups-title">
     <h2 id="tone-mixups-title">Same syllable, different tone, different meaning</h2>

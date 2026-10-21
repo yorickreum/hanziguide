@@ -1,0 +1,92 @@
+{% assign sounds = site.data.pronunciation_sounds %}
+<section id="sound-tables" aria-labelledby="sound-tables-title">
+  <h2 id="sound-tables-title">Sound tables: build a syllable</h2>
+  <p>Use these as a reference while listening. The German labels <strong>Anlaut</strong>, <strong>Zwischenlaut</strong>, and <strong>Auslaut</strong> describe different positions in a syllable. A <em>final</em> is the whole part after the initial, so it can contain several sounds.</p>
+  <table class="pronunciation-glossary-table">
+    <caption>The parts of a syllable</caption>
+    <thead><tr><th scope="col">Part</th><th scope="col">What it does</th><th scope="col">Example</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Initial · Anlaut</th><td>The opening consonant, if present.</td><td><strong>d</strong> in duàn</td></tr>
+      <tr><th scope="row">Medial · Zwischenlaut</th><td>A short glide before the main vowel, in the Mandarin breakdown.</td><td><strong>u</strong> in duàn</td></tr>
+      <tr><th scope="row">Nucleus · Vokalkern</th><td>The main vowel sound.</td><td><strong>a</strong> in duàn</td></tr>
+      <tr><th scope="row">Coda · Auslaut</th><td>The closing sound, if present.</td><td><strong>n</strong> in duàn</td></tr>
+      <tr><th scope="row">Final · Reim</th><td>Everything after the initial, excluding tone.</td><td><strong>uan</strong> in duàn</td></tr>
+      <tr><th scope="row">Tone · Ton</th><td>The syllable’s pitch pattern.</td><td>The falling fourth tone in du<strong>à</strong>n</td></tr>
+    </tbody>
+  </table>
+  <p>For example, <span lang="zh-Hans">段</span> <strong>duàn</strong> breaks down as <strong>d + u + a + n + tone 4</strong>. Not every syllable needs every part. Cantonese is described below using initials, vowels, and codas, without imposing Mandarin’s medial categories on it.</p>
+  <p class="pronunciation-guide-note">Open a language below. Each example links to the writing tool; its listening button plays the <strong>whole character</strong>, not an isolated letter. Audio needs a matching voice on your device. The tips describe mouth movements; recordings remain the best model.</p>
+
+  <details class="pronunciation-reference">
+    <summary>Mandarin Pinyin: initials, medials, finals, and spelling rules</summary>
+    <h3>21 consonant initials · Anlaute</h3>
+    <p>The symbols in square brackets are IPA sound symbols. Pairs such as <strong>b/p</strong>, <strong>d/t</strong>, and <strong>g/k</strong> mainly contrast a small release of air with a stronger puff, rather than following the English voiced/unvoiced distinction.</p>
+    {% include pronunciation-sound-table.html rows=sounds.pinyin_initials language="zh-CN" caption="All 21 Pinyin consonant initials" %}
+    <p><strong>What about y and w?</strong> They help spell syllables without a consonant initial: <strong>yi, ya, wu, wa, yu</strong>. They are not extra members of the 21-initial list. A vowel can also start a syllable directly, as in <strong>ài</strong> (<span lang="zh-Hans">爱</span>, “love”).</p>
+
+    <h3>Three medials · Zwischenlaute</h3>
+    <p>When these occur before another vowel, move quickly through them into the main vowel. The same written letters can also serve as the main vowel in other syllables.</p>
+    {% include pronunciation-sound-table.html rows=sounds.pinyin_medials language="zh-CN" caption="The three Mandarin medials" %}
+
+    <h3>36 conventional finals · Reime</h3>
+    <p>This table includes simple vowels and whole vowel combinations. Forms in parentheses show the fuller spelling behind a shortened final. Read each example as a syllable; not every initial can combine with every final.</p>
+    {% include pronunciation-sound-table.html rows=sounds.pinyin_finals language="zh-CN" caption="All 36 conventional Pinyin finals, grouped by their opening vowel" %}
+
+    <h3>Endings within a final · Auslaute</h3>
+    <p>A final can end in a nasal or a vowel glide, or have no closing sound. The letter <strong>r</strong> also needs a separate explanation.</p>
+    {% include pronunciation-sound-table.html rows=sounds.pinyin_endings language="zh-CN" caption="Mandarin closing sounds and r-colouring" %}
+
+    <h3>Spelling rules that hide the parts</h3>
+    <table class="pronunciation-spelling-table">
+      <caption>Common Pinyin spelling changes</caption>
+      <thead><tr><th scope="col">Rule</th><th scope="col">What you see</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">i without a consonant initial</th><td><strong>i → yi, ia → ya, ie → ye, iao → yao, iou → you, ian → yan, in → yin, iang → yang, ing → ying, iong → yong</strong>.</td></tr>
+        <tr><th scope="row">u without a consonant initial</th><td><strong>u → wu, ua → wa, uo → wo, uai → wai, uei → wei, uan → wan, uen → wen, uang → wang, ueng → weng</strong>.</td></tr>
+        <tr><th scope="row">ü without a consonant initial</th><td><strong>ü → yu, üe → yue, üan → yuan, ün → yun</strong>. The sound stays rounded even though the dots disappear.</td></tr>
+        <tr><th scope="row">Shortened finals after an initial</th><td><strong>iou → iu</strong> (liù), <strong>uei → ui</strong> (shuǐ), <strong>uen → un</strong> (chūn).</td></tr>
+        <tr><th scope="row">ü after j, q, x</th><td>The dots are omitted: <strong>ju, qu, xu</strong> contain the ü sound. Keep the dots after n/l: <strong>nǚ</strong> differs from <strong>nǔ</strong>, and <strong>lǜ</strong> from <strong>lù</strong>. In <strong>jun/qun/xun</strong>, written un represents <strong>ün</strong>.</td></tr>
+        <tr><th scope="row">Two special uses of i</th><td>In <strong>zi, ci, si</strong> and <strong>zhi, chi, shi, ri</strong>, i does not sound like the vowel in <strong>mǐ</strong>. Keep the tongue near the preceding consonant’s position; listen to each group.</td></tr>
+        <tr><th scope="row">Tone-mark position</th><td>Mark <strong>a</strong> first, otherwise <strong>e</strong>; in <strong>ou</strong>, mark o. In <strong>iu/ui</strong>, mark the last vowel: <strong>liù, shuǐ</strong>. A marked i loses its dot.</td></tr>
+        <tr><th scope="row">Apostrophe between syllables</th><td>Before a following a-, o-, or e-initial syllable, an apostrophe can clarify the boundary: <strong>Xī’ān</strong> has two syllables; <strong>xiān</strong> has one.</td></tr>
+        <tr><th scope="row">er and an added -r</th><td><strong>ér</strong> is a syllable of its own. In <em>erhua</em>, -r colours the preceding final, as in <strong>huār</strong> (<span lang="zh-Hans">花儿</span>); do not automatically add another syllable.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Rare extras:</strong> the conventional 36-final teaching list does not cover every interjection. You may also encounter <strong>ê</strong> and syllabic <strong>m, n, ng</strong>. Learn those in context rather than treating them as freely interchangeable finals.</p>
+    <p class="pronunciation-guide-source">Reference inventories: <a href="https://web.mit.edu/~jinzhang/www/pinyin/finals/">MIT’s Pinyin finals chart</a> and <a href="https://ocw.mit.edu/courses/res-21g-003-learning-chinese-a-foundation-course-in-mandarin-spring-2011/01af9a25b804b7d58a26fa580691df4f_MITRES_21G_003S11_pinyin.pdf">MIT’s Pinyin overview</a>.</p>
+  </details>
+
+  <details class="pronunciation-reference">
+    <summary>Cantonese Jyutping: initials, vowels, all finals, and codas</summary>
+    <h3>19 initials · Anlaute</h3>
+    {% include pronunciation-sound-table.html rows=sounds.jyutping_initials language="zh-HK" caption="All 19 Jyutping initials" %}
+    <p>A syllable can also have <strong>no initial</strong>, as in <strong>aa3</strong> (<span lang="zh-Hant">亞</span>). Unlike the Pinyin spelling helpers, Jyutping <strong>j</strong> and <strong>w</strong> are initials. <strong>gw</strong> and <strong>kw</strong> each count as one rounded consonant initial, not g/k plus a separate Mandarin-style medial.</p>
+
+    <h3>Nine vowel spellings · Vokalkerne</h3>
+    <p>Jyutping does not use Pinyin’s three-medial table. Start with these vowel spellings, then check how they combine with endings. Vowel quality can shift with the ending; the same letter is not a promise of one identical sound in every final.</p>
+    {% include pronunciation-sound-table.html rows=sounds.jyutping_vowels language="zh-HK" caption="The vowel spellings used in Jyutping finals" %}
+
+    <h3>Complete written-final chart · Reime</h3>
+    <p>Read across from the vowel to its ending. A dash means that combination is not listed in this scheme. This includes uncommon syllables, not just the finals you will meet in a first lesson. Initials and finals still have combination restrictions.</p>
+    <div class="pronunciation-table-scroll" role="region" tabindex="0" aria-label="Jyutping finals chart; scroll horizontally on a small screen">
+      <table class="pronunciation-finals-matrix">
+        <caption>60 written finals in the LSHK scheme, plus syllabic nasals below</caption>
+        <thead><tr><th scope="col">Vowel</th>{% for ending in sounds.jyutping_columns %}<th scope="col">{{ ending }}</th>{% endfor %}</tr></thead>
+        <tbody>
+          {% for row in sounds.jyutping_finals %}
+          <tr><th scope="row">{{ row.vowel }}</th>{% for final in row.finals %}<td>{% if final != '' %}{{ final }}{% if sounds.jyutping_less_common contains final %}<sup>*</sup>{% endif %}{% if sounds.jyutping_added_2018 contains final %}<sup>†</sup>{% endif %}{% else %}—{% endif %}</td>{% endfor %}</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p><strong>*</strong> Less common finals, often found in colloquial words, interjections, or borrowed sounds. <strong>† a and oet</strong> were added to the scheme in 2018. Bare <strong>a</strong> is a short vowel; it is different from <strong>aa</strong>. <strong>m</strong> and <strong>ng</strong> can also be whole syllables; they appear in their own table below.</p>
+
+    <h3>Codas · Auslaute</h3>
+    {% include pronunciation-sound-table.html rows=sounds.jyutping_codas language="zh-HK" caption="The eight Jyutping codas, plus an open syllable" %}
+    <p>For <strong>-p, -t, -k</strong>, close the lips or tongue position without an extra puff or following vowel. These checked syllables take tone numbers <strong>1, 3, or 6</strong>. Keep <strong>-m, -n, -ng</strong> distinct too: their closing positions can change the word.</p>
+
+    <h3>Syllabic nasals</h3>
+    {% include pronunciation-sound-table.html rows=sounds.jyutping_nasals language="zh-HK" caption="A nasal can carry the whole syllable and its tone" %}
+    <p class="pronunciation-guide-source">Reference inventories and spelling conventions: the <a href="https://lshk.org/jyutping-scheme/">Linguistic Society of Hong Kong’s Jyutping scheme</a>, its <a href="https://lshk.org/jyutping-faq/">Jyutping FAQ</a>, and the <a href="https://jyutping.org/en/jyutping/">Jyutping pronunciation charts</a>.</p>
+  </details>
+</section>

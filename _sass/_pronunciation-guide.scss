@@ -84,6 +84,59 @@
 
 .pronunciation-guide-source { color: $muted-text-color; font-size: 14px; }
 
+.pronunciation-reference {
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
+  padding: 16px;
+  margin: 20px 0;
+  min-width: 0;
+
+  summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: $brand-color;
+    padding: 4px 0;
+  }
+}
+
+.pronunciation-sound-table,
+.pronunciation-glossary-table,
+.pronunciation-spelling-table,
+.pronunciation-finals-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 15px;
+
+  caption { color: $muted-text-color; font-size: 14px; text-align: left; }
+  th, td {
+    border-bottom: 1px solid $border-color;
+    padding: 12px 8px;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+  thead { background: $surface-color; }
+}
+
+.pronunciation-sound-table {
+  table-layout: fixed;
+  th:first-child { width: 17%; }
+  th:nth-child(2) { width: 31%; }
+  small { display: block; font-size: 13px; color: $muted-text-color; }
+  td a { display: inline-block; font-size: 18px; }
+  .pronunciation-button { margin-top: 8px; }
+}
+
+.pronunciation-spelling-table th { width: 32%; }
+.pronunciation-table-scroll { max-width: 100%; overflow-x: auto; }
+.pronunciation-finals-matrix {
+  min-width: 640px;
+  th, td { text-align: center; white-space: nowrap; }
+  tbody th { background: $surface-color; }
+  sup { color: $brand-color; }
+}
+
 .tone-pair { margin: 32px 0; }
 .tone-pair-character { font-size: 52px; line-height: 1.2; }
 .tone-pair-listen { margin: 12px 0; }
@@ -114,4 +167,16 @@
     td a { font-size: 18px; }
   }
   .pronunciation-tone-curve { width: 72px; height: 47px; }
+  .pronunciation-reference { padding: 10px; }
+  .pronunciation-sound-table,
+  .pronunciation-glossary-table,
+  .pronunciation-spelling-table {
+    font-size: 14px;
+    th, td { padding: 10px 5px; }
+  }
+  .pronunciation-sound-table {
+    th:first-child { width: 19%; }
+    th:nth-child(2) { width: 34%; }
+    td a { font-size: 16px; }
+  }
 }

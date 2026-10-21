@@ -1,0 +1,15 @@
+{% assign cantonese = false %}
+{% if include.language == 'zh-HK' %}{% assign cantonese = true %}{% endif %}
+<table class="pronunciation-sound-table" data-speech-language="{{ include.language }}">
+  <caption>{{ include.caption }}</caption>
+  <thead><tr><th scope="col">Spelling</th><th scope="col">Example</th><th scope="col">How to read it</th></tr></thead>
+  <tbody>
+    {% for sound in include.rows %}
+    <tr>
+      <th scope="row">{{ sound.symbol }}{% if sound.ipa %}<small>[{{ sound.ipa }}]</small>{% endif %}</th>
+      <td><a href="/?pronunciation={% if cantonese %}cantonese&amp;script=traditional{% else %}mandarin&amp;script=simplified{% endif %}#{{ sound.character | uri_escape }}"><span lang="{% if cantonese %}zh-Hant{% else %}zh-Hans{% endif %}">{{ sound.character }}</span> <strong>{{ sound.reading }}</strong></a><small>{{ sound.meaning }}</small></td>
+      <td>{{ sound.tip }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -32,12 +32,15 @@ function lesson({ voice = true, writer = true } = {}) {
   const example = element();
   example.querySelector = () => ({ textContent: '水' });
   const table = { dataset: { speechLanguage: 'zh-CN' }, querySelectorAll: () => [{ querySelector: () => example }] };
+  const soundExample = element();
+  soundExample.querySelector = () => ({ textContent: '花' });
+  const soundTable = { dataset: { speechLanguage: 'zh-HK' }, querySelectorAll: () => [{ querySelector: () => soundExample }] };
   const context = {
     window: {
       SpeechSynthesisUtterance: function () {},
       speechSynthesis: { addEventListener(event, fn) { voiceEvents[event] = fn; } }
     },
-    document: { querySelectorAll: selector => selector.startsWith('.pronunciation-tone-table') ? [table] : [card] },
+    document: { querySelectorAll: selector => selector.startsWith('.pronunciation-tone-table') ? (selector.includes('.pronunciation-sound-table') ? [table, soundTable] : [table]) : [card] },
     createSpeechButton(character, language) {
       const button = element(); button.setAttribute('aria-label', 'Listen: ' + character);
       listens.push({ character, language, button }); return button;
@@ -60,9 +63,9 @@ function lesson({ voice = true, writer = true } = {}) {
   return { listens, writers, animate, quiz, actions, target, status, voiceEvents };
 }
 
-test('tone charts and contrast cards request the correct character and language', () => {
+test('tone charts, sound tables and contrast cards request the correct character and language', () => {
   const app = lesson();
-  assert.deepEqual(app.listens.map(({ character, language }) => [character, language]), [['水', 'zh-CN'], ['湯', 'zh-HK']]);
+  assert.deepEqual(app.listens.map(({ character, language }) => [character, language]), [['水', 'zh-CN'], ['花', 'zh-HK'], ['湯', 'zh-HK']]);
   assert.ok(app.listens.every(({ button }) => !button.disabled));
   assert.equal(app.writers.length, 0, 'stroke data stays unloaded until requested');
 });

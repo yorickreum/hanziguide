@@ -1,0 +1,919 @@
+{
+  "pinyin_initials": [
+    {
+      "symbol": "b",
+      "character": "八",
+      "reading": "bā",
+      "meaning": "eight",
+      "tip": "Lips together; release without a strong puff of air.",
+      "ipa": "p"
+    },
+    {
+      "symbol": "p",
+      "character": "趴",
+      "reading": "pā",
+      "meaning": "to lie face down",
+      "tip": "Like b, with a clear puff of air.",
+      "ipa": "pʰ"
+    },
+    {
+      "symbol": "m",
+      "character": "妈",
+      "reading": "mā",
+      "meaning": "mum / mom",
+      "tip": "Lips together; sound passes through the nose.",
+      "ipa": "m"
+    },
+    {
+      "symbol": "f",
+      "character": "飞",
+      "reading": "fēi",
+      "meaning": "to fly",
+      "tip": "Upper teeth touch the lower lip.",
+      "ipa": "f"
+    },
+    {
+      "symbol": "d",
+      "character": "搭",
+      "reading": "dā",
+      "meaning": "to put up",
+      "tip": "Tongue tip behind the upper teeth; little puff.",
+      "ipa": "t"
+    },
+    {
+      "symbol": "t",
+      "character": "他",
+      "reading": "tā",
+      "meaning": "he / him",
+      "tip": "Like d, with a clear puff of air.",
+      "ipa": "tʰ"
+    },
+    {
+      "symbol": "n",
+      "character": "你",
+      "reading": "nǐ",
+      "meaning": "you",
+      "tip": "Tongue tip behind the upper teeth; nasal sound.",
+      "ipa": "n"
+    },
+    {
+      "symbol": "l",
+      "character": "来",
+      "reading": "lái",
+      "meaning": "to come",
+      "tip": "Tongue tip touches behind the upper teeth; air flows around it.",
+      "ipa": "l"
+    },
+    {
+      "symbol": "g",
+      "character": "哥",
+      "reading": "gē",
+      "meaning": "older brother",
+      "tip": "Back of the tongue closes and releases; little puff.",
+      "ipa": "k"
+    },
+    {
+      "symbol": "k",
+      "character": "课",
+      "reading": "kè",
+      "meaning": "lesson",
+      "tip": "Like g, with a clear puff of air.",
+      "ipa": "kʰ"
+    },
+    {
+      "symbol": "h",
+      "character": "喝",
+      "reading": "hē",
+      "meaning": "to drink",
+      "tip": "Air rubs past the back of the tongue; often stronger than English h.",
+      "ipa": "x"
+    },
+    {
+      "symbol": "j",
+      "character": "鸡",
+      "reading": "jī",
+      "meaning": "chicken",
+      "tip": "Front of the tongue near the hard palate; little puff. Not English j.",
+      "ipa": "tɕ"
+    },
+    {
+      "symbol": "q",
+      "character": "七",
+      "reading": "qī",
+      "meaning": "seven",
+      "tip": "Like j, with a clear puff of air. Not English q.",
+      "ipa": "tɕʰ"
+    },
+    {
+      "symbol": "x",
+      "character": "西",
+      "reading": "xī",
+      "meaning": "west",
+      "tip": "A soft hissing sound near the hard palate; not English x.",
+      "ipa": "ɕ"
+    },
+    {
+      "symbol": "zh",
+      "character": "知",
+      "reading": "zhī",
+      "meaning": "to know",
+      "tip": "Tongue tip raised behind the tooth ridge; little puff.",
+      "ipa": "tʂ"
+    },
+    {
+      "symbol": "ch",
+      "character": "吃",
+      "reading": "chī",
+      "meaning": "to eat",
+      "tip": "Like zh, with a clear puff of air.",
+      "ipa": "tʂʰ"
+    },
+    {
+      "symbol": "sh",
+      "character": "书",
+      "reading": "shū",
+      "meaning": "book",
+      "tip": "Tongue tip raised farther back than for s.",
+      "ipa": "ʂ"
+    },
+    {
+      "symbol": "r",
+      "character": "人",
+      "reading": "rén",
+      "meaning": "person",
+      "tip": "Tongue raised back; a voiced, r-like sound, not a rolled r.",
+      "ipa": "ɻ ~ ʐ"
+    },
+    {
+      "symbol": "z",
+      "character": "早",
+      "reading": "zǎo",
+      "meaning": "early",
+      "tip": "A ts-like release without a strong puff.",
+      "ipa": "ts"
+    },
+    {
+      "symbol": "c",
+      "character": "草",
+      "reading": "cǎo",
+      "meaning": "grass",
+      "tip": "Like z, with a clear puff of air; not English c.",
+      "ipa": "tsʰ"
+    },
+    {
+      "symbol": "s",
+      "character": "三",
+      "reading": "sān",
+      "meaning": "three",
+      "tip": "A hiss near the front teeth.",
+      "ipa": "s"
+    }
+  ],
+  "pinyin_medials": [
+    {
+      "symbol": "i",
+      "character": "家",
+      "reading": "jiā",
+      "meaning": "home",
+      "tip": "A brief y-like glide before the main vowel; j + i + a."
+    },
+    {
+      "symbol": "u",
+      "character": "花",
+      "reading": "huā",
+      "meaning": "flower",
+      "tip": "A brief w-like glide before the main vowel; h + u + a."
+    },
+    {
+      "symbol": "ü",
+      "character": "雪",
+      "reading": "xuě",
+      "meaning": "snow",
+      "tip": "A rounded front glide; x + ü + e is written xue. Think of rounded lips for German ü."
+    }
+  ],
+  "pinyin_finals": [
+    {
+      "symbol": "a",
+      "character": "大",
+      "reading": "dà",
+      "meaning": "big",
+      "tip": "Open vowel."
+    },
+    {
+      "symbol": "o",
+      "character": "波",
+      "reading": "bō",
+      "meaning": "wave",
+      "tip": "Rounded vowel; often has a brief u-like lead-in after b, p, m, f."
+    },
+    {
+      "symbol": "e",
+      "character": "饿",
+      "reading": "è",
+      "meaning": "hungry",
+      "tip": "An unrounded back vowel, unlike English e."
+    },
+    {
+      "symbol": "ai",
+      "character": "爱",
+      "reading": "ài",
+      "meaning": "love",
+      "tip": "Moves from a toward i."
+    },
+    {
+      "symbol": "ei",
+      "character": "黑",
+      "reading": "hēi",
+      "meaning": "black",
+      "tip": "Moves toward i."
+    },
+    {
+      "symbol": "ao",
+      "character": "好",
+      "reading": "hǎo",
+      "meaning": "good",
+      "tip": "Moves from a toward a u-like ending."
+    },
+    {
+      "symbol": "ou",
+      "character": "口",
+      "reading": "kǒu",
+      "meaning": "mouth",
+      "tip": "Moves toward u."
+    },
+    {
+      "symbol": "an",
+      "character": "山",
+      "reading": "shān",
+      "meaning": "mountain",
+      "tip": "Ends with the tongue-tip nasal n."
+    },
+    {
+      "symbol": "en",
+      "character": "人",
+      "reading": "rén",
+      "meaning": "person",
+      "tip": "A central vowel followed by n."
+    },
+    {
+      "symbol": "ang",
+      "character": "上",
+      "reading": "shàng",
+      "meaning": "up / above",
+      "tip": "Ends with the back-of-tongue nasal ng."
+    },
+    {
+      "symbol": "eng",
+      "character": "冷",
+      "reading": "lěng",
+      "meaning": "cold",
+      "tip": "A central vowel followed by ng."
+    },
+    {
+      "symbol": "ong",
+      "character": "中",
+      "reading": "zhōng",
+      "meaning": "middle",
+      "tip": "Rounded vowel followed by ng."
+    },
+    {
+      "symbol": "er",
+      "character": "儿",
+      "reading": "ér",
+      "meaning": "child",
+      "tip": "A standalone r-coloured final."
+    },
+    {
+      "symbol": "i",
+      "character": "米",
+      "reading": "mǐ",
+      "meaning": "rice",
+      "tip": "An ee-like vowel here; see the special i spellings below."
+    },
+    {
+      "symbol": "ia",
+      "character": "家",
+      "reading": "jiā",
+      "meaning": "home",
+      "tip": "Medial i + a."
+    },
+    {
+      "symbol": "ie",
+      "character": "写",
+      "reading": "xiě",
+      "meaning": "to write",
+      "tip": "Medial i + an open e-like vowel."
+    },
+    {
+      "symbol": "iao",
+      "character": "小",
+      "reading": "xiǎo",
+      "meaning": "small",
+      "tip": "Medial i + ao."
+    },
+    {
+      "symbol": "iu (iou)",
+      "character": "六",
+      "reading": "liù",
+      "meaning": "six",
+      "tip": "Written iu after an initial; written you without one."
+    },
+    {
+      "symbol": "ian",
+      "character": "天",
+      "reading": "tiān",
+      "meaning": "sky",
+      "tip": "The a is closer to an e-like vowel here; ends in n."
+    },
+    {
+      "symbol": "in",
+      "character": "心",
+      "reading": "xīn",
+      "meaning": "heart",
+      "tip": "i + n; no extra e is written."
+    },
+    {
+      "symbol": "iang",
+      "character": "江",
+      "reading": "jiāng",
+      "meaning": "river",
+      "tip": "Medial i + ang."
+    },
+    {
+      "symbol": "ing",
+      "character": "星",
+      "reading": "xīng",
+      "meaning": "star",
+      "tip": "i + ng."
+    },
+    {
+      "symbol": "iong",
+      "character": "熊",
+      "reading": "xióng",
+      "meaning": "bear",
+      "tip": "Rounded medial/vowel + ng; standalone spelling yong."
+    },
+    {
+      "symbol": "u",
+      "character": "路",
+      "reading": "lù",
+      "meaning": "road",
+      "tip": "A rounded oo-like vowel."
+    },
+    {
+      "symbol": "ua",
+      "character": "花",
+      "reading": "huā",
+      "meaning": "flower",
+      "tip": "Medial u + a."
+    },
+    {
+      "symbol": "uo",
+      "character": "国",
+      "reading": "guó",
+      "meaning": "country",
+      "tip": "Medial u + o."
+    },
+    {
+      "symbol": "uai",
+      "character": "快",
+      "reading": "kuài",
+      "meaning": "fast",
+      "tip": "Medial u + ai."
+    },
+    {
+      "symbol": "ui (uei)",
+      "character": "水",
+      "reading": "shuǐ",
+      "meaning": "water",
+      "tip": "Written ui after an initial; written wei without one."
+    },
+    {
+      "symbol": "uan",
+      "character": "关",
+      "reading": "guān",
+      "meaning": "to close",
+      "tip": "Medial u + an."
+    },
+    {
+      "symbol": "un (uen)",
+      "character": "春",
+      "reading": "chūn",
+      "meaning": "spring",
+      "tip": "Written un after an initial; written wen without one."
+    },
+    {
+      "symbol": "uang",
+      "character": "光",
+      "reading": "guāng",
+      "meaning": "light",
+      "tip": "Medial u + ang."
+    },
+    {
+      "symbol": "ueng",
+      "character": "翁",
+      "reading": "wēng",
+      "meaning": "old man",
+      "tip": "Normally encountered in the standalone spelling weng."
+    },
+    {
+      "symbol": "ü",
+      "character": "女",
+      "reading": "nǚ",
+      "meaning": "female / woman",
+      "tip": "Rounded lips with the tongue forward; dots remain after n and l."
+    },
+    {
+      "symbol": "üe",
+      "character": "月",
+      "reading": "yuè",
+      "meaning": "moon",
+      "tip": "Written yue alone; xue, jue, que after x, j, q; nüe and lüe keep the dots."
+    },
+    {
+      "symbol": "üan",
+      "character": "元",
+      "reading": "yuán",
+      "meaning": "unit / yuan",
+      "tip": "Written yuan alone; juan, quan, xuan after j, q, x."
+    },
+    {
+      "symbol": "ün",
+      "character": "云",
+      "reading": "yún",
+      "meaning": "cloud",
+      "tip": "Written yun alone; jun, qun, xun after j, q, x."
+    }
+  ],
+  "pinyin_endings": [
+    {
+      "symbol": "-n",
+      "character": "山",
+      "reading": "shān",
+      "meaning": "mountain",
+      "tip": "Tongue-tip nasal ending; no extra vowel after it."
+    },
+    {
+      "symbol": "-ng",
+      "character": "上",
+      "reading": "shàng",
+      "meaning": "up / above",
+      "tip": "Back-of-tongue nasal ending, like the end of English sing; no released g."
+    },
+    {
+      "symbol": "-i",
+      "character": "爱",
+      "reading": "ài",
+      "meaning": "love",
+      "tip": "A vowel glide in endings such as ai and ei."
+    },
+    {
+      "symbol": "-u / written -o",
+      "character": "好",
+      "reading": "hǎo",
+      "meaning": "good",
+      "tip": "A rounding glide: written u in ou, but o in ao and iao."
+    },
+    {
+      "symbol": "er / -r",
+      "character": "儿",
+      "reading": "ér",
+      "meaning": "child",
+      "tip": "er is a standalone final. Added -r can colour a preceding syllable (erhua), rather than forming a separate ordinary consonant ending."
+    }
+  ],
+  "jyutping_initials": [
+    {
+      "symbol": "b",
+      "character": "巴",
+      "reading": "baa1",
+      "meaning": "to cling",
+      "tip": "Lips close and release, with little puff."
+    },
+    {
+      "symbol": "p",
+      "character": "怕",
+      "reading": "paa3",
+      "meaning": "to fear",
+      "tip": "Like b, with a clear puff."
+    },
+    {
+      "symbol": "m",
+      "character": "媽",
+      "reading": "maa1",
+      "meaning": "mum / mom",
+      "tip": "A nasal sound made with closed lips."
+    },
+    {
+      "symbol": "f",
+      "character": "花",
+      "reading": "faa1",
+      "meaning": "flower",
+      "tip": "Upper teeth at the lower lip."
+    },
+    {
+      "symbol": "d",
+      "character": "打",
+      "reading": "daa2",
+      "meaning": "to hit",
+      "tip": "Tongue-tip release, with little puff."
+    },
+    {
+      "symbol": "t",
+      "character": "他",
+      "reading": "taa1",
+      "meaning": "he / him",
+      "tip": "Like d, with a clear puff."
+    },
+    {
+      "symbol": "n",
+      "character": "你",
+      "reading": "nei5",
+      "meaning": "you",
+      "tip": "Tongue-tip nasal sound."
+    },
+    {
+      "symbol": "l",
+      "character": "來",
+      "reading": "loi4",
+      "meaning": "to come",
+      "tip": "Air passes around the sides of the tongue."
+    },
+    {
+      "symbol": "g",
+      "character": "家",
+      "reading": "gaa1",
+      "meaning": "home",
+      "tip": "Back-of-tongue release, with little puff."
+    },
+    {
+      "symbol": "k",
+      "character": "近",
+      "reading": "kan5",
+      "meaning": "near",
+      "tip": "Like g, with a clear puff."
+    },
+    {
+      "symbol": "ng",
+      "character": "我",
+      "reading": "ngo5",
+      "meaning": "I / me",
+      "tip": "The ng sound can begin a Cantonese syllable."
+    },
+    {
+      "symbol": "h",
+      "character": "好",
+      "reading": "hou2",
+      "meaning": "good",
+      "tip": "An h-like breath sound."
+    },
+    {
+      "symbol": "gw",
+      "character": "瓜",
+      "reading": "gwaa1",
+      "meaning": "melon",
+      "tip": "A single labialized initial: g-like release with rounded lips."
+    },
+    {
+      "symbol": "kw",
+      "character": "誇",
+      "reading": "kwaa1",
+      "meaning": "to boast",
+      "tip": "A single labialized initial, like gw with a puff."
+    },
+    {
+      "symbol": "w",
+      "character": "話",
+      "reading": "waa6",
+      "meaning": "speech / words",
+      "tip": "A rounded w-like beginning."
+    },
+    {
+      "symbol": "z",
+      "character": "早",
+      "reading": "zou2",
+      "meaning": "early",
+      "tip": "A ts-like sound, sometimes more ch-like before front vowels; little puff."
+    },
+    {
+      "symbol": "c",
+      "character": "車",
+      "reading": "ce1",
+      "meaning": "vehicle",
+      "tip": "Like z, with a clear puff."
+    },
+    {
+      "symbol": "s",
+      "character": "三",
+      "reading": "saam1",
+      "meaning": "three",
+      "tip": "An s-like hiss."
+    },
+    {
+      "symbol": "j",
+      "character": "人",
+      "reading": "jan4",
+      "meaning": "person",
+      "tip": "A y-like sound, not the English j."
+    }
+  ],
+  "jyutping_vowels": [
+    {
+      "symbol": "i",
+      "character": "詩",
+      "reading": "si1",
+      "meaning": "poem",
+      "tip": "Usually a long ee-like vowel; in ing/ik it is closer to [e]."
+    },
+    {
+      "symbol": "yu",
+      "character": "書",
+      "reading": "syu1",
+      "meaning": "book",
+      "tip": "A rounded front vowel, comparable to German ü; not y + English oo."
+    },
+    {
+      "symbol": "u",
+      "character": "夫",
+      "reading": "fu1",
+      "meaning": "husband",
+      "tip": "Usually a long oo-like vowel; the vowel in ung/uk (and rare um/up) is closer to [o]."
+    },
+    {
+      "symbol": "e",
+      "character": "些",
+      "reading": "se1",
+      "meaning": "some",
+      "tip": "An open e-like vowel; ei has a different, closer starting vowel."
+    },
+    {
+      "symbol": "eo",
+      "character": "詢",
+      "reading": "seon1",
+      "meaning": "to inquire",
+      "tip": "A shorter rounded central vowel in eoi, eon, eot; eo is not a standalone final."
+    },
+    {
+      "symbol": "oe",
+      "character": "鋸",
+      "reading": "goe3",
+      "meaning": "saw",
+      "tip": "A longer rounded front vowel; keep it distinct from eo."
+    },
+    {
+      "symbol": "o",
+      "character": "可",
+      "reading": "ho2",
+      "meaning": "can / may",
+      "tip": "An open rounded vowel; ou has a closer starting vowel."
+    },
+    {
+      "symbol": "a",
+      "character": "新",
+      "reading": "san1",
+      "meaning": "new",
+      "tip": "The shorter, more central a vowel; distinct from aa."
+    },
+    {
+      "symbol": "aa",
+      "character": "沙",
+      "reading": "saa1",
+      "meaning": "sand",
+      "tip": "The longer, more open a vowel."
+    }
+  ],
+  "jyutping_codas": [
+    {
+      "symbol": "none",
+      "character": "花",
+      "reading": "faa1",
+      "meaning": "flower",
+      "tip": "An open final ends in the vowel itself."
+    },
+    {
+      "symbol": "-i",
+      "character": "四",
+      "reading": "sei3",
+      "meaning": "four",
+      "tip": "Ends in a vowel glide toward i."
+    },
+    {
+      "symbol": "-u",
+      "character": "好",
+      "reading": "hou2",
+      "meaning": "good",
+      "tip": "Ends in a vowel glide toward u."
+    },
+    {
+      "symbol": "-m",
+      "character": "心",
+      "reading": "sam1",
+      "meaning": "heart",
+      "tip": "Close the lips for the final nasal."
+    },
+    {
+      "symbol": "-n",
+      "character": "身",
+      "reading": "san1",
+      "meaning": "body",
+      "tip": "Tongue-tip nasal ending."
+    },
+    {
+      "symbol": "-ng",
+      "character": "生",
+      "reading": "saang1",
+      "meaning": "raw / alive",
+      "tip": "Back-of-tongue nasal ending; no released g."
+    },
+    {
+      "symbol": "-p",
+      "character": "十",
+      "reading": "sap6",
+      "meaning": "ten",
+      "tip": "Close the lips and stop; do not add an extra vowel."
+    },
+    {
+      "symbol": "-t",
+      "character": "八",
+      "reading": "baat3",
+      "meaning": "eight",
+      "tip": "Close at the tongue tip and stop; no extra vowel."
+    },
+    {
+      "symbol": "-k",
+      "character": "六",
+      "reading": "luk6",
+      "meaning": "six",
+      "tip": "Close at the back of the tongue and stop; no extra vowel."
+    }
+  ],
+  "jyutping_nasals": [
+    {
+      "symbol": "m",
+      "character": "唔",
+      "reading": "m4",
+      "meaning": "not",
+      "tip": "A whole syllable made by humming with closed lips; it still carries a tone."
+    },
+    {
+      "symbol": "ng",
+      "character": "五",
+      "reading": "ng5",
+      "meaning": "five",
+      "tip": "A whole nasal syllable; no written vowel is missing."
+    }
+  ],
+  "jyutping_columns": [
+    "Open",
+    "-i",
+    "-u",
+    "-m",
+    "-n",
+    "-ng",
+    "-p",
+    "-t",
+    "-k"
+  ],
+  "jyutping_finals": [
+    {
+      "vowel": "i",
+      "finals": [
+        "i",
+        "",
+        "iu",
+        "im",
+        "in",
+        "ing",
+        "ip",
+        "it",
+        "ik"
+      ]
+    },
+    {
+      "vowel": "yu",
+      "finals": [
+        "yu",
+        "",
+        "",
+        "",
+        "yun",
+        "",
+        "",
+        "yut",
+        ""
+      ]
+    },
+    {
+      "vowel": "u",
+      "finals": [
+        "u",
+        "ui",
+        "",
+        "um",
+        "un",
+        "ung",
+        "up",
+        "ut",
+        "uk"
+      ]
+    },
+    {
+      "vowel": "e",
+      "finals": [
+        "e",
+        "ei",
+        "eu",
+        "em",
+        "en",
+        "eng",
+        "ep",
+        "et",
+        "ek"
+      ]
+    },
+    {
+      "vowel": "eo",
+      "finals": [
+        "",
+        "eoi",
+        "",
+        "",
+        "eon",
+        "",
+        "",
+        "eot",
+        ""
+      ]
+    },
+    {
+      "vowel": "oe",
+      "finals": [
+        "oe",
+        "",
+        "",
+        "",
+        "",
+        "oeng",
+        "",
+        "oet",
+        "oek"
+      ]
+    },
+    {
+      "vowel": "o",
+      "finals": [
+        "o",
+        "oi",
+        "ou",
+        "",
+        "on",
+        "ong",
+        "",
+        "ot",
+        "ok"
+      ]
+    },
+    {
+      "vowel": "a",
+      "finals": [
+        "a",
+        "ai",
+        "au",
+        "am",
+        "an",
+        "ang",
+        "ap",
+        "at",
+        "ak"
+      ]
+    },
+    {
+      "vowel": "aa",
+      "finals": [
+        "aa",
+        "aai",
+        "aau",
+        "aam",
+        "aan",
+        "aang",
+        "aap",
+        "aat",
+        "aak"
+      ]
+    }
+  ],
+  "jyutping_less_common": [
+    "um",
+    "up",
+    "eu",
+    "em",
+    "en",
+    "ep",
+    "et"
+  ],
+  "jyutping_added_2018": [
+    "a",
+    "oet"
+  ]
+}

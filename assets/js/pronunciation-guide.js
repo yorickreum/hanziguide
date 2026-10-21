@@ -21,7 +21,7 @@ function refreshLessonVoices() {
   });
 }
 
-document.querySelectorAll('.pronunciation-tone-table[data-speech-language]').forEach(table => {
+document.querySelectorAll('.pronunciation-tone-table[data-speech-language], .pronunciation-sound-table[data-speech-language]').forEach(table => {
   table.querySelectorAll('tbody tr').forEach(row => {
     const example = row.querySelector('td');
     const character = example.querySelector('a span').textContent;
