@@ -38,6 +38,7 @@ ad_placement: quiz-results
     </div>
 
     <section class="tone-quiz-round" data-quiz-round aria-labelledby="tone-question" hidden>
+      <div class="tone-quiz-celebration" data-quiz-celebration aria-hidden="true"></div>
       <p class="tone-quiz-progress" data-quiz-progress></p>
       <h2 id="tone-question" tabindex="-1">Listen, then choose the tone</h2>
       <div class="tone-quiz-audio-controls">
@@ -62,12 +63,17 @@ ad_placement: quiz-results
       </div>
       {% endfor %}
       <p class="tone-quiz-progress" data-quiz-keyboard>Keyboard: choose a tone using its number. Press Enter after completing a question to continue.</p>
-      <div class="tone-quiz-feedback pronunciation-guide-card" data-quiz-feedback role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden></div>
+      <div class="tone-quiz-feedback pronunciation-guide-card" data-quiz-feedback role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden>
+        <span class="tone-quiz-feedback-icon" data-quiz-feedback-icon aria-hidden="true"></span>
+        <div>
+          <h3 data-quiz-feedback-title></h3>
+          <p data-quiz-feedback-detail></p>
+        </div>
+      </div>
       <div class="tone-quiz-answer-links" data-quiz-answer-links hidden>
         <a data-quiz-practice>Watch strokes or practise writing this character →</a>
       </div>
       <button type="button" class="btn btn-primary" data-quiz-next hidden>Next question</button>
-      <button type="button" class="btn btn-default" data-quiz-reset>Start over</button>
     </section>
 
       {% for language in site.data.tone_quiz %}
@@ -82,6 +88,10 @@ ad_placement: quiz-results
         </div>
       </details>
       {% endfor %}
+
+    <div class="tone-quiz-secondary-actions">
+      <button type="button" class="tone-quiz-reset" data-quiz-reset>Start over</button>
+    </div>
 
     <section data-quiz-results aria-labelledby="tone-results-title" hidden>
       <h2 id="tone-results-title" tabindex="-1">Round complete</h2>

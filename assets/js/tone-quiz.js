@@ -13,6 +13,7 @@ let session = null;
 let utterance = null;
 let audioTimeout = null;
 let playing = false;
+let celebrationTimeout = null;
 try {
   if (localStorage.getItem('pronunciation-guide-view') === 'cantonese') language = 'cantonese';
 } catch (_) {}
@@ -35,6 +36,44 @@ function describeMode() {
 
 function updateProgress() {
   ui('progress').textContent = languageName() + ' · ' + (mode === 'beginner' ? 'Beginner' : 'Full quiz') + ' · Question ' + (session.index + 1) + ' of ' + session.questions.length + ' · ' + session.score + (mode === 'beginner' ? ' on first try' : ' correct');
+}
+
+function clearCelebration() {
+  clearTimeout(celebrationTimeout);
+  ui('celebration').textContent = '';
+}
+
+function celebrate() {
+  clearCelebration();
+  if (!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for (let i = 0; i < 14; i++) {
+    const piece = document.createElement('span');
+    piece.className = 'tone-quiz-confetti';
+    piece.style.setProperty('--left', (8 + i * 6.4) + '%');
+    piece.style.setProperty('--delay', (i % 4) * 45 + 'ms');
+    piece.style.setProperty('--drift', (i % 2 ? 45 : -45) + 'px');
+    piece.style.setProperty('--color', ['#287343', '#c79127', '#357a98', '#a95470'][i % 4]);
+    ui('celebration').appendChild(piece);
+  }
+  celebrationTimeout = setTimeout(clearCelebration, 1400);
+}
+
+function showFeedback(correct, title, description, question = null) {
+  const feedback = ui('feedback');
+  feedback.classList.toggle('is-correct', correct);
+  feedback.classList.toggle('is-wrong', !correct);
+  ui('feedback-icon').textContent = correct ? '✓' : '✕';
+  ui('feedback-title').textContent = title;
+  const detail = ui('feedback-detail');
+  detail.textContent = description;
+  if (question) {
+    const word = document.createElement('strong');
+    word.textContent = question.character + ' · ' + question.reading + ' · tone ' + question.tone;
+    detail.appendChild(word);
+    detail.appendChild(document.createTextNode(' — ' + question.meaning + '.'));
+  }
+  feedback.hidden = false;
+  feedback.focus();
 }
 
 function stopAudio() {
@@ -101,9 +140,11 @@ function playQuestion() {
 }
 
 function renderQuestion() {
+  clearCelebration();
   updateProgress();
   ui('feedback').hidden = true;
-  ui('feedback').textContent = '';
+  ui('feedback-title').textContent = '';
+  ui('feedback-detail').textContent = '';
   ui('answer-links').hidden = true;
   ui('practice').removeAttribute('href');
   ui('next').hidden = true;
@@ -143,14 +184,11 @@ function answer(tone) {
   const result = session.answer(tone);
   if (!result) return;
   const question = result.question;
-  const feedback = ui('feedback');
   if (mode === 'beginner' && !result.correct) {
     buttons().forEach(button => {
       if (Number(button.dataset.tone) === tone) button.classList.add('is-wrong');
     });
-    feedback.textContent = 'Try again. Open Reference sounds below to compare, replay the quiz sound, then choose the other tone.';
-    feedback.hidden = false;
-    feedback.focus();
+    showFeedback(false, 'Try again', 'Open Reference sounds below to compare, replay the quiz sound, then choose the other tone.');
     refreshAudio();
     return;
   }
@@ -159,13 +197,10 @@ function answer(tone) {
     button.classList.toggle('is-correct', Number(button.dataset.tone) === question.tone);
     button.classList.toggle('is-wrong', Number(button.dataset.tone) === tone && !result.correct);
   });
-  feedback.textContent = result.correct ? (mode === 'beginner' && session.attemptCount > 1 ? 'You found it! ' : 'Correct! ') : 'You chose tone ' + tone + '. The answer is tone ' + question.tone + '. ';
-  const word = document.createElement('strong');
-  word.textContent = question.character + ' · ' + question.reading + ' · tone ' + question.tone;
-  feedback.appendChild(word);
-  feedback.appendChild(document.createTextNode(' — ' + question.meaning + '.'));
-  feedback.hidden = false;
-  feedback.focus();
+  showFeedback(result.correct, result.correct ? 'Correct!' : 'Not quite', result.correct
+    ? (mode === 'beginner' && session.attemptCount > 1 ? 'You found it after a retry. ' : '')
+    : 'You chose tone ' + tone + '. The answer is tone ' + question.tone + '. ', question);
+  if (result.correct) celebrate();
   ui('practice').href = practiceURL(question);
   ui('answer-links').hidden = false;
   ui('next').textContent = session.index === session.questions.length - 1 ? 'See my results' : 'Next question';
@@ -175,6 +210,7 @@ function answer(tone) {
 
 function showResults() {
   stopAudio();
+  clearCelebration();
   root.querySelectorAll('[data-quiz-references]').forEach(group => { group.hidden = true; });
   root.classList.remove('is-playing');
   ui('round').hidden = true;
@@ -202,6 +238,7 @@ function showResults() {
 
 function resetQuiz() {
   stopAudio();
+  clearCelebration();
   root.querySelectorAll('[data-quiz-references]').forEach(group => { group.hidden = true; });
   root.classList.remove('is-playing');
   session = null;
@@ -266,7 +303,10 @@ window.addEventListener('keydown', event => {
   }
 });
 if (window.speechSynthesis) window.speechSynthesis.addEventListener('voiceschanged', refreshAudio);
-window.addEventListener('pagehide', stopAudio);
+window.addEventListener('pagehide', () => {
+  stopAudio();
+  clearCelebration();
+});
 window.addEventListener('pageshow', () => {
   refreshAudio();
   if (session && !session.complete && !session.answered && !session.heard) {

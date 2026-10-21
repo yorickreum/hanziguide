@@ -43,12 +43,17 @@ test('a question requires successful listening and only the first answer counts'
 
 function element() {
   const classes = new Set();
+  let content = '';
   return {
-    hidden: false, disabled: false, checked: false, textContent: '', children: [], dataset: {},
+    hidden: false, disabled: false, checked: false, children: [], dataset: {},
+    get textContent() { return content + this.children.map(child => child.textContent).join(''); },
+    set textContent(value) { content = value; this.children = []; },
+    style: { setProperty(name, value) { this[name] = value; } },
     classList: {
       add(...names) { names.forEach(n => classes.add(n)); },
       remove(...names) { names.forEach(n => classes.delete(n)); },
-      toggle(name, force) { if (force) classes.add(name); else classes.delete(name); }
+      toggle(name, force) { if (force) classes.add(name); else classes.delete(name); },
+      contains(name) { return classes.has(name); }
     },
     addEventListener(name, handler) { this[name] = handler; },
     appendChild(child) { this.children.push(child); },
@@ -56,10 +61,13 @@ function element() {
     focus() { this.focused = true; }
   };
 }
-function app({ missingVoice = false, saved = null, unsupported = false, mode = 'full' } = {}) {
-  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'speed', 'audio-status', 'progress', 'feedback', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
+function app({ missingVoice = false, saved = null, unsupported = false, mode = 'full', reducedMotion = false } = {}) {
+  const names = ['app', 'language', 'mode', 'description', 'keyboard', 'intro', 'results', 'round', 'start', 'listen', 'speed', 'audio-status', 'progress', 'feedback', 'feedback-title', 'feedback-icon', 'feedback-detail', 'celebration', 'answer-links', 'practice', 'next', 'score', 'review', 'restart', 'listening', 'reset'];
   const ui = Object.fromEntries(names.map(name => [name, element()]));
   ui.speed.value = '1';
+  const feedbackBody = element();
+  feedbackBody.children = [ui['feedback-title'], ui['feedback-detail']];
+  ui.feedback.children = [ui['feedback-icon'], feedbackBody];
   ['results', 'round', 'feedback', 'answer-links', 'next', 'app'].forEach(name => { ui[name].hidden = true; });
   const inputs = ['mandarin', 'cantonese'].map(value => Object.assign(element(), { value }));
   const modes = ['beginner', 'full'].map(value => Object.assign(element(), { value }));
@@ -112,6 +120,7 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     window: {
       speechSynthesis: unsupported ? undefined : synth,
       SpeechSynthesisUtterance: unsupported ? undefined : function (text) { this.text = text; },
+      matchMedia: () => ({ matches: reducedMotion }),
       addEventListener(name, handler) { events[name] = handler; }
     },
     setTimeout(fn) { const id = Symbol(); timers.set(id, fn); return id; },
@@ -445,4 +454,54 @@ test('slower audio applies to questions and references in either language and mo
       assert.equal(quiz.ui.speed.disabled, false);
     }
   }
+});
+
+test('incorrect answers show a red state, cross and explicit answer or retry guidance', () => {
+  for (const mode of ['beginner', 'full']) {
+    const quiz = app({ mode });
+    quiz.ui.start.click();
+    const question = data.mandarin.questions.find(q => q.character === quiz.spoken.at(-1).text);
+    quiz.spoken.at(-1).onend();
+    const wrong = question.tone === 1 ? 4 : 1;
+    pressKey(quiz, String(wrong));
+    assert.equal(quiz.ui.feedback.classList.contains('is-wrong'), true);
+    assert.equal(quiz.ui['feedback-icon'].textContent, '✕');
+    assert.equal(quiz.ui['feedback-title'].textContent, mode === 'beginner' ? 'Try again' : 'Not quite');
+    assert.equal(quiz.ui.celebration.children.length, 0);
+    assert.ok(quiz.groups.mandarin.buttons.find(button => Number(button.dataset.tone) === wrong).classList.contains('is-wrong'));
+    if (mode === 'full') {
+      assert.match(quiz.ui['feedback-detail'].textContent, new RegExp('answer is tone ' + question.tone));
+    } else {
+      pressKey(quiz, String(question.tone));
+      assert.equal(quiz.ui.feedback.classList.contains('is-wrong'), false);
+      assert.equal(quiz.ui.feedback.classList.contains('is-correct'), true);
+      assert.equal(quiz.ui['feedback-title'].textContent, 'Correct!');
+      assert.match(quiz.ui['feedback-detail'].textContent, /after a retry/);
+    }
+  }
+});
+
+test('correct answers show green feedback and a single short confetti burst that is cleaned up', () => {
+  const quiz = app();
+  quiz.ui.start.click(); quiz.answerCorrect();
+  assert.equal(quiz.ui.feedback.classList.contains('is-correct'), true);
+  assert.equal(quiz.ui['feedback-icon'].textContent, '✓');
+  assert.equal(quiz.ui['feedback-title'].textContent, 'Correct!');
+  assert.equal(quiz.ui.celebration.children.length, 14);
+  pressKey(quiz, '1');
+  assert.equal(quiz.ui.celebration.children.length, 14, 'answering twice cannot add confetti');
+  [...quiz.timers.values()][0]();
+  assert.equal(quiz.ui.celebration.children.length, 0, 'confetti expires');
+  pressKey(quiz, 'Enter'); quiz.answerCorrect();
+  assert.equal(quiz.ui.celebration.children.length, 14);
+  pressKey(quiz, 'Enter');
+  assert.equal(quiz.ui.celebration.children.length, 0, 'new question clears old celebration');
+});
+
+test('reduced-motion preference keeps feedback and skips confetti', () => {
+  const quiz = app({ reducedMotion: true });
+  quiz.ui.start.click(); quiz.answerCorrect();
+  assert.equal(quiz.ui['feedback-title'].textContent, 'Correct!');
+  assert.equal(quiz.ui.feedback.classList.contains('is-correct'), true);
+  assert.equal(quiz.ui.celebration.children.length, 0);
 });
