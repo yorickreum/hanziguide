@@ -39,7 +39,10 @@ ad_placement: quiz-inline
 
     <section class="tone-quiz-round" data-quiz-round aria-labelledby="tone-question" hidden>
       <div class="tone-quiz-celebration" data-quiz-celebration aria-hidden="true"></div>
-      <p class="tone-quiz-progress" data-quiz-progress></p>
+      <div class="tone-quiz-round-header">
+        <p class="tone-quiz-progress" data-quiz-progress></p>
+        <button type="button" class="tone-quiz-reset" data-quiz-reset>Start over</button>
+      </div>
       <h2 id="tone-question" tabindex="-1">Listen, then choose the tone</h2>
       <div class="tone-quiz-sound-row">
         <div class="tone-quiz-audio-controls">
@@ -92,10 +95,6 @@ ad_placement: quiz-inline
         </div>
       </details>
       {% endfor %}
-
-    <div class="tone-quiz-secondary-actions">
-      <button type="button" class="tone-quiz-reset" data-quiz-reset>Start over</button>
-    </div>
 
     <section data-quiz-results aria-labelledby="tone-results-title" hidden>
       <h2 id="tone-results-title" tabindex="-1">Round complete</h2>

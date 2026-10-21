@@ -101,24 +101,26 @@
   .tone-quiz-confetti { display: none; animation: none; }
 }
 .tone-quiz-answer-links { margin-bottom: 18px; }
-.tone-quiz-secondary-actions {
-  display: none;
-  text-align: right;
-  border-top: 1px solid $border-color;
-  margin-top: 24px;
-  padding-top: 8px;
+.tone-quiz-round-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  .tone-quiz-progress { flex: 1; min-width: 0; margin: 0; }
 }
-.tone-quiz.is-playing .tone-quiz-secondary-actions { display: block; }
 .tone-quiz-reset {
-  border: 0;
+  flex-shrink: 0;
+  max-width: 45%;
+  border: 1px solid $border-color;
+  border-radius: $ui-radius;
   background: transparent;
   color: $muted-text-color;
-  padding: 10px 4px;
+  padding: 8px 12px;
   min-height: 44px;
-  font-size: 14px;
-  text-decoration: underline;
+  font-size: 13px;
   cursor: pointer;
-  &:hover { color: $text-color; }
+  &:hover { color: $text-color; background: $background-color; }
   &:focus-visible { outline: 2px solid $brand-color; outline-offset: 3px; }
 }
 .tone-quiz-review { padding-left: 24px; }
