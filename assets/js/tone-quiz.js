@@ -56,7 +56,7 @@ function celebrate() {
     piece.style.setProperty('--color', ['#287343', '#c79127', '#357a98', '#a95470'][i % 4]);
     ui('celebration').appendChild(piece);
   }
-  celebrationTimeout = setTimeout(clearCelebration, 1400);
+  celebrationTimeout = setTimeout(clearCelebration, 1700);
 }
 
 function showFeedback(correct, title, description, question = null) {

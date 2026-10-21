@@ -90,12 +90,12 @@
   height: 11px;
   opacity: 0;
   background: var(--color);
-  animation: tone-quiz-confetti-fall 1.1s ease-out var(--delay) forwards;
+  animation: tone-quiz-confetti-fall 1.4s ease-out var(--delay) forwards;
 }
 @keyframes tone-quiz-confetti-fall {
   10% { opacity: 1; }
   80% { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--drift), 300px) rotate(400deg); }
+  100% { top: 100%; opacity: 0; transform: translateX(var(--drift)) rotate(400deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   .tone-quiz-confetti { display: none; animation: none; }
