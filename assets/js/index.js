@@ -11,7 +11,6 @@ var cedictWorker = null;
 var cedictPending = {};
 var cedictSeq = 0;
 var translationInfoEl = null;
-var lastTrackedSnapshotKey = null;
 import { createSpeechButton, refreshSpeechButtons } from '/assets/js/utils/speech.js';
 import { renderPracticeSyllables } from '/assets/js/utils/practice-syllables.js';
 import { applyPracticePreset } from '/assets/js/utils/practice-preset.js';
@@ -56,14 +55,6 @@ function trackMatomoEvent(category, action, name, value) {
     }
   }
   window._paq.push(payload);
-}
-
-function normalizeMatomoText(text, maxLen) {
-  var clean = (text || '').replace(/\s+/g, ' ').trim();
-  if (maxLen && clean.length > maxLen) {
-    return clean.slice(0, maxLen) + '…';
-  }
-  return clean;
 }
 
 function parseDailyIdiomCsv(text) {
@@ -186,29 +177,6 @@ function initHomeDailyIdiom() {
       console.error(error);
       textEl.textContent = textEl.getAttribute('data-fallback') || 'Open today\'s idiom with meaning and stroke practice.';
     });
-}
-
-function trackPracticeSnapshot(chars, translationText) {
-  var trimmedChars = (chars || '').trim();
-  var trimmedTranslation = normalizeMatomoText(translationText, 160);
-  if (!trimmedChars) {
-    return;
-  }
-  var showMandarin = $('#show-mandarin').prop('checked');
-  var showCantonese = $('#show-cantonese').prop('checked');
-  var scriptType = getScriptType();
-  var state = 'script=' + (scriptType || 'unknown') +
-    ';mandarin=' + (showMandarin ? '1' : '0') +
-    ';cantonese=' + (showCantonese ? '1' : '0');
-  var payload = 'chars=' + trimmedChars +
-    ';' + state +
-    ';translation=' + (trimmedTranslation || 'none');
-  var key = payload;
-  if (key === lastTrackedSnapshotKey) {
-    return;
-  }
-  lastTrackedSnapshotKey = key;
-  trackMatomoEvent('Practice', 'InputSnapshot', payload, trimmedChars.length);
 }
 
 function isXrayModeOn() {
@@ -636,7 +604,6 @@ async function getTranslation(characters) {
 
     if (!mainText) {
       $('#translation-text').text('No dictionary entry found.');
-      trackPracticeSnapshot(characters, 'No dictionary entry found.');
       return;
     }
 
@@ -658,7 +625,6 @@ async function getTranslation(characters) {
     // Fallback tooltip on main text
     $('#translation-text').attr('title', detailText || '');
     $('#translation-display').show();
-    trackPracticeSnapshot(characters, mainText);
   } catch (error) {
     console.error('Translation error:', error);
     $('#translation-display').hide();
@@ -1875,6 +1841,9 @@ $(function() {
 				});
 			} else {
 				// Play
+                if (animationWriters.some(function(writer) { return !!writer._character; })) {
+                  window.hanziLearning?.practiceStarted();
+                }
 				isPlaying = true;
 				$('#animate-play').html('<i class="fas fa-pause"></i> Pause').removeClass('btn-primary').addClass('btn-success');
 				
@@ -1902,6 +1871,7 @@ $(function() {
                 return;
               }
               if (strokeIdx >= totalCharStrokes) {
+                if (index === 0 && totalCharStrokes > 0) window.hanziLearning?.practiceCompleted('AnimationComplete');
                 // Move to next character after a small gap
                 var nextGap = 400 / strokeSpeedFactor;
                 setTimeout(function() {
@@ -2053,6 +2023,7 @@ $(function() {
         highlightOnComplete: false,
         strokeFadeDuration: 0,
         onCorrectStroke: function() {
+          window.hanziLearning?.practiceStarted();
           // Advance to next stroke
           if (currentStrokeIndex < getTotalStrokes()) {
             currentStrokeIndex++;
@@ -2067,6 +2038,7 @@ $(function() {
                 }
               }, 100);
             } else {
+              window.hanziLearning?.practiceCompleted('DrawingComplete');
               // Completed all strokes
               $('#draw-mode').prop('checked', false);
               stopDrawMode();

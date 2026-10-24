@@ -86,6 +86,7 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     }));
     return [language, group];
   }));
+  const learningEvents = [];
   const events = {}, timers = new Map(), timerDelays = new Map(), spoken = [];
   const voice = { name: 'exact language voice' };
   let voiceAvailable = !missingVoice;
@@ -122,6 +123,7 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
   const context = {
     document, console, localStorage: { getItem: () => saved },
     window: {
+      hanziLearning: { track: (...args) => learningEvents.push(args) },
       speechSynthesis: unsupported ? undefined : synth,
       SpeechSynthesisUtterance: unsupported ? undefined : function (text) { this.text = text; },
       matchMedia: query => ({ matches: query.includes('max-width') ? mobile : reducedMotion }),
@@ -138,7 +140,7 @@ function app({ missingVoice = false, saved = null, unsupported = false, mode = '
     modes.find(input => input.checked).change();
   }
   return {
-    ui, inputs, modes, references, groups, spoken, events, voice, timers, synth, questionHeading,
+    ui, inputs, modes, references, groups, spoken, events, voice, timers, synth, questionHeading, learningEvents,
     tick(delay) {
       const entry = [...timers].find(([id]) => timerDelays.get(id) === delay);
       assert.ok(entry, 'expected an active timer for ' + delay + 'ms');
@@ -188,7 +190,11 @@ test('twenty answers produce a score, a review, and a playable new round', () =>
   assert.match(quiz.ui.score.textContent, /20 \/ 20 correct in Mandarin/);
   assert.equal(quiz.ui.review.children.length, 20);
   assert.equal(quiz.ui.language.disabled, false);
+  assert.deepEqual(quiz.learningEvents.map(event => event[1]), ['Start', 'Complete']);
+  quiz.events.pageshow();
+  assert.equal(quiz.learningEvents.length, 2, 'restored results do not count again');
   quiz.ui.restart.click();
+  assert.deepEqual(quiz.learningEvents.map(event => event[1]), ['Start', 'Complete', 'Start']);
   assert.equal(quiz.ui.results.hidden, true);
   assert.match(quiz.ui.progress.textContent, /Question 1 of 20 · 0 correct/);
 });

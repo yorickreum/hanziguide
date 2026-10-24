@@ -195,6 +195,7 @@ function startRound() {
     questions.push(...createToneRound(bank, 20 - questions.length));
   }
   session = new ToneQuizSession(questions, { retryWrong: mode === 'beginner' });
+  window.hanziLearning?.track('Tone Quiz', 'Start', language + ':' + mode);
   ui('intro').hidden = true;
   ui('results').hidden = true;
   ui('round').hidden = false;
@@ -236,6 +237,10 @@ function answer(tone) {
 }
 
 function showResults() {
+  if (!session.metricsComplete) {
+    session.metricsComplete = true;
+    window.hanziLearning?.track('Tone Quiz', 'Complete', language + ':' + mode, session.score);
+  }
   stopAudio();
   clearCelebration();
   root.querySelectorAll('[data-quiz-references]').forEach(group => { group.hidden = true; });

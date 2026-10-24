@@ -2190,94 +2190,27 @@ body {
   }
 }
 
-// Compact feature discovery cards beside the practice introduction
+// Keep the learning task ahead of secondary discovery links.
 .practice-hero {
-  align-items: center;
   display: grid;
-  gap: 12px 22px;
-  grid-template-columns: 8px minmax(250px, 1fr) minmax(420px, 520px);
-  margin-bottom: 38px;
+  grid-template-columns: 8px minmax(0, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
 }
-
-.practice-hero-spine {
-  grid-column: 1;
+.practice-hero-copy { min-width: 0; }
+.practice-explore {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px auto;
+  font-size: 14px;
 }
-
-.practice-hero-copy {
-  grid-column: 2;
-  min-width: 0;
-}
-
-.practice-hero-promos {
-  display: grid;
-  gap: 8px;
-  grid-column: 3;
-  min-width: 0;
-}
-
-.practice-hero-promos .home-geo-quiz-callout,
-.practice-hero-promos .home-daily-idiom-callout {
-  align-items: center;
-  border-radius: 6px;
-  gap: 9px;
-  margin: 0;
-  max-width: none;
-  min-width: 0;
-  padding: 9px 10px;
-}
-
-.practice-hero-promos .home-geo-quiz-callout i,
-.practice-hero-promos .home-daily-idiom-callout i {
-  font-size: 18px;
-}
-
-.practice-hero-promos .home-geo-quiz-callout strong,
-.practice-hero-promos .home-daily-idiom-callout strong {
-  font-size: 13px;
-}
-
-.practice-hero-promos .home-geo-quiz-callout span,
-.practice-hero-promos .home-daily-idiom-callout span {
-  display: -webkit-box;
-  font-size: 12px;
-  line-height: 1.3;
-  margin-top: 1px;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.practice-hero-promos .home-callout-actions {
-  gap: 5px;
-}
-
-.practice-hero-promos .home-geo-quiz-callout a,
-.practice-hero-promos .home-daily-idiom-callout a {
-  font-size: 11px;
-  padding: 6px 8px;
-  white-space: nowrap;
-}
-
-@media (max-width: 991px) {
-  .practice-hero {
-    grid-template-columns: 8px minmax(0, 1fr);
-  }
-
-  .practice-hero-spine {
-    grid-row: 1 / span 2;
-  }
-
-  .practice-hero-promos {
-    grid-column: 2;
-    width: 100%;
-  }
-}
-
 @media (max-width: 600px) {
-  .practice-hero-promos .home-geo-quiz-callout,
-  .practice-hero-promos .home-daily-idiom-callout {
-    align-items: stretch;
-  }
+  .practice-hero { padding: 8px 0; margin-bottom: 16px; }
+  .practice-hero h1 { font-size: 26px; }
+  .practice-hero .practice-hero-description { font-size: 14px; }
+  .practice-hero .home-tutor-link { margin: 8px 0 0; }
 }
 
 @media (min-width: 992px) {

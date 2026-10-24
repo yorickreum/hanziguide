@@ -18,13 +18,15 @@
   display: none !important;
 }
 
+.site-ad--desktop-banner { display: none; }
+
 .site-ad--desktop {
   display: none;
   max-width: 280px;
 }
 
 @media (min-width: 901px) {
-  .site-ad--desktop { display: block; }
+  .site-ad--desktop, .site-ad--desktop-banner { display: block; }
   .site-ad--mobile { display: none; }
 }
 

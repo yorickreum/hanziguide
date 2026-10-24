@@ -1,9 +1,13 @@
 {% if site.adsense_client and site.adsense_slot and site.adsense_slot != '' and page.adsense != false %}
+{% assign placement = include.placement | default: page.ad_placement | default: 'content' %}
+{% assign channel = site.adsense_channels[placement] %}
 {% assign ad_label = 'Advertisement' %}
 {% if page.lang == 'zh' %}{% assign ad_label = '广告' %}{% elsif page.lang == 'zh-Hant' %}{% assign ad_label = '廣告' %}{% endif %}
 <aside class="site-ad container {{ include.variant }}" aria-label="{{ ad_label }}">
   <div class="site-ad-label">{{ ad_label }}</div>
   <ins class="site-ad-unit {% if include.shape == 'square' %}site-ad-square{% else %}site-ad-banner{% endif %}"
+       data-ad-placement="{{ placement | escape }}"
+       {% if channel %}data-ad-channel="{{ channel | escape }}"{% endif %}
        data-ad-client="{{ site.adsense_client | escape }}"
        data-ad-slot="{{ include.slot | default: site.adsense_slot | escape }}"
        data-full-width-responsive="false"></ins>

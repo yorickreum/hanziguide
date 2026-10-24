@@ -39,36 +39,9 @@
       <p class="practice-hero-description">Practice over 9,000 simplified and traditional Hanzi, hear Mandarin and Cantonese pronunciation, explore Chinese idioms, and discover regional language patterns—all in one free learning tool.</p>
       <p class="home-tutor-link"><a href="/tutor/" hreflang="en">{{ t.nav.tutor }}</a></p>
     </div>
-    <aside class="practice-hero-promos" aria-label="More ways to explore Hanzi Guide">
-      <div class="home-daily-idiom-callout" id="home-daily-idiom">
-        <i class="fas fa-calendar-day" aria-hidden="true"></i>
-        <div>
-          <strong>{{ t.home_teasers.idiom_title }}</strong>
-          <span id="home-daily-idiom-text" data-fallback="{{ t.home_teasers.idiom_fallback }}">{{ t.home_teasers.idiom_loading }}</span>
-        </div>
-        <div class="home-callout-actions">
-          <a class="home-callout-primary" id="home-daily-idiom-practice" href="/idioms/">{{ t.home_teasers.idiom_practice }}</a>
-          <a class="home-callout-secondary" href="/idioms/">{{ t.home_teasers.idiom_more }}</a>
-        </div>
-      </div>
-      <div class="home-geo-quiz-callout">
-        <i class="fas fa-location-dot" aria-hidden="true"></i>
-        <div>
-          <strong>{{ t.home_teasers.geo_title }}</strong>
-          <span>{{ t.home_teasers.geo_text }}</span>
-        </div>
-        {% if page.lang == "zh" %}
-        <a href="/cn/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
-        {% elsif page.lang == "zh-Hant" %}
-        <a href="/tw/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
-        {% else %}
-        <a href="/geo-quiz/">{{ t.home_teasers.geo_button }}</a>
-        {% endif %}
-      </div>
-    </aside>
   </header>
 
-  {% include ad-unit.html %}
+  {% include ad-unit.html placement="practice-top" variant="site-ad--desktop-banner" %}
 
   <!-- <h4>{{ t.stroke_order_animation }}</h4>-->
   
@@ -118,6 +91,7 @@
         <a class="btn btn-default" id="practice-pdf-link" href="/pdf"><i class="fas fa-file-pdf"></i> {{ t.practice_pdf }}</a>
       </div>
       <p class="text-muted practice-pdf-description">{{ t.practice_pdf_description }}</p>
+      {% include ad-unit.html placement="practice-mobile" variant="site-ad--mobile" %}
     </section>
 
     <aside class="practice-sidebar">
@@ -139,6 +113,8 @@
         <span id="translation-text"></span>
       </div>
 
+      {% include ad-unit.html placement="practice-sidebar" shape="square" slot=site.adsense_square_slot variant="site-ad--desktop" %}
+
       <section class="practice-info-card practice-pronunciation">
         <h2>{{ t.language_label }}</h2>
         <p class="text-muted pronunciation-description">{{ t.pronunciation_description }}</p>
@@ -154,14 +130,15 @@
           <div class="practice-syllable-list" data-syllable-list></div>
         </details>
       </section>
-
-      {% include ad-unit.html shape="square" slot=site.adsense_square_slot variant="site-ad--desktop" %}
-
     </aside>
   </div>
 </div>
 
-{% include ad-unit.html variant="site-ad--mobile" %}
+<nav class="practice-explore container" aria-label="{{ t.nav.howto | default: 'Explore' }}">
+  <a href="{% if page.lang == 'zh' %}/cn{% elsif page.lang == 'zh-Hant' %}/tw{% endif %}/idioms/">{{ t.nav.idioms }}</a>
+  <span aria-hidden="true">·</span>
+  <a href="{% if page.lang == 'zh' %}/cn{% elsif page.lang == 'zh-Hant' %}/tw{% endif %}/geo-quiz/">{{ t.nav.geo_quiz }}</a>
+</nav>
 
 <!-- Beginner Characters Modal -->
 <div id="beginner-chars-modal" class="beginner-chars-modal" style="display: none;">

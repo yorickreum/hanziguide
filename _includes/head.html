@@ -58,7 +58,7 @@
     {% if page.leaflet %}
     <link rel="stylesheet" href="/assets/cdn/leaflet/leaflet.css">
     {% endif %}
-    <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}?v=quiz-mobile-compact-1">
+    <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl | replace: '//', '/' }}?v=ads-monitoring-1">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
     <link rel="describedby" type="text/plain" href="{{ '/llms.txt' | relative_url }}">
     {% comment %}
@@ -73,7 +73,8 @@
       .site-ad-square { display: block; width: 250px; height: 250px; }
       @media (min-width: 800px) { .site-ad-banner { height: 90px; } }
     </style>
-    <script defer src="{{ '/assets/js/ads.js' | relative_url }}?v=2"></script>
+    <script defer src="{{ '/assets/js/ads.js' | relative_url }}?v=3"></script>
+    <script defer src="/assets/js/ad-metrics.js?v=1"></script>
     {% endif %}
     
     <!-- Structured Data -->
@@ -102,12 +103,14 @@
     <script src="/assets/cdn/pinyin-pro/pinyin-pro.min.js"></script>
     <script src="/assets/cdn/to-jyutping/to-jyutping.min.js"></script>
 
+    <script defer src="/assets/js/learning-metrics.js?v=1"></script>
     <!-- Matomo -->
     <script>
       var _paq = window._paq = window._paq || [];
       /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
       _paq.push(['disableCookies']);
       _paq.push(['trackPageView']);
+      _paq.push(['enableHeartBeatTimer', 15]);
       _paq.push(['enableLinkTracking']);
       (function() {
         var u="//matomo.yorickreum.de/";

@@ -47,6 +47,9 @@
       script.crossOrigin = 'anonymous';
       script.onerror = function () {
         libraryFailed = true;
+        units.forEach(function (unit) {
+          if (unit.dataset.adRequested) unit.dataset.adFailed = 'true';
+        });
         units.forEach(collapseAd);
       };
       script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(unit.dataset.adClient);

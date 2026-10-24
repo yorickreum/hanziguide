@@ -12,6 +12,14 @@ github_username:  yorickreum
 # With no slot configured, no advertising script or empty ad space is rendered.
 adsense_slot: "7163092498"
 adsense_square_slot: "9573633413"
+# Placement channels are assigned in the tag, rather than to the shared unit.
+adsense_channels:
+  practice-top: "8114487175"
+  practice-mobile: "2067953570"
+  practice-sidebar: "7133200113"
+  content: "8441790237"
+  tone-results: "5516243990"
+  geo-results: "1146502574"
 
 # Build settings
 markdown: kramdown

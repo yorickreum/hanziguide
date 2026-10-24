@@ -976,7 +976,9 @@
     }
 
     restoreState();
-    if (state.completed && hasCompleteAnswers()) {
+    learningStarted = state.answers.some(function(answer) { return typeof answer === 'number'; });
+    learningComplete = state.completed && hasCompleteAnswers();
+    if (learningComplete) {
       renderResults();
     } else {
       renderQuestion();
@@ -1016,6 +1018,10 @@
         button.classList.add('is-selected');
       }
       button.addEventListener('click', function() {
+        if (!learningStarted) {
+          learningStarted = true;
+          window.hanziLearning?.track('Geo Quiz', 'Start');
+        }
         state.answers[state.index] = optionIndex;
         state.completed = false;
         saveState();
@@ -1059,6 +1065,9 @@
     }
   }
 
+  var learningStarted = false;
+  var learningComplete = false;
+
   function goNext() {
     if (typeof state.answers[state.index] !== 'number') return;
     if (state.index < getQuestionCount() - 1) {
@@ -1067,11 +1076,17 @@
       saveState();
       renderQuestion();
     } else {
+      if (!learningComplete) {
+        learningComplete = true;
+        window.hanziLearning?.track('Geo Quiz', 'Complete');
+      }
       renderResults();
     }
   }
 
   function restart() {
+    learningStarted = false;
+    learningComplete = false;
     var questionCount = getQuestionCount();
     state.index = 0;
     state.answers = [];
