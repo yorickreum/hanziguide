@@ -31,6 +31,7 @@
   })();
 </script>
 <div class="demo container" id="practice" data-components-label="{{ t.components_label }}" data-char-unavailable="{{ t.char_unavailable }}" data-radical-label="{{ t.radical_label }}" data-radical-remainder-label="{{ t.radical_remainder_label }}" data-listen-mandarin="{{ t.listen_mandarin }}" data-listen-cantonese="{{ t.listen_cantonese }}" data-cantonese-unavailable="{{ t.cantonese_voice_unavailable }}">
+  <div class="practice-intro">
   <header class="practice-hero">
     <span class="practice-hero-spine" aria-hidden="true"></span>
     <div class="practice-hero-copy">
@@ -42,6 +43,8 @@
   </header>
 
   {% include ad-unit.html placement="practice-top" variant="site-ad--desktop-banner" %}
+  {% include ad-unit.html placement="practice-sidebar" shape="square" slot=site.adsense_square_slot variant="site-ad--desktop" %}
+  </div>
 
   <!-- <h4>{{ t.stroke_order_animation }}</h4>-->
   
@@ -112,8 +115,6 @@
         <strong>{{ t.translation_label }}</strong>
         <span id="translation-text"></span>
       </div>
-
-      {% include ad-unit.html placement="practice-sidebar" shape="square" slot=site.adsense_square_slot variant="site-ad--desktop" %}
 
       <section class="practice-info-card practice-pronunciation">
         <h2>{{ t.language_label }}</h2>

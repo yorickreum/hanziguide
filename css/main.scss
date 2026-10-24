@@ -2198,6 +2198,37 @@ body {
   margin-bottom: 20px;
 }
 .practice-hero-copy { min-width: 0; }
+.practice-intro { margin-bottom: 16px; }
+@media (min-width: 901px) {
+  .practice-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    grid-template-areas: "intro sponsor" "banner sponsor";
+    align-items: center;
+    gap: 16px 34px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid $border-color;
+  }
+  .practice-intro .practice-hero {
+    grid-area: intro;
+    margin: 0;
+    padding: 0;
+  }
+  .practice-intro > .site-ad {
+    margin: 0 auto;
+    padding: 10px 14px;
+    border: 1px solid $border-color;
+    border-radius: $ui-radius;
+    background: rgba(255, 255, 255, 0.18);
+  }
+  .practice-intro > .site-ad--desktop-banner { grid-area: banner; }
+  .practice-intro > .site-ad--desktop { grid-area: sponsor; }
+}
+@media (min-width: 901px) and (max-width: 1199px) {
+  .practice-intro { grid-template-areas: "intro sponsor" "banner banner"; }
+}
+
 .practice-explore {
   display: flex;
   justify-content: center;
